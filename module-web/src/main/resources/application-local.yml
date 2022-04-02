@@ -1,0 +1,6 @@
+server:
+  port: ${LOCAL_PORT}
+
+spring:
+  application:
+    name: gazua
