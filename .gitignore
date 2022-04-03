@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+.env
 .idea
 *.iws
 *.iml
@@ -38,4 +39,3 @@ out/
 /module-domain/src/main/resources/
 /module-api/src/main/resources/
 /module-common/src/main/resources/
-/module-web/src/main/resources/
