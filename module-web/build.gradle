@@ -1,12 +1,17 @@
 bootJar {
-    enabled=true
+    enabled = true
 }
 
 jar {
-    enabled=true
+    enabled = true
 }
 
 dependencies {
     api project(':module-api')
+    api project(':module-common')
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
