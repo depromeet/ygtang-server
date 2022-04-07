@@ -1,0 +1,1 @@
+# Gazua Team의 Inspiration Api Server 입니다.
