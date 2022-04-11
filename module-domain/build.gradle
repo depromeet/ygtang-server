@@ -1,11 +1,20 @@
 bootJar {
-    enabled=false
+    enabled = false
 }
 
 jar {
-    enabled=true
+    enabled = true
 }
 
 dependencies {
     implementation project(":module-common")
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
+
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }

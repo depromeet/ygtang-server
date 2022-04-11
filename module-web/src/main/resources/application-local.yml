@@ -5,8 +5,22 @@ spring:
   application:
     name: inspriation
 
-logging:
-  level:
-    root: debug
-  pattern:
-    console: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    show-sql: true
+    format_sql: true
+
+
+#logging:
+#  level:
+#    root: debug
+#  pattern:
+#    console: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
