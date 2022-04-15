@@ -18,7 +18,6 @@ spring:
     show-sql: true
     format_sql: true
 
-
 #logging:
 #  level:
 #    root: debug
