@@ -1,6 +1,6 @@
-package inspiration.exception;
+package com.depromeet.inspiration.exception;
 
-import inspiration.enumeration.ExceptionType;
+import com.depromeet.inspiration.enumeration.ExceptionType;
 
 public class PostNotFoundException extends RuntimeException {
 

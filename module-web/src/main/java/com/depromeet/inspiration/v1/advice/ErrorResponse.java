@@ -1,4 +1,4 @@
-package inspiration.v1.advice;
+package com.depromeet.inspiration.v1.advice;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

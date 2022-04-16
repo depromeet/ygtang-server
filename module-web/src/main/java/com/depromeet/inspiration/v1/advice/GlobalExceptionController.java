@@ -1,6 +1,6 @@
-package inspiration.v1.advice;
+package com.depromeet.inspiration.v1.advice;
 
-import inspiration.exception.PostNotFoundException;
+import com.depromeet.inspiration.exception.PostNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;

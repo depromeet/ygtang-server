@@ -1,4 +1,4 @@
-package inspiration.v1;
+package com.depromeet.inspiration.member;
 
 public class ResultResponse {
 

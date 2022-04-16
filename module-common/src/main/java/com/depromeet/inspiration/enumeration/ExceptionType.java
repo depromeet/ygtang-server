@@ -1,4 +1,4 @@
-package inspiration.enumeration;
+package com.depromeet.inspiration.enumeration;
 
 public enum ExceptionType {
 
