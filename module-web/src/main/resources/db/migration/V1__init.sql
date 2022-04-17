@@ -6,4 +6,3 @@ create table member
     email        varchar(255) not null,
     primary key (member_id)
 ) engine=InnoDB
-

@@ -7,8 +7,9 @@ jar {
 }
 
 dependencies {
-    api project(':module-api')
-    api project(':module-common')
+    implementation project(':module-common')
+    implementation project(':module-domain')
+    implementation project(':module-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 

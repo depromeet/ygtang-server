@@ -1,6 +1,6 @@
 package com.depromeet.inspiration.member;
 
-import com.depromeet.inspiration.domain.date.BaseTimeEntity;
+import com.depromeet.inspiration.date.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

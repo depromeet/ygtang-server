@@ -1,4 +1,4 @@
-package com.depromeet.inspiration.domain.date;
+package com.depromeet.inspiration.date;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
