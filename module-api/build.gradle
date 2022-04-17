@@ -9,7 +9,7 @@ jar {
 dependencies {
     implementation project(":module-web")
     implementation project(":module-domain")
-    api project(":module-common")
+    implementation project(":module-common")
 
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
