@@ -27,6 +27,12 @@ subprojects {
         mavenCentral()
     }
 
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
     dependencies {
         // spring
         compileOnly 'org.projectlombok:lombok'
