@@ -1,7 +1,10 @@
 package inspiration.emailauth;
 
+import inspiration.enumeration.ExceptionType;
+import inspiration.exception.PostNotFoundException;
 import inspiration.property.MailProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @EnableAsync
 @RequiredArgsConstructor
+@Slf4j
 public class EmailSendService {
 
     private final JavaMailSender mailSender;
@@ -27,7 +31,8 @@ public class EmailSendService {
 
             mailSender.send(simpleMailMessage);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e);
+            throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
         }
     }
 }
