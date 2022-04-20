@@ -1,0 +1,12 @@
+version: "3"
+services:
+  spring1:
+    build: .
+    image: spring
+    container_name: dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./build/libs/:/root/
+    environment:
+      active: dev
