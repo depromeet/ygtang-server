@@ -50,7 +50,7 @@ public class EmailAuthService {
         emailAuthRepository.save(
                 EmailAuth.builder()
                         .email(request.getEmail())
-                        .auth(true)
+                        .isAuth(true)
                         .build());
 
         return PolicyRedirectViewUtil.redirectView();
