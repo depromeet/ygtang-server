@@ -8,6 +8,7 @@ import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.EmailNotAuthenticatedException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.redis.RedisService;
+import inspiration.utils.AuthTokenUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class EmailAuthService {
 
         isAuth(request.getEmail());
 
-        String authToken = UUID.randomUUID().toString();
+        String authToken = AuthTokenUtil.getAuthToken();
 
         redisService.setDataWithExpiration(RedisKey.EAUTH.getKey() + request.getEmail(), authToken, 60 * 5L);
 
@@ -39,10 +40,12 @@ public class EmailAuthService {
     @Transactional
     public RedirectView emailAuth(EmailAuthRequest request) {
 
-        if (redisService.getData(RedisKey.EAUTH.getKey() + request.getEmail()) == null)
+        String expiredKey = RedisKey.EAUTH.getKey() + request.getEmail();
+
+        if (redisService.getData(expiredKey) == null)
             throw new EmailAuthenticatedTimeExpiredException();
 
-        redisService.deleteData(RedisKey.EAUTH.getKey() + request.getEmail());
+        redisService.deleteData(expiredKey);
 
         emailAuthRepository.save(
                 EmailAuth.builder()

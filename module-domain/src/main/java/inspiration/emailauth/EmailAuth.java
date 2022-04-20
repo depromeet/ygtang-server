@@ -25,8 +25,8 @@ public class EmailAuth {
     private Boolean isAuth;
 
     @Builder
-    public EmailAuth(String email, Boolean auth, String authToken, Boolean expired) {
+    public EmailAuth(String email, Boolean isAuth) {
         this.email = email;
-        this.isAuth = auth;
+        this.isAuth = isAuth;
     }
 }
