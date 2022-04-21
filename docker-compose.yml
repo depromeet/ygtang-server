@@ -10,3 +10,5 @@ services:
       - ./build/libs/:/root/
     environment:
       active: ${ACTIVE}
+      project_name: ${PROJECT_NAME}
+      version: ${VERSION}
