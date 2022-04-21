@@ -9,7 +9,8 @@ set -o allexport
 source ${APP_PATH}/source/build/libs/.env
 set +o allexport
 
-echo "> Start health check of WAS at '${TARGET_URL}' ..."
+echo "> Start health check of WAS at '${TARGET_URL}:${PORT}' ..."
+
 
 for RETRY_COUNT in 1 2 3 4 5 6 7 8 9 10
 do
