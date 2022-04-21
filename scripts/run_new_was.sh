@@ -4,7 +4,7 @@
 #
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
-APP_PATH = /home/ubuntu/app/inspiration
+APP_PATH=/home/ubuntu/app/inspiration
 cp ${APP_PATH}/deploy/.env ${APP_PATH}/source/.env
 cp ${APP_PATH}/source/module-web/build/libs/* ${APP_PATH}/source/
 source ${APP_PATH}/deploy/deploy_env.sh
