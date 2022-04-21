@@ -18,13 +18,6 @@ spring:
     show-sql: true
     format_sql: true
 
-  jwt:
-    header: Authorization
-    secret: cg3FinueMfHj7ouyOq5MhPF7Xz2XTBxAq0LPm8yi1HKFhz8vqPH0_DwSVPAenc1kFDWgRKdrUq4FUDWbm_KNAg # ${SECRET_KEY}
-    access-token-validity-in-seconds: 86400
-    refresh-token-validity-in-seconds: 86400
-
-
 #logging:
 #  level:
 #    root: debug

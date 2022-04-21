@@ -1,5 +1,6 @@
 package inspiration.member;
 
+import inspiration.exception.PostNotFoundException;
 import inspiration.jwt.TokenProvider;
 import inspiration.member.request.LoginRequest;
 import inspiration.member.request.TokenRequest;
@@ -18,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final MemberRepository memberRepository;
+    private final EmailAuthRepository emailAuthRepository;
     private final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
     @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
-        Member member = memberRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow();
+        Member member = emailAuthRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new PostNotFoundException());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

@@ -31,8 +31,8 @@ public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-//    @Value("${jwt.secret")
-    private final String secret;
+//    @Value("${jwt.secret}")
+    private String secret;
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
 
@@ -40,9 +40,9 @@ public class TokenProvider implements InitializingBean {
 
 
     public TokenProvider(
-            @Value("cg3FinueMfHj7ouyOq5MhPF7Xz2XTBxAq0LPm8yi1HKFhz8vqPH0DwSVPAenc1kFDWgRKdrUq4FUDWbmKNAg") String secret,
-            @Value("86400") long accessTokenValidityInMilliseconds,
-            @Value("86400") long refreshTokenValidityInMilliseconds) {
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.access-token-validity-in-seconds}") long accessTokenValidityInMilliseconds,
+            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds) {
         this.secret = secret;
         this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
