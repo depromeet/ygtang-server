@@ -1,10 +1,7 @@
 #!/bin/bash
 
-source /home/ubuntu/app/inspiration/deploy/deploy_env.sh
 # Crawl current connected port of WAS
 TARGET_URL=localhost
-echo ${DEPLOYMENT_ACTIVE}
-
 
 echo "> Start health check of WAS at '${TARGET_URL}' ..."
 
