@@ -3,10 +3,10 @@ services:
   spring1:
     build: .
     image: spring
-    container_name: dev
+    container_name: ${ACTIVE}
     ports:
-      - "8081:8081"
+      - "${PORT}:${PORT}"
     volumes:
       - ./build/libs/:/root/
     environment:
-      active: dev
+      active: ${ACTIVE}
