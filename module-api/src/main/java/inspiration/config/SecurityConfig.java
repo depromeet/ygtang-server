@@ -1,10 +1,9 @@
-package inspiration.member.config;
+package inspiration.config;
 
-import com.sun.net.httpserver.HttpsServer;
-import inspiration.member.jwt.JwtAccessDeniedHandler;
-import inspiration.member.jwt.JwtAuthenticationEntryPoint;
-import inspiration.member.jwt.JwtSecurityConfig;
-import inspiration.member.jwt.TokenProvider;
+import inspiration.jwt.JwtAccessDeniedHandler;
+import inspiration.jwt.JwtAuthenticationEntryPoint;
+import inspiration.jwt.JwtSecurityConfig;
+import inspiration.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -49,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .csrf().disable()
 
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -61,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/member/login").permitAll()
+                .antMatchers("/member/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

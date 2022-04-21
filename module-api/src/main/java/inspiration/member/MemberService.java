@@ -1,14 +1,11 @@
 package inspiration.member;
 
-import domain.member.Member;
-import domain.member.MemberRepository;
-import inspiration.member.jwt.TokenProvider;
+import inspiration.jwt.TokenProvider;
 import inspiration.member.request.LoginRequest;
 import inspiration.member.request.TokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -25,7 +22,7 @@ public class MemberService {
     private final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
     @Transactional
-    public TokenRequest login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
@@ -33,7 +30,7 @@ public class MemberService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        TokenRequest jwt = tokenProvider.createToken(member.getEmail(), authentication);
+        TokenResponse jwt = tokenProvider.createToken(member.getEmail(), authentication);
 
         // redis에 refreshToken 저장
 

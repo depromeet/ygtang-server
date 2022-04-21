@@ -1,8 +1,7 @@
-package inspiration.member.loginAuth;
+package inspiration.loginAuth;
 
-import domain.member.Member;
-import domain.member.MemberRepository;
-import lombok.AllArgsConstructor;
+import inspiration.member.Member;
+import inspiration.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

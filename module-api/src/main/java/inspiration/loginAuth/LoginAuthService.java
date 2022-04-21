@@ -1,4 +1,4 @@
-package inspiration.member.loginAuth;
+package inspiration.loginAuth;
 
 import org.springframework.stereotype.Service;
 

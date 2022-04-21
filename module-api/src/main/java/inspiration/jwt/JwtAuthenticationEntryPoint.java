@@ -1,4 +1,4 @@
-package inspiration.member.jwt;
+package inspiration.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
