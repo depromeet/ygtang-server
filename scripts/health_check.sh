@@ -4,7 +4,10 @@
 TARGET_URL=localhost
 APP_PATH=/home/ubuntu/app/inspiration
 
-export $(grep -v '^#' ${APP_PATH}/source/build/libs/.env | xargs)
+grep -v '^#' ${APP_PATH}/source/build/libs/.env
+set -o allexport
+source ${APP_PATH}/source/build/libs/.env
+set +o allexport
 
 echo "> Start health check of WAS at '${TARGET_URL}' ..."
 
