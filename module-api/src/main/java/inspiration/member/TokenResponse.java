@@ -1,16 +1,17 @@
-package inspiration.member.request;
+package inspiration.member;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
-@NoArgsConstructor
-public class TokenRequest {
+public class TokenResponse {
 
-    public TokenRequest(String accessToken, String refreshToken) {
+    public TokenResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
     private String accessToken;
     private String refreshToken;
 }

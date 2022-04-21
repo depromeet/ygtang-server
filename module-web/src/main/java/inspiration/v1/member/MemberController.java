@@ -1,9 +1,8 @@
 package inspiration.v1.member;
 
+import inspiration.member.TokenResponse;
 import inspiration.member.request.LoginRequest;
 import inspiration.member.MemberService;
-import inspiration.member.request.TokenRequest;
-import inspiration.member.loginAuth.LoginAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -22,9 +20,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenRequest> login(@RequestBody LoginRequest loginRequest,
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest,
                                               HttpServletResponse response) {
-        TokenRequest token = memberService.login(loginRequest);
+        TokenResponse token = memberService.login(loginRequest);
 
         Cookie accessToken = new Cookie("accessToken", token.getAccessToken());
         accessToken.setSecure(true);

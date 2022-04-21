@@ -1,4 +1,4 @@
-package domain.member;
+package inspiration.member;
 
 import inspiration.domain.date.BaseTimeEntity;
 import lombok.AccessLevel;
