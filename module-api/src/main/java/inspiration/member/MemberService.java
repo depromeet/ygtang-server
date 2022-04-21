@@ -3,7 +3,6 @@ package inspiration.member;
 import inspiration.exception.PostNotFoundException;
 import inspiration.jwt.TokenProvider;
 import inspiration.member.request.LoginRequest;
-import inspiration.member.request.TokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

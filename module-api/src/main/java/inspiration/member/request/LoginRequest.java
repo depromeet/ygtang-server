@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class LoginRequest {
 
-    @NotNull
+    @NotNull @Valid
     private String password;
 
     @NotNull @Email(message = "올바른 이메일 주소를 입력해주세요.")
