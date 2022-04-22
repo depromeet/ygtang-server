@@ -30,5 +30,5 @@ else
     echo running process not found.
 fi
 
-nohup java -jar -Duser.timezone=Asia/Seoul -Dspring.profiles.active=local ${APP_PATH}/source/${PROJECT_NAME}-${VERSION}.jar > ${APP_PATH}/log/${PROJECT_NAME}.log 2>&1 &
+nohup java -jar -Duser.timezone=Asia/Seoul -Dspring.profiles.active=${ACTIVE} ${APP_PATH}/source/${PROJECT_NAME}-${VERSION}.jar > ${APP_PATH}/log/${PROJECT_NAME}.log 2>&1 &
 exit 0
