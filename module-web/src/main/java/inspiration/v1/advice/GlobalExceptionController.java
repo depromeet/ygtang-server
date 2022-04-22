@@ -1,5 +1,6 @@
 package inspiration.v1.advice;
 
+import inspiration.exception.ConflictRequestException;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.EmailNotAuthenticatedException;
 import inspiration.exception.PostNotFoundException;
@@ -66,6 +67,15 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(EmailAuthenticatedTimeExpiredException.class)
     private ErrorResponse handleEmailAuthenticatedTimeExpiredException(EmailAuthenticatedTimeExpiredException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictRequestException.class)
+    private ErrorResponse handleConflictRequestException(ConflictRequestException exception) {
         String message = exception.getMessage();
         log.debug(message, exception);
 

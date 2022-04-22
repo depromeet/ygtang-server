@@ -1,4 +1,4 @@
-package inspiration.member;
+package inspiration;
 
 public class ResultResponse {
 

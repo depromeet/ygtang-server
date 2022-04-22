@@ -26,7 +26,7 @@ public class EmailAuthService {
     @Transactional
     public void confirmEmail(ConfirmEmailRequest request) {
 
-        isAuth(request.getEmail());
+        isEmailAuth(request.getEmail());
 
         String authToken = AuthTokenUtil.getAuthToken();
 
@@ -54,7 +54,7 @@ public class EmailAuthService {
         return PolicyRedirectViewUtil.redirectView();
     }
 
-    private void isAuth(String email) {
+    private void isEmailAuth(String email) {
         if (emailAuthRepository.findByEmail(email).isPresent()) {
             throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
         }
