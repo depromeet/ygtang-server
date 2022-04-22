@@ -31,6 +31,9 @@ spring:
     auth-mail: ${AUTH_MAIL}
     auth-token: ${AUTH_TOKEN}
 
+  jwt:
+    secret: ${SECRET_KEY}
+
 #logging:
 #  level:
 #    root: debug
