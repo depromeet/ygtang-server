@@ -2,14 +2,17 @@ buildscript {
     ext {
         springBootVersion = '2.6.5'
     }
+
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath "io.spring.gradle:dependency-management-plugin:1.0.10.RELEASE"
     }
 }
+
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -24,8 +27,16 @@ subprojects {
         mavenCentral()
     }
 
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
     dependencies {
         // spring
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
 
         // test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -35,3 +46,4 @@ subprojects {
         useJUnitPlatform()
     }
 }
+

@@ -9,10 +9,14 @@ jar {
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
-    api project(':module-api')
-    api project(':module-common')
+    implementation project(':module-common')
+    implementation project(':module-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    implementation("io.springfox:springfox-swagger2:2.9.2")
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

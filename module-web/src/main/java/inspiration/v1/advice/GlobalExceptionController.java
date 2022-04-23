@@ -1,5 +1,7 @@
 package inspiration.v1.advice;
 
+import inspiration.exception.EmailAuthenticatedTimeExpiredException;
+import inspiration.exception.EmailNotAuthenticatedException;
 import inspiration.exception.PostNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,6 +48,24 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     protected ErrorResponse handleNotFoundException(PostNotFoundException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(EmailNotAuthenticatedException.class)
+    private ErrorResponse handleEmailNotAuthenticatedException(EmailNotAuthenticatedException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(EmailAuthenticatedTimeExpiredException.class)
+    private ErrorResponse handleEmailAuthenticatedTimeExpiredException(EmailAuthenticatedTimeExpiredException exception) {
         String message = exception.getMessage();
         log.debug(message, exception);
 
