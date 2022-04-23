@@ -31,6 +31,7 @@ public class MemberService {
 
         isEmailAuth(request.getEmail());
         duplicationEmailCheck(request);
+        confirmPasswordCheck(request.getConfirmPassword(), request.getPassword());
 
         return memberRepository.save(request.toEntity(passwordEncoder)).getId();
     }
@@ -38,6 +39,12 @@ public class MemberService {
     private void duplicationEmailCheck(SignUpRequest request) {
         if (memberRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
+        }
+    }
+
+    private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
+        if (!confirmPasswordCheck.equals(password)) {
+            throw new PostNotFoundException(ExceptionType.VALID_NOT_PASSWORD.getMessage());
         }
     }
 
