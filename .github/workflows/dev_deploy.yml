@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: inspiration
+
+on: 
+  workflow_dispatch: 
+
+env:
+  S3_BUCKET_NAME: depromeet11th
+  PROJECT_LOCATION: 7team/deploy
+  PROJECT_NAME: inspiration
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest 
+    
+    steps: 
+      - name: Checkout 
+        uses: actions/checkout@v2 
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1 
+        with: 
+          java-version: 17
+          
+      - name: Grant execute permission for gradlew 
+        run: chmod +x gradlew 
+        shell: bash 
+        
+      - name: Build with Gradle 
+        run: ./gradlew build 
+        shell: bash
+    
+      - name: Make zip file 
+        run: zip -r ./$GITHUB_SHA.zip . 
+        shell: bash 
+
+
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1 
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: ${{ secrets.AWS_REGION }} 
+          
+      - name: Upload to S3 
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy 
+        run: aws deploy create-deployment --application-name 7-Team-CodeDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Dev_7-Team-DeployGroup --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip

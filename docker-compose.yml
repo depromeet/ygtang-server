@@ -1,0 +1,14 @@
+version: "3"
+services:
+  spring1:
+    build: .
+    image: spring
+    container_name: ${ACTIVE}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./build/libs/:/root/
+    environment:
+      active: ${ACTIVE}
+      project_name: ${PROJECT_NAME}
+      version: ${VERSION}
