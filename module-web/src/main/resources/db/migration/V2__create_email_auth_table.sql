@@ -1,7 +1,10 @@
-create table email_auth
+create table member
 (
-    email_auth_id bigint       not null  auto_increment,
-    is_auth          Boolean      not null,
-    email         varchar(255) not null,
-    primary key (email_auth_id)
+    member_id    bigint       not null auto_increment,
+    created_date datetime(6),
+    updated_date datetime(6),
+    email        varchar(255) not null,
+    nickname     varchar(255) not null,
+    password     varchar(255) not null,
+    primary key (member_id)
 ) engine=InnoDB
