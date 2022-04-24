@@ -5,6 +5,34 @@ spring:
   application:
     name: inspriation
 
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    show-sql: true
+    format_sql: true
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    auth-mail: ${AUTH_MAIL}
+    auth-token: ${AUTH_TOKEN}
+
+  jwt:
+    secret: ${SECRET_KEY}
+
 logging:
   level:
     root: debug
