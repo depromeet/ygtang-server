@@ -42,7 +42,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/members/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/members/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/v1/members/**").permitAll()
                 .anyRequest().hasRole("USER")
 
