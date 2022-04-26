@@ -54,12 +54,6 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        Cookie cookie = new Cookie("accessToken", accessToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(Math.toIntExact(accessTokenValidMillisecond));
-        httpServletResponse.addCookie(cookie);
-
-
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
