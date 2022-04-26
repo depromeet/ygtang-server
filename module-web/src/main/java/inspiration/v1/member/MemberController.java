@@ -35,7 +35,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
+    @ApiOperation(value = "회원가입 / cd test", notes = "회원가입을 합니다.")
     public Long singUp(@RequestBody SignUpRequest request) {
         return memberService.signUp(request);
     }
