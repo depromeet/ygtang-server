@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
@@ -43,8 +46,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/v1/members/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/members/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/v1/members/**").permitAll()
-                .anyRequest().hasRole("USER")
-
 
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
@@ -54,5 +55,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/members/**");
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        configuration.addAllowedOrigin("13.125.36.7");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(7200L);
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }

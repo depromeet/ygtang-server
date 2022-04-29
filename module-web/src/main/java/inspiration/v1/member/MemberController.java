@@ -58,10 +58,4 @@ public class MemberController {
     public RedirectView emailAuth(@ModelAttribute EmailAuthRequest request) {
         return emailAuthService.emailAuth(request);
     }
-
-    @GetMapping("/test")
-    @ApiOperation(value = "테스트", notes = "테스트 api 입니다.")
-    public String test() {
-        return "hello";
-    }
 }
