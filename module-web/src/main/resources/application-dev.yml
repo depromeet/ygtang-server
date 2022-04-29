@@ -20,7 +20,7 @@ spring:
 
   redis:
     host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+    port: 6397
 
   mail:
     host: ${MAIL_HOST}
