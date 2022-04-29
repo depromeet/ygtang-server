@@ -56,19 +56,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/members/**");
     }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        configuration.addAllowedOrigin("13.125.36.7");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(7200L);
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
 }
