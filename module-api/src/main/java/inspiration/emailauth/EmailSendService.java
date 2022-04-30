@@ -31,7 +31,7 @@ public class EmailSendService {
 
             mailSender.send(simpleMailMessage);
         } catch (Exception e) {
-            log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e.getMessage());
+            log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e);
             throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
         }
     }
