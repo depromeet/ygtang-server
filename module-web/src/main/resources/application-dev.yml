@@ -25,7 +25,7 @@ spring:
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
+    username: yeonggamt@gmail.com
     password: ktmygrzezaeyfnvv
     auth-mail: ${AUTH_MAIL}
     auth-token: ${AUTH_TOKEN}
