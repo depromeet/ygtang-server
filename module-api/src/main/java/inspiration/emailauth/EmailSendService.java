@@ -21,7 +21,7 @@ public class EmailSendService {
     private final MailProperties mailProperties;
     private final static String SUBJECT = "회원가입 이메일 인증";
 
-    @Async
+    //@Async
     public void send(String email, String authToken) {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -31,7 +31,7 @@ public class EmailSendService {
 
             mailSender.send(simpleMailMessage);
         } catch (Exception e) {
-            log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e);
+            log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e.getMessage());
             throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
         }
     }
