@@ -59,7 +59,6 @@ public class JwtProvider {
         cookie.setMaxAge(Math.toIntExact(accessTokenValidMillisecond));
         httpServletResponse.addCookie(cookie);
 
-
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
