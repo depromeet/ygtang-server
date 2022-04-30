@@ -1,10 +1,13 @@
 package inspiration.config.security;
 
+import inspiration.enumeration.ExceptionType;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,6 +36,7 @@ public class JwtProvider {
     private final Long accessTokenValidMillisecond = 60 * 60 * 1000L;
     private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private final UserDetailsService userDetailsService;
+    private Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
     @PostConstruct
     protected void init() {
@@ -91,7 +95,14 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        Cookie[] cookies = request.getCookies();
+        String accessToken = new String();
+        for(Cookie c: cookies) {
+            if(c.getName().equals("accessToken")) {
+                accessToken = c.getValue();
+            }
+        }
+        return accessToken;
     }
 
     public boolean validationToken(String token) {
