@@ -28,6 +28,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .host("13.125.36.7")
                 .apiInfo(this.apiInfo())
+                .host("13.125.36.7")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
