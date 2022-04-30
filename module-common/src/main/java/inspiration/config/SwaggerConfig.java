@@ -26,7 +26,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Bean
     public Docket commonApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .host("13.125.36.7")
+                .host("13.125.36.7:8080")
                 .apiInfo(this.apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
