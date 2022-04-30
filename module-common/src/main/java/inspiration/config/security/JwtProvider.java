@@ -33,13 +33,14 @@ public class JwtProvider {
     private final Long accessTokenValidMillisecond = 60 * 60 * 1000L;
     private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private final UserDetailsService userDetailsService;
+    private final HttpServletResponse httpServletResponse;
 
     @PostConstruct
     protected void init() {
         secretKey = Base64UrlCodec.BASE64URL.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createTokenDto(Long userPk, List<String> roles, HttpServletResponse httpServletResponse) {
+    public String createTokenDto(Long userPk, List<String> roles) {
 
         Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
         claims.put(ROLES, roles);
@@ -53,6 +54,7 @@ public class JwtProvider {
                 .setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
 
         Cookie cookie = new Cookie("accessToken", accessToken);
         cookie.setPath("/");

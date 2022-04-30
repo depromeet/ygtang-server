@@ -42,8 +42,8 @@ public class MemberController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 합니다.")
-    public void login(@RequestBody LoginRequest request, HttpServletResponse httpServletResponse) {
-        authService.login(request, httpServletResponse);
+    public void login(@RequestBody LoginRequest request) {
+        authService.login(request);
     }
 
     @GetMapping("/nicknames/{nickname}/exists")
