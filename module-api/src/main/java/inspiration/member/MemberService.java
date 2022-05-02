@@ -44,7 +44,7 @@ public class MemberService {
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
         if (!confirmPasswordCheck.equals(password)) {
-            throw new PostNotFoundException(ExceptionType.VALID_NOT_PASSWORD.getMessage());
+            throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
         }
     }
 

@@ -13,7 +13,7 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/authorization")
-    public void getMemberInfo() {
-        authService.getUserInfo();
+    public String getMemberInfo() {
+        return authService.getUserInfo();
     }
 }

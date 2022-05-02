@@ -8,19 +8,18 @@ import inspiration.member.Member;
 import inspiration.member.MemberRepository;
 import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final JwtProvider jwtProvider;
@@ -28,7 +27,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
-    private Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Transactional
     public void login(LoginRequest request, HttpServletResponse httpServletResponse) {
@@ -40,9 +38,17 @@ public class AuthService {
         refreshTokenSave(member.getId(), jwtProvider.createTokenDto(member.getId(), member.getRoles(), httpServletResponse));
     }
 
-    @Transactional
-    public void getUserInfo() {
-        loginUserCheck();
+    @Transactional(readOnly = true)
+    public String getUserInfo() {
+
+        memberRepository.findById(SecurityUtil.getCurrentMemberId())
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+
+        String userEmail = memberRepository.findById(SecurityUtil.getCurrentMemberId()).get().getEmail();
+
+        log.info("현재 로그인한 사용자: " + userEmail);
+
+        return userEmail;
     }
 
     private void refreshTokenSave(Long memberId, String refreshToken) {
@@ -56,12 +62,8 @@ public class AuthService {
 
     private void isValidPassword(String requestPassword, String realPassword) {
         if (!passwordEncoder.matches(requestPassword, realPassword))
-            throw new PostNotFoundException(ExceptionType.VALID_NOT_PASSWORD.getMessage());
+            throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
     }
 
-    private Member loginUserCheck() {
-        Optional<Member> member = memberRepository.findById(SecurityUtil.getCurrentMemberId());
-        logger.info("현재 로그인한 사용자: " + member.get().getEmail());
-        return member.orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
-    }
+
 }
