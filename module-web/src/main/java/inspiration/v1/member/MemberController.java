@@ -51,6 +51,7 @@ public class MemberController {
     @PostMapping("/reissue")
     @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
     public void reissue(@RequestHeader(value = "X-AUTH-TOKEN") String accessToken) {
+
         authService.reissue(accessToken);
     }
 
