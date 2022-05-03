@@ -42,6 +42,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 합니다.")
     public ResultResponse login(@RequestBody LoginRequest request) {
 
@@ -49,6 +50,7 @@ public class MemberController {
     }
 
     @PostMapping("/reissue")
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
     public ResultResponse reissue(
             @RequestHeader(value = "X-AUTH-TOKEN") String accessToken,
