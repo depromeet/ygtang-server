@@ -2,9 +2,10 @@ package inspiration.emailauth.request;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class EmailAuthRequest {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+public class authenticateEmailRequest {
 
     private String email;
 

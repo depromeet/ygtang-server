@@ -1,1 +1,0 @@
-INSERT INTO email_auth (email_auth_id, email, is_auth ) VALUE (1, 'yeonggamt@gmail.com', 1)

@@ -40,13 +40,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1/members/**").permitAll()
-
-                .antMatchers("/v2/api-docs", "/swagger-resources/**",
-                        "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/members/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/members/confirm-email").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/members/signup").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/members/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/members/nicknames/{nickname}/exists").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/members/auth-email").permitAll()
+                .anyRequest().hasRole("USER")
 
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
