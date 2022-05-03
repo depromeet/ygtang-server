@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResultResponse {
 
     private String message;
@@ -17,8 +16,18 @@ public class ResultResponse {
         this.message = message;
     }
 
+    private ResultResponse(String message, Object data) {
+        this.message = message;
+        this.data = data;
+    }
+
     public static ResultResponse of(String message) {
 
         return new ResultResponse(message);
+    }
+
+    public static ResultResponse of(String message, Object data) {
+
+        return new ResultResponse(message, data);
     }
 }

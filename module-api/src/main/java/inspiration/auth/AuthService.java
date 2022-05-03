@@ -1,7 +1,9 @@
 package inspiration.auth;
 
+import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
 import inspiration.config.security.JwtProvider;
+import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
@@ -29,20 +31,27 @@ public class AuthService {
     private final String refreshTokenKey = "refreshToken : ";
 
     @Transactional
-    public void login(LoginRequest request) {
+    public ResultResponse login(LoginRequest request) {
 
         Member member = checkEmail(request.getEmail());
 
         isValidPassword(request.getPassword(), member.getPassword());
 
-        refreshTokenSave(member.getId(), jwtProvider.createTokenDto(member.getId(), member.getRoles()));
+        TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+
+        refreshTokenSave(member.getId(), tokenResponse.getRefreshToken());
+
+        return ResultResponse.of("엑세스 토큰, 리프레시 토큰 발급", tokenResponse);
     }
 
     @Transactional
-    public void reissue(String accessToken) {
-        System.out.println(accessToken);
+    public ResultResponse reissue(String accessTokenRequest, String refreshTokenRequest) {
 
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        if (!jwtProvider.validationToken(refreshTokenRequest)) {
+            throw new RefreshTokenException();
+        }
+
+        Authentication authentication = jwtProvider.getAuthentication(accessTokenRequest);
 
         Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
@@ -53,9 +62,14 @@ public class AuthService {
             throw new RefreshTokenException();
         }
 
-        String newCreatedToken = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        if (!refreshToken.equals(refreshTokenRequest))
+            throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
 
-        refreshTokenSave(member.getId(), newCreatedToken);
+        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+
+        refreshTokenSave(member.getId(), newTokenResponse.getRefreshToken());
+
+        return ResultResponse.of("엑세스 토큰, 리프레시 토큰 발급", newTokenResponse);
     }
 
     private void refreshTokenSave(Long memberId, String refreshToken) {

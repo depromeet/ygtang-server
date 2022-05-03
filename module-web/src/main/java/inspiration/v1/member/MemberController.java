@@ -43,16 +43,19 @@ public class MemberController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 합니다.")
-    public void login(@RequestBody LoginRequest request) {
+    public ResultResponse login(@RequestBody LoginRequest request) {
 
-        authService.login(request);
+        return authService.login(request);
     }
 
     @PostMapping("/reissue")
     @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
-    public void reissue(@RequestHeader(value = "X-AUTH-TOKEN") String accessToken) {
+    public ResultResponse reissue(
+            @RequestHeader(value = "X-AUTH-TOKEN") String accessToken,
+            @RequestHeader(value = "REFRESH-TOKEN") String refreshToken
+    ) {
 
-        authService.reissue(accessToken);
+        return authService.reissue(accessToken, refreshToken);
     }
 
     @GetMapping("/nicknames/{nickname}/exists")
