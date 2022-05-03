@@ -72,6 +72,13 @@ public class MemberController {
         return emailAuthService.authenticateEmail(request);
     }
 
+    @GetMapping("/auth-email/{email}/status")
+    @ApiOperation(value = "해당 이메일의 인증 상태 여부 반환", notes = "해당 이메일의 인증 상태 여부를 반환한다.")
+    public ResultResponse validAuthenticateEmailStatus(@PathVariable String email) {
+
+        return emailAuthService.validAuthenticateEmailStatus(email);
+    }
+
     @GetMapping("/test")
     @ApiOperation(value = "테스트", notes = "테스트 api 입니다.")
     public String test() {

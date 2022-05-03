@@ -1,13 +1,11 @@
 package inspiration.emailauth;
 
+import inspiration.ResultResponse;
 import inspiration.emailauth.request.authenticateEmailRequest;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.RedisKey;
-import inspiration.exception.ConflictRequestException;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
-import inspiration.member.MemberRepository;
-import inspiration.member.MemberService;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
@@ -27,7 +25,9 @@ public class EmailAuthService {
     @Transactional
     public void sendEmail(String email) {
 
-        isEmailAuth(email);
+        if (emailAuthRepository.existsByEmail(email)) {
+            throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
+        }
 
         String authToken = AuthTokenUtil.getAuthToken();
 
@@ -56,10 +56,12 @@ public class EmailAuthService {
         return PolicyRedirectViewUtil.redirectView();
     }
 
-    private void isEmailAuth(String email) {
+    public ResultResponse validAuthenticateEmailStatus(String email) {
 
         if (emailAuthRepository.existsByEmail(email)) {
-            throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
+            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
         }
+
+        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
     }
 }
