@@ -1,5 +1,7 @@
 package inspiration.config.security;
 
+import inspiration.enumeration.ExpireTimeConstants;
+import inspiration.enumeration.TokenType;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
@@ -30,8 +31,6 @@ public class JwtProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
     private String ROLES = "roles";
-    private final Long accessTokenValidMillisecond = 60 * 60 * 1000L;
-    private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private final UserDetailsService userDetailsService;
     private final HttpServletResponse httpServletResponse;
 
@@ -40,7 +39,7 @@ public class JwtProvider {
         secretKey = Base64UrlCodec.BASE64URL.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createTokenDto(Long userPk, List<String> roles) {
+    public TokenResponse createTokenDto(Long userPk, List<String> roles) {
 
         Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
         claims.put(ROLES, roles);
@@ -51,23 +50,28 @@ public class JwtProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-
-        Cookie cookie = new Cookie("accessToken", accessToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(Math.toIntExact(accessTokenValidMillisecond));
-        httpServletResponse.addCookie(cookie);
+        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        return refreshToken;
+        Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
+        httpServletResponse.addCookie(cookie);
+
+        return TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                .build();
     }
 
     public Authentication getAuthentication(String token) {
@@ -92,7 +96,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(TokenType.X_AUTH_TOKEN.getMessage());
     }
 
     public boolean validationToken(String token) {
