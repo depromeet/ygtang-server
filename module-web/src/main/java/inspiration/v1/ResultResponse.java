@@ -14,7 +14,7 @@ public class ResultResponse {
         this.message = message;
     }
 
-    public static ResultResponse of(String message) {
+    public static ResultResponse from(String message) {
 
         return new ResultResponse(message);
     }

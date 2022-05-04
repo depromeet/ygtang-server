@@ -20,25 +20,25 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public ResultResponse confirmNickName(String nickname) {
+    public ResultResponse checkNickName(String nickname) {
 
-        existsByNickName(nickname);
+        isValidNickName(nickname);
 
-        return ResultResponse.of("사용할 수 있는 닉네임입니다.");
+        return ResultResponse.from("사용할 수 있는 닉네임입니다.");
     }
 
     @Transactional
     public Long signUp(SignUpRequest request) {
 
-        isEmailAuth(request.getEmail());
-        duplicationEmailCheck(request.getEmail());
-        existsByNickName(request.getNickName());
+        verifyEmail(request.getEmail());
+        isValidEmail(request.getEmail());
+        isValidNickName(request.getNickName());
         confirmPasswordCheck(request.getConfirmPassword(), request.getPassword());
 
         return memberRepository.save(request.toEntity(passwordEncoder)).getId();
     }
 
-    private void duplicationEmailCheck(String email) {
+    private void isValidEmail(String email) {
 
         if (memberRepository.existsByEmail(email)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
@@ -52,14 +52,14 @@ public class MemberService {
         }
     }
 
-    private void isEmailAuth(String email) {
+    private void verifyEmail(String email) {
 
         if (!emailAuthRepository.existsByEmail(email)) {
             throw new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage());
         }
     }
 
-    private void existsByNickName(String nickName) {
+    private void isValidNickName(String nickName) {
 
         if (memberRepository.existsByNickname(nickName)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_NICKNAME.getMessage());

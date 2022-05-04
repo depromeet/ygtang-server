@@ -1,5 +1,7 @@
 package inspiration.config.security;
 
+import inspiration.enumeration.ExpireTimeConstants;
+import inspiration.enumeration.TokenType;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
@@ -29,8 +31,6 @@ public class JwtProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
     private String ROLES = "roles";
-    private final Long accessTokenValidMillisecond = 60 * 60 * 1000L;
-    private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private final UserDetailsService userDetailsService;
     private final HttpServletResponse httpServletResponse;
 
@@ -50,28 +50,28 @@ public class JwtProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        httpServletResponse.setHeader("accessToken", accessToken);
+        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
         cookie.setPath("/");
-        cookie.setMaxAge(Math.toIntExact(accessTokenValidMillisecond));
+        cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
         cookie.setHttpOnly(true);
         httpServletResponse.addCookie(cookie);
 
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpireDate(accessTokenValidMillisecond)
+                .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
                 .build();
     }
 
@@ -97,7 +97,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(TokenType.X_AUTH_TOKEN.getMessage());
     }
 
     public boolean validationToken(String token) {

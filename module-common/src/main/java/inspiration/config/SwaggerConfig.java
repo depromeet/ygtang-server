@@ -1,6 +1,8 @@
 package inspiration.config;
 
 import com.google.common.collect.Lists;
+import inspiration.enumeration.HttpHeaderType;
+import inspiration.enumeration.TokenType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -24,6 +26,7 @@ import java.util.List;
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     private ApiInfo apiInfo() {
+
         return new ApiInfoBuilder()
                 .title("영감탱 API")
                 .description("영감탱 API 서버입니다.")
@@ -32,9 +35,10 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket commonApi() {
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(this.apiInfo())
-//                .host("13.125.36.7")
+                .host("13.125.36.7")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
@@ -44,23 +48,25 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("JWT", "accessToken", "header");
+
+        return new ApiKey(TokenType.JWT.getMessage(), TokenType.ACCESS_TOKEN.getMessage(), HttpHeaderType.HEADER.getMessage());
     }
 
     private SecurityContext securityContext() {
+
         return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
 
     List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
 
-        return Lists.newArrayList(new SecurityReference("JWT", authorizationScopes));
+        AuthorizationScope[] authorizationScopes = {new AuthorizationScope("global", "accessEverything")};
+
+        return Lists.newArrayList(new SecurityReference(TokenType.JWT.getMessage(), authorizationScopes));
     }
 
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")

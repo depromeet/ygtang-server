@@ -5,6 +5,7 @@ import inspiration.auth.request.LoginRequest;
 import inspiration.config.security.JwtProvider;
 import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
+import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
 import inspiration.member.Member;
@@ -27,21 +28,21 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private final String refreshTokenKey = "refreshToken : ";
+    private final String issueToken = "refreshToken : ";
 
     @Transactional
     public ResultResponse login(LoginRequest request) {
 
         Member member = checkEmail(request.getEmail());
 
-        isValidPassword(request.getPassword(), member.getPassword());
+        verifyPassword(request.getPassword(), member.getPassword());
 
         TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
 
-        refreshTokenSave(member.getId(), tokenResponse.getRefreshToken());
+        saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
 
-        return ResultResponse.of("엑세스 토큰, 리프레시 토큰 발급", tokenResponse);
+        return ResultResponse.of(issueToken, tokenResponse);
     }
 
     @Transactional
@@ -62,19 +63,20 @@ public class AuthService {
             throw new RefreshTokenException();
         }
 
-        if (!refreshToken.equals(refreshTokenRequest))
+        if (!refreshToken.equals(refreshTokenRequest)) {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
+        }
 
         TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
 
-        refreshTokenSave(member.getId(), newTokenResponse.getRefreshToken());
+        saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
 
-        return ResultResponse.of("엑세스 토큰, 리프레시 토큰 발급", newTokenResponse);
+        return ResultResponse.of(issueToken, newTokenResponse);
     }
 
-    private void refreshTokenSave(Long memberId, String refreshToken) {
+    private void saveRefreshToken(Long memberId, String refreshToken) {
 
-        redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
     }
 
     private Member checkEmail(String email) {
@@ -82,9 +84,10 @@ public class AuthService {
         return memberRepository.findByEmail(email).orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIl_NOT_FOUND.getMessage()));
     }
 
-    private void isValidPassword(String requestPassword, String realPassword) {
+    private void verifyPassword(String requestPassword, String realPassword) {
 
-        if (!passwordEncoder.matches(requestPassword, realPassword))
+        if (!passwordEncoder.matches(requestPassword, realPassword)) {
             throw new PostNotFoundException(ExceptionType.VALID_NOT_PASSWORD.getMessage());
+        }
     }
 }

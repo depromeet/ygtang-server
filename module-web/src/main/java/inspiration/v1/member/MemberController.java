@@ -4,7 +4,7 @@ import inspiration.ResultResponse;
 import inspiration.auth.AuthService;
 import inspiration.auth.request.LoginRequest;
 import inspiration.emailauth.request.SendEmailRequest;
-import inspiration.emailauth.request.authenticateEmailRequest;
+import inspiration.emailauth.request.AuthenticateEmailRequest;
 import inspiration.emailauth.EmailAuthService;
 import inspiration.member.MemberService;
 import inspiration.member.request.SignUpRequest;
@@ -49,29 +49,18 @@ public class MemberController {
         return authService.login(request);
     }
 
-    @PostMapping("/reissue")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
-    public ResultResponse reissue(
-            @RequestHeader(value = "X-AUTH-TOKEN") String accessToken,
-            @RequestHeader(value = "REFRESH-TOKEN") String refreshToken
-    ) {
-
-        return authService.reissue(accessToken, refreshToken);
-    }
-
     @GetMapping("/nicknames/{nickname}/exists")
     @ApiOperation(value = "닉네임 중복 확인", notes = "중복된 닉네임이 있는지 검사합니다.")
-    public ResultResponse confirmNickname(@PathVariable String nickname) {
+    public ResultResponse checkNickname(@PathVariable String nickname) {
 
-        return memberService.confirmNickName(nickname);
+        return memberService.checkNickName(nickname);
     }
 
     @GetMapping("/auth-email")
     @ApiOperation(value = "이메일 인증.", notes = "링크를 클릭하면 이메일 인증에 성공한다.")
-    public RedirectView authenticateEmail(@ModelAttribute authenticateEmailRequest request) {
+    public RedirectView authenticateEmail(@ModelAttribute AuthenticateEmailRequest request) {
 
-        return emailAuthService.authenticateEmail(request);
+        return emailAuthService.authenticateEmail(request.getEmail());
     }
 
     @GetMapping("/test")

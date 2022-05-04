@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,11 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/confirm-email").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/signup").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/members/nicknames/{nickname}/exists").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/members/auth-email").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/members/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/members/*").permitAll()
                 .anyRequest().hasRole("USER")
 
                 .and()

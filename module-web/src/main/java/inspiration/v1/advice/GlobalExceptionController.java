@@ -23,7 +23,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,7 +32,7 @@ public class GlobalExceptionController {
         String message = Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -41,7 +41,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -50,7 +50,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -59,7 +59,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -68,7 +68,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -77,7 +77,7 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -86,6 +86,6 @@ public class GlobalExceptionController {
         String message = exception.getMessage();
         log.debug(message, exception);
 
-        return ResultResponse.of(message);
+        return ResultResponse.from(message);
     }
 }

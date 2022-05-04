@@ -5,9 +5,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class authenticateEmailRequest {
+public class AuthenticateEmailRequest {
 
     private String email;
-
-    private String authToken;
 }
