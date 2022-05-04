@@ -1,8 +1,7 @@
 package inspiration.emailauth;
 
-import inspiration.emailauth.request.ConfirmEmailRequest;
-import inspiration.emailauth.request.EmailAuthRequest;
 import inspiration.enumeration.ExceptionType;
+import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
@@ -23,38 +22,40 @@ public class EmailAuthService {
     private final RedisService redisService;
 
     @Transactional
-    public void confirmEmail(ConfirmEmailRequest request) {
+    public void sendEmail(String email) {
 
-        isEmailAuth(request.getEmail());
+        verifyEmail(email);
 
         String authToken = AuthTokenUtil.getAuthToken();
 
-        redisService.setDataWithExpiration(RedisKey.EAUTH.getKey() + request.getEmail(), authToken, 60 * 5L);
+        redisService.setDataWithExpiration(RedisKey.EAUTH.getKey() + email, authToken, ExpireTimeConstants.expireAccessTokenTime);
 
-        emailSendService.send(request.getEmail(), authToken);
+        emailSendService.send(email, authToken);
     }
 
     @Transactional
-    public RedirectView emailAuth(EmailAuthRequest request) {
+    public RedirectView authenticateEmail(String email) {
 
-        String expiredKey = RedisKey.EAUTH.getKey() + request.getEmail();
+        String expiredKey = RedisKey.EAUTH.getKey() + email;
 
-        if (redisService.getData(expiredKey) == null)
+        if (redisService.getData(expiredKey) == null) {
             throw new EmailAuthenticatedTimeExpiredException();
+        }
 
         redisService.deleteData(expiredKey);
 
         emailAuthRepository.save(
                 EmailAuth.builder()
-                        .email(request.getEmail())
+                        .email(email)
                         .isAuth(true)
                         .build());
 
         return PolicyRedirectViewUtil.redirectView();
     }
 
-    private void isEmailAuth(String email) {
-        if (emailAuthRepository.findByEmail(email).isPresent()) {
+    private void verifyEmail(String email) {
+
+        if (emailAuthRepository.existsByEmail(email)) {
             throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
         }
     }
