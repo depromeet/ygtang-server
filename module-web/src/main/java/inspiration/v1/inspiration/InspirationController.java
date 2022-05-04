@@ -49,8 +49,8 @@ public class InspirationController {
             @ApiResponse(code = 201, message = "정상적으로 등록되었습니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationAdd(HttpServletRequest httpServletRequest,  @RequestPart(required = false) List<MultipartFile> files, @ModelAttribute @Valid InspirationAddRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
-        Long id = inspirationService.addInspiration(request, files, memberId);
+    public ResponseEntity<ResultResponse> inspirationAdd(HttpServletRequest httpServletRequest, @ModelAttribute @Valid InspirationAddRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+        Long id = inspirationService.addInspiration(request, memberId);
 
         final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + id);
         return ResponseEntity.created(uri).build();

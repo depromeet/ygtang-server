@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,16 +45,16 @@ public class InspirationService {
         return inspirationPage.map(InspirationResponse::from);
     }
 
-    public Long addInspiration(InspirationAddRequest request, List<MultipartFile> multipartFiles, Long memberId) {
+    public Long addInspiration(InspirationAddRequest request,  Long memberId) {
 
         Member member = memberService.findById(memberId);
         Inspiration inspiration = request.toEntity();
         inspiration.writeBy(member);
         if (request.getType() == InspirationType.IMAGE) {
-            if(multipartFiles.isEmpty()){
+            if(request.getFile() == null){
                 throw new IllegalArgumentException("IMAGE 타입은 파일을 업로드 해야합니다.");
             }
-            fileUpload(inspiration, multipartFiles);
+            fileUpload(inspiration, Arrays.asList(request.getFile()));
         }
         return inspirationRepository.save(inspiration).getId();
     }
