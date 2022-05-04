@@ -75,6 +75,7 @@ public class JwtProvider {
             throw new UnauthorizedAccessRequestException();
         }
 
+        System.out.println("claims = " + claims);
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
@@ -104,6 +105,7 @@ public class JwtProvider {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");
+            return true;
         } catch (UnsupportedJwtException e) {
             log.error("지원하지 않는 토큰입니다.");
         } catch (IllegalArgumentException e) {
