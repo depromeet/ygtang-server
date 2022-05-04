@@ -65,7 +65,6 @@ public class JwtProvider {
         Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
         cookie.setPath("/");
         cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
-        cookie.setHttpOnly(true);
         httpServletResponse.addCookie(cookie);
 
         return TokenResponse.builder()
