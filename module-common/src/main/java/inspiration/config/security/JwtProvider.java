@@ -74,7 +74,6 @@ public class JwtProvider {
         if (claims.get(ROLES) == null) {
             throw new UnauthorizedAccessRequestException();
         }
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
