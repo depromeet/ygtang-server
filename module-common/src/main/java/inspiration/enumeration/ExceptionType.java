@@ -22,7 +22,15 @@ public enum ExceptionType {
 
     EMAIL_AUTHENTICATED_TIME_HAS_EXPIRED("이메일 인증 링크의 유효시간이 만료되었습니다."),
 
-    FAILED_TO_SEND_MAIL("메일 전송에 실패하였습니다.");
+    FAILED_TO_SEND_MAIL("메일 전송에 실패하였습니다."),
+
+    RESOURCE_NOT_FOUND("해당 리소스를 찾을 수 없습니다."),
+
+    INVALID_TOKEN("토큰이 유효하지 않습니다."),
+
+    INVALID_MEMBER("유효한 사용자가 아닙니다."),
+
+    NO_ACCESS_AUTHORIZATION("해당 리소스에 접근 권한이 없습니다.");
 
     private final String message;
 

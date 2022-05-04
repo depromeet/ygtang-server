@@ -5,7 +5,6 @@ import inspiration.emailauth.request.EmailAuthRequest;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
-import inspiration.exception.EmailNotAuthenticatedException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;

@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.lang.String;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -72,13 +71,11 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
 
         Claims claims = parseClaims(token);
-
         if (claims.get(ROLES) == null) {
             throw new UnauthorizedAccessRequestException();
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -91,7 +88,12 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        Cookie[] cookies = request.getCookies();
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("accessToken"))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow();
     }
 
     public boolean validationToken(String token) {

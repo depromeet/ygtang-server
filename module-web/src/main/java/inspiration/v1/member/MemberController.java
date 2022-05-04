@@ -2,9 +2,9 @@ package inspiration.v1.member;
 
 import inspiration.auth.AuthService;
 import inspiration.auth.request.LoginRequest;
+import inspiration.emailauth.EmailAuthService;
 import inspiration.emailauth.request.ConfirmEmailRequest;
 import inspiration.emailauth.request.EmailAuthRequest;
-import inspiration.emailauth.EmailAuthService;
 import inspiration.member.MemberService;
 import inspiration.member.request.SignUpRequest;
 import inspiration.member.response.NicknameResponse;

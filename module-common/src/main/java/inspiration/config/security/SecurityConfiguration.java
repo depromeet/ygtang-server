@@ -11,11 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
+    public static final String [] ALLOWED_URI_PATTERN = {"/api/v1/members"};
 
     @Bean
     @Override
@@ -39,11 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/members/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1/members/**").permitAll()
+                .antMatchers(HttpMethod.POST, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.GET, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.DELETE, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.POST, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.PUT, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .anyRequest().hasRole("USER")
 
 
@@ -56,4 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**");
     }
+    private String[] addMatchers(String[] patterns) {
+        return Arrays.stream(patterns).map(pattern -> pattern.concat("/**")).collect(Collectors.toList()).toArray(String[]::new);
+    }
+
 }
