@@ -42,8 +42,8 @@ public class MemberController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 합니다.")
-    public void login(@RequestBody LoginRequest request, HttpServletResponse httpServletResponse) {
-        authService.login(request, httpServletResponse);
+    public void login(@RequestBody LoginRequest request) {
+        authService.login(request);
     }
 
     @GetMapping("/nicknames/{nickname}/exists")
@@ -57,5 +57,11 @@ public class MemberController {
     @ApiOperation(value = "이메일 인증.", notes = "링크를 클릭하면 이메일 인증에 성공한다.")
     public RedirectView emailAuth(@ModelAttribute EmailAuthRequest request) {
         return emailAuthService.emailAuth(request);
+    }
+
+    @GetMapping("/test")
+    @ApiOperation(value = "테스트", notes = "테스트 api 입니다.")
+    public String test() {
+        return "hello";
     }
 }

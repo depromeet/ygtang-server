@@ -26,13 +26,13 @@ public class AuthService {
     private final Long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
 
     @Transactional
-    public void login(LoginRequest request, HttpServletResponse httpServletResponse) {
+    public void login(LoginRequest request) {
 
         Member member = existsEmailCheck(request.getEmail());
 
         isValidPassword(request.getPassword(), member.getPassword());
 
-        refreshTokenSave(member.getId(), jwtProvider.createTokenDto(member.getId(), member.getRoles(), httpServletResponse));
+        refreshTokenSave(member.getId(), jwtProvider.createTokenDto(member.getId(), member.getRoles()));
     }
 
     private void refreshTokenSave(Long memberId, String refreshToken) {
