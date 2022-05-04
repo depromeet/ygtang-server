@@ -1,7 +1,7 @@
 package inspiration.v1.advice;
 
 import inspiration.exception.*;
-import inspiration.ResultResponse;
+import inspiration.v1.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -65,6 +65,34 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(EmailAuthenticatedTimeExpiredException.class)
     private ResultResponse handleEmailAuthenticatedTimeExpiredException(EmailAuthenticatedTimeExpiredException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ResultResponse.from(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedAccessRequestException.class)
+    private ResultResponse handleUnauthorizedAccessRequestException(UnauthorizedAccessRequestException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ResultResponse.from(message);
+    }
+
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidTokenException.class)
+    private ResultResponse handleInvalidTokenException(InvalidTokenException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ResultResponse.from(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(NoAccessAuthorizationException.class)
+    private ResultResponse handleNoAccessAuthorizationException(NoAccessAuthorizationException exception) {
         String message = exception.getMessage();
         log.debug(message, exception);
 

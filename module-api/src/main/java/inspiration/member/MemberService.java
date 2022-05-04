@@ -5,6 +5,7 @@ import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
+import inspiration.exception.UnauthorizedAccessRequestException;
 import inspiration.member.request.SignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,5 +65,10 @@ public class MemberService {
         if (memberRepository.existsByNickname(nickName)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_NICKNAME.getMessage());
         }
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(UnauthorizedAccessRequestException::new);
     }
 }

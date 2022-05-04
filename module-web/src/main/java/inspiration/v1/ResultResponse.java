@@ -14,8 +14,17 @@ public class ResultResponse {
         this.message = message;
     }
 
+    private ResultResponse(Object data){
+        this.data = data;
+    }
+
     public static ResultResponse from(String message) {
 
         return new ResultResponse(message);
+    }
+
+    public static ResultResponse from(Object data) {
+
+        return new ResultResponse(data);
     }
 }
