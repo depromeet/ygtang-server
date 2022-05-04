@@ -13,6 +13,7 @@ public class NicknameResponse {
     String message;
 
     public static NicknameResponse of() {
+
         return new NicknameResponse("사용 가능한 닉네임 입니다.");
     }
 }
