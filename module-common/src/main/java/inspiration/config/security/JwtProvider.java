@@ -96,7 +96,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(TokenType.X_AUTH_TOKEN.getMessage());
+        return request.getHeader(TokenType.ACCESS_TOKEN.getMessage());
     }
 
     public boolean validationToken(String token) {
