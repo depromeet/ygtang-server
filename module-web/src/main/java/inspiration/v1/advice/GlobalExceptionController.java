@@ -1,9 +1,6 @@
 package inspiration.v1.advice;
 
-import inspiration.exception.ConflictRequestException;
-import inspiration.exception.EmailAuthenticatedTimeExpiredException;
-import inspiration.exception.EmailNotAuthenticatedException;
-import inspiration.exception.PostNotFoundException;
+import inspiration.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -46,6 +43,15 @@ public class GlobalExceptionController {
         return ErrorResponse.of(message);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ErrorResponse handleResourceNotFoundException(ResourceNotFoundException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PostNotFoundException.class)
     protected ErrorResponse handleNotFoundException(PostNotFoundException exception) {
@@ -67,6 +73,34 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(EmailAuthenticatedTimeExpiredException.class)
     private ErrorResponse handleEmailAuthenticatedTimeExpiredException(EmailAuthenticatedTimeExpiredException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedAccessRequestException.class)
+    private ErrorResponse handleUnauthorizedAccessRequestException(UnauthorizedAccessRequestException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidTokenException.class)
+    private ErrorResponse handleInvalidTokenException(InvalidTokenException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ErrorResponse.of(message);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(NoAccessAuthorizationException.class)
+    private ErrorResponse handleNoAccessAuthorizationException(NoAccessAuthorizationException exception) {
         String message = exception.getMessage();
         log.debug(message, exception);
 

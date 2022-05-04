@@ -4,6 +4,7 @@ import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
+import inspiration.exception.UnauthorizedAccessRequestException;
 import inspiration.member.request.SignUpRequest;
 import inspiration.member.response.NicknameResponse;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,10 @@ public class MemberService {
         if (emailAuthRepository.findByEmail(email).isEmpty()) {
             throw new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage());
         }
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(UnauthorizedAccessRequestException::new);
     }
 }
