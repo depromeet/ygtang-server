@@ -1,5 +1,7 @@
 package inspiration.config.security;
 
+import inspiration.enumeration.ExceptionType;
+import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
@@ -91,15 +93,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-
-        String accessToken = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("accessToken"))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElseThrow(UnauthorizedAccessRequestException::new);
-
-        return accessToken;
+        return request.getHeader("accessToken");
     }
 
     public boolean validationToken(String token) {
