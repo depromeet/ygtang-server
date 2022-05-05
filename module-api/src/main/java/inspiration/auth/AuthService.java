@@ -10,17 +10,20 @@ import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
 import inspiration.member.Member;
 import inspiration.member.MemberRepository;
+import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final JwtProvider jwtProvider;
@@ -74,6 +77,18 @@ public class AuthService {
         return ResultResponse.of(issueToken, newTokenResponse);
     }
 
+    @Transactional(readOnly = true)
+    public String getUserInfo() {
+
+        memberRepository.findById(SecurityUtil.getCurrentMemberId())
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+
+        String userEmail = memberRepository.findById(SecurityUtil.getCurrentMemberId()).get().getEmail();
+
+        log.info("현재 로그인한 사용자: " + userEmail);
+
+        return userEmail;
+    }
     private void saveRefreshToken(Long memberId, String refreshToken) {
 
         redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
@@ -87,7 +102,9 @@ public class AuthService {
     private void verifyPassword(String requestPassword, String realPassword) {
 
         if (!passwordEncoder.matches(requestPassword, realPassword)) {
-            throw new PostNotFoundException(ExceptionType.VALID_NOT_PASSWORD.getMessage());
+            throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
         }
     }
+
+
 }
