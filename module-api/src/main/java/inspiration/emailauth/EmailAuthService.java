@@ -1,5 +1,6 @@
 package inspiration.emailauth;
 
+import inspiration.ResultResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
@@ -51,6 +52,16 @@ public class EmailAuthService {
                         .build());
 
         return PolicyRedirectViewUtil.redirectView();
+    }
+
+    public ResultResponse validAuthenticateEmailStatus(String email) {
+
+        if (emailAuthRepository.existsByEmail(email)) {
+
+            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
+        }
+
+        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
     }
 
     private void verifyEmail(String email) {
