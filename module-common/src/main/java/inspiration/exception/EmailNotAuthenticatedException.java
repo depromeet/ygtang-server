@@ -1,5 +1,6 @@
 package inspiration.exception;
 
+
 import inspiration.enumeration.ExceptionType;
 
 public class EmailNotAuthenticatedException extends RuntimeException {

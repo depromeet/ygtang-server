@@ -16,7 +16,9 @@ spring:
       ddl-auto: validate
     generate-ddl: false
     show-sql: true
-    format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   redis:
     host: ${REDIS_HOST}
@@ -33,8 +35,31 @@ spring:
   jwt:
     secret: ${SECRET_KEY}
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    s3:
+      bucket: ${S3_BUCKET}
+    stack:
+      auto: false
+
 logging:
   level:
     root: info
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
   pattern:
     console: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"

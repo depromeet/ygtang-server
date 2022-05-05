@@ -18,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
+
         return memberRepository.findById(Long.parseLong(userPk))
                 .orElseThrow(PostNotFoundException::new);
     }
