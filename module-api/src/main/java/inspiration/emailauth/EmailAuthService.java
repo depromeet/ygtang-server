@@ -3,8 +3,8 @@ package inspiration.emailauth;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
+import inspiration.exception.ConflictRequestException;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
-import inspiration.exception.PostNotFoundException;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
@@ -56,7 +56,7 @@ public class EmailAuthService {
     private void verifyEmail(String email) {
 
         if (emailAuthRepository.existsByEmail(email)) {
-            throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
+            throw new ConflictRequestException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
         }
     }
 }
