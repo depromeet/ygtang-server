@@ -14,6 +14,9 @@ import inspiration.member.MemberService;
 import inspiration.tag.Tag;
 import inspiration.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 
+@CacheConfig(cacheNames = "findInspirations")
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -34,6 +38,7 @@ public class InspirationService {
     private final AwsS3Service awsS3Service;
     private final MemberService memberService;
 
+    @Cacheable(value = "findInspirations")
     @Transactional(readOnly = true)
     public Page<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
 
@@ -41,17 +46,18 @@ public class InspirationService {
 
         Page<Inspiration> inspirationPage = inspirationRepository.findAllByIsDeletedAndMember(false, member, pageable);
         inspirationPage.stream()
-                    .forEach(inspiration -> inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
+                .forEach(inspiration -> inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
         return inspirationPage.map(InspirationResponse::from);
     }
 
-    public Long addInspiration(InspirationAddRequest request,  Long memberId) {
+    @CacheEvict(allEntries = true)
+    public Long addInspiration(InspirationAddRequest request, Long memberId) {
 
         Member member = memberService.findById(memberId);
         Inspiration inspiration = request.toEntity();
         inspiration.writeBy(member);
         if (request.getType() == InspirationType.IMAGE) {
-            if(request.getFile() == null){
+            if (request.getFile() == null) {
                 throw new IllegalArgumentException("IMAGE 타입은 파일을 업로드 해야합니다.");
             }
             fileUpload(inspiration, Arrays.asList(request.getFile()));
@@ -59,10 +65,11 @@ public class InspirationService {
         return inspirationRepository.save(inspiration).getId();
     }
 
+    @CacheEvict(allEntries = true)
     public Long modifyMemo(InspirationModifyRequest request, Long memberId) {
 
         Inspiration inspiration = inspirationRepository.findById(request.getId())
-                                                        .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(ResourceNotFoundException::new);
 
         if (!inspiration.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
@@ -71,9 +78,10 @@ public class InspirationService {
         return inspiration.getId();
     }
 
+    @CacheEvict(allEntries = true)
     public void removeInspiration(Long id, Long memberId) {
         Inspiration inspiration = inspirationRepository.findById(id)
-                                                        .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(ResourceNotFoundException::new);
 
         if (!inspiration.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
@@ -85,14 +93,14 @@ public class InspirationService {
     public Long tagInspiration(InspirationTagRequest request, Long memberId) {
 
         Inspiration inspiration = inspirationRepository.findById(request.getId())
-                                                        .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(ResourceNotFoundException::new);
 
         if (!inspiration.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
         }
 
         Tag tag = tagRepository.findById(request.getTagId())
-                                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(ResourceNotFoundException::new);
 
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
@@ -104,13 +112,13 @@ public class InspirationService {
 
     private void fileUpload(Inspiration inspiration, List<MultipartFile> multipartFiles) {
         List<String> fileNames = awsS3Service.uploadFile(multipartFiles);
-        if(!fileNames.isEmpty()){
+        if (!fileNames.isEmpty()) {
             inspiration.setFilePath(fileNames.get(0));
         }
     }
 
     private String getFilePath(InspirationType type, String content) {
-        if(type == InspirationType.IMAGE){
+        if (type == InspirationType.IMAGE) {
             return awsS3Service.getFilePath(content);
         }
         return content;
