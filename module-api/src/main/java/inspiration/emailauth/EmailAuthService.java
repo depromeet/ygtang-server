@@ -6,6 +6,8 @@ import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
+import inspiration.member.MemberRepository;
+import inspiration.member.MemberService;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
@@ -19,25 +21,36 @@ import org.springframework.web.servlet.view.RedirectView;
 public class EmailAuthService {
 
     private final EmailAuthRepository emailAuthRepository;
-    private final EmailSendService emailSendService;
+    private final SignUpEmailSendService signUpEmailSendService;
+    private final UpdatePasswordEmailSendService updatePasswordEmailSendService;
     private final RedisService redisService;
 
     @Transactional
-    public void sendEmail(String email) {
+    public void signUpEmailSend(String email) {
 
         verifyEmail(email);
 
         String authToken = AuthTokenUtil.getAuthToken();
 
-        redisService.setDataWithExpiration(RedisKey.EAUTH.getKey() + email, authToken, ExpireTimeConstants.expireAccessTokenTime);
+        redisService.setDataWithExpiration(RedisKey.EAUTH_SIGN_UP.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
 
-        emailSendService.send(email, authToken);
+        signUpEmailSendService.send(email, authToken);
     }
 
     @Transactional
-    public RedirectView authenticateEmail(String email) {
+    public void updatePasswordEmailSend(String email) {
 
-        String expiredKey = RedisKey.EAUTH.getKey() + email;
+        String authToken = AuthTokenUtil.getAuthToken();
+
+        redisService.setDataWithExpiration(RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + email, authToken, ExpireTimeConstants.expireUpdatePasswordAccessTokenTime);
+
+        updatePasswordEmailSendService.send(email, authToken);
+    }
+
+    @Transactional
+    public RedirectView authenticateEmailOfSingUp(String email) {
+
+        String expiredKey = RedisKey.EAUTH_SIGN_UP.getKey() + email;
 
         if (redisService.getData(expiredKey) == null) {
             throw new EmailAuthenticatedTimeExpiredException();
@@ -54,14 +67,28 @@ public class EmailAuthService {
         return PolicyRedirectViewUtil.redirectView();
     }
 
+    @Transactional
+    public RedirectView authenticateEmailOfUpdatePassword(String email) {
+
+        String expiredKey = RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + email;
+        System.out.println(expiredKey);
+        System.out.println(redisService.getData(expiredKey));
+        if (redisService.getData(expiredKey) == null) {
+            throw new EmailAuthenticatedTimeExpiredException();
+        }
+
+        return PolicyRedirectViewUtil.redirectView();
+    }
+
+    @Transactional(readOnly = true)
     public ResultResponse validAuthenticateEmailStatus(String email) {
 
         if (emailAuthRepository.existsByEmail(email)) {
 
-            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
+            return ResultResponse.of(ExceptionType.USER_EXISTS.getMessage(), true);
         }
 
-        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
+        return ResultResponse.of(ExceptionType.USER_NOT_EXISTS.getMessage(), false);
     }
 
     private void verifyEmail(String email) {

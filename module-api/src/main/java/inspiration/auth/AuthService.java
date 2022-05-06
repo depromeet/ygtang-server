@@ -105,6 +105,4 @@ public class AuthService {
             throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
         }
     }
-
-
 }
