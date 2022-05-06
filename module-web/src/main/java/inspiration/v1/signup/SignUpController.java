@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class SignUpController {
     private final SignupService signupService;
 
-    @PostMapping("/signup")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
     public Long singUp(@RequestBody SignUpRequest request) {
