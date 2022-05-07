@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TagRepository extends JpaRepository<Tag, Long>{
 
     Page<Tag> findAllByMember(Member member, Pageable pageable);
+
+    Page<Tag> findAllByMemberAndContentContaining(Member member, String content, Pageable pageable);
 }

@@ -7,8 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -36,7 +35,7 @@ public class Inspiration extends BaseTimeEntity {
     private String memo;
 
     @OneToMany(mappedBy = "inspiration", fetch = FetchType.LAZY)
-    private List<InspirationTag> inspirationTags = new ArrayList<>();
+    private Set<InspirationTag> inspirationTags = new LinkedHashSet<>();
 
     private Boolean isDeleted;
 
