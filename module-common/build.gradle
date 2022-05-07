@@ -26,5 +26,6 @@ dependencies {
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    implementation("org.springframework.cloud:spring-cloud-openfeign-core:2.2.5.RELEASE")
+    implementation 'org.springframework.cloud:spring-cloud-openfeign-core:2.2.10.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE'
 }
