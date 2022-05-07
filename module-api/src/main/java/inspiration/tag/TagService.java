@@ -34,12 +34,21 @@ public class TagService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TagResponse> searchTags(Pageable pageable, String keyword, Long memberId) {
+    public RestPage<TagResponse> indexTags(Pageable pageable, String keyword, Long memberId) {
 
         Member member = memberService.findById(memberId);
 
         Page<Tag> tagPage = tagRepository.findAllByMemberAndContentContaining(member, keyword, pageable);
-        return tagPage.map(TagResponse::from);
+        return new RestPage<>(tagPage.map(TagResponse::from));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TagResponse> searchTags(Pageable pageable, String keyword, Long memberId) {
+
+        Member member = memberService.findById(memberId);
+
+        Page<Tag> tagPage = tagRepository.findAllByMemberAndContent(member, keyword, pageable);
+        return new RestPage<>(tagPage.map(TagResponse::from));
     }
 
     @CacheEvict(value = "tag", allEntries = true)
