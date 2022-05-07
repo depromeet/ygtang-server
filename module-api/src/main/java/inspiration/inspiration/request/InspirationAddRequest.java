@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @Getter
 @ApiModel("Sample Request InspirationAddRequest")
@@ -25,6 +27,8 @@ public class InspirationAddRequest {
     private String memo;
 
     private MultipartFile file;
+
+    private List<Long> tagIds;
 
     public Inspiration toEntity() {
         return Inspiration.builder()
