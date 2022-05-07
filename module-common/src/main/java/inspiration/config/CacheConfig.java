@@ -51,6 +51,7 @@ public class CacheConfig extends CachingConfigurerSupport {
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, null);
         return objectMapper;
+
     }
 
 
