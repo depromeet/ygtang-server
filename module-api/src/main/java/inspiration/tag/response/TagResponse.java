@@ -1,6 +1,8 @@
 package inspiration.tag.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import inspiration.member.response.MemberResponse;
 import inspiration.tag.Tag;
 import lombok.*;
@@ -20,10 +22,12 @@ public class TagResponse {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdDatetime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime updatedDatetime;
 
     public static TagResponse from(Tag tag) {

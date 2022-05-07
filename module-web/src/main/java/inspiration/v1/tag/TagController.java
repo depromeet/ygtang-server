@@ -37,6 +37,28 @@ public class TagController {
         Page<TagResponse> tagResponsePage = tagService.findTags(pageable, memberId);
         return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
     }
+
+    @GetMapping("/index/{keyword}")
+    @ApiOperation(value = "태그 검색(LIKE)", notes = "태그를 키워드로 검색한다.(LIKE)")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
+    })
+    public ResponseEntity<ResultResponse> indexTag(Pageable pageable, @PathVariable String keyword, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+        Page<TagResponse> tagResponsePage = tagService.indexTags(pageable, keyword, memberId);
+        return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
+    }
+
+    @GetMapping("/search/{keyword}")
+    @ApiOperation(value = "태그 검색(일치)", notes = "태그를 키워드로 검색한다.(일치)")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
+    })
+    public ResponseEntity<ResultResponse> searchTag(Pageable pageable, @PathVariable String keyword, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+        Page<TagResponse> tagResponsePage = tagService.searchTags(pageable, keyword, memberId);
+        return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
+    }
     
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)

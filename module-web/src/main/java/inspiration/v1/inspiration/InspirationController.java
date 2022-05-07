@@ -6,6 +6,7 @@ import inspiration.inspiration.request.InspirationAddRequest;
 import inspiration.inspiration.request.InspirationModifyRequest;
 import inspiration.inspiration.request.InspirationTagRequest;
 import inspiration.inspiration.response.InspirationResponse;
+import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.v1.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -16,13 +17,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -86,6 +85,18 @@ public class InspirationController {
         return ResponseEntity.created(uri).build();
     }
 
+    @DeleteMapping("/untag/{id}/{tagId}")
+    @ApiOperation(value = "영감 태깅 해제", notes = "영감 태깅을 해제한다")
+    @ApiResponses({
+            @ApiResponse(code = 2010, message = "정상적으로 해제되었습니다.")
+            ,@ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다. | 존재하지 않는 태그ID 입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
+    })
+    public ResponseEntity<ResultResponse> inspirationUntagging(@PathVariable Long id, @PathVariable Long tagId, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+        inspirationService.unTagInspiration(id, tagId, memberId);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/remove/{id}")
     @ApiOperation(value = "영감 삭제", notes = "영감 삭제를 요청한다.")
     @ApiResponses({
@@ -96,5 +107,17 @@ public class InspirationController {
     public ResponseEntity<ResultResponse> inspirationRemove(@PathVariable Long id, @ApiIgnore @AuthenticationPrincipal Long memberId) {
         inspirationService.removeInspiration(id, memberId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/link/availiable")
+    @ApiOperation(value = "링크 적합성 판단", notes = "링크 적합성을 판단한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공입니다.")
+            ,@ApiResponse(code = 400, message = "적합하지 않은 링크입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
+    })
+    public ResponseEntity<ResultResponse> inspirationList(@RequestParam  String link) {
+        OpenGraphResponse openGraphResponse = inspirationService.getOG(link);
+        return ResponseEntity.ok().body(ResultResponse.from(openGraphResponse));
     }
 }

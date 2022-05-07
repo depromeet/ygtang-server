@@ -34,6 +34,7 @@ public class Tag extends BaseTimeEntity {
         this.member = member;
     }
 
+
 //    public void taggedBy(Inspiration inspiration) {
 //        this.inspirations.add(inspiration);
 //        inspiration.tagInspiration(this);

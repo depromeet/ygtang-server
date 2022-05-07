@@ -1,6 +1,8 @@
 package inspiration.inspiration.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import inspiration.inspiration.Inspiration;
 import inspiration.inspiration.InspirationType;
 import inspiration.member.response.MemberResponse;
@@ -24,16 +26,19 @@ public class InspirationResponse {
     private InspirationType type;
     private String content;
     private String memo;
+    private OpenGraphResponse openGraphResponse;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdDatetime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime updatedDatetime;
 
-    public static InspirationResponse from(Inspiration inspiration) {
+    public static InspirationResponse of(Inspiration inspiration, OpenGraphResponse openGraphResponse) {
         return InspirationResponse.builder()
                                     .id(inspiration.getId())
                                     .type(inspiration.getType())
@@ -45,6 +50,7 @@ public class InspirationResponse {
                                     .tagResponses(inspiration.getInspirationTags().stream()
                                                                                 .map(inspirationTag -> TagResponse.from(inspirationTag.getTag()))
                                                                                 .collect(Collectors.toList()))
+                                    .openGraphResponse(openGraphResponse)
                                     .build();
     }
 
