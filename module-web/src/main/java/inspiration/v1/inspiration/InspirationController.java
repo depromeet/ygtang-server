@@ -22,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -83,6 +84,18 @@ public class InspirationController {
 
         final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + id);
         return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping ("/tag/")
+    @ApiOperation(value = "태그로 영감조회", notes = "태그로 영감 조회를 요청한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
+    })
+    public ResponseEntity<ResultResponse> findInspirationByTag(Pageable pageable, @RequestBody List<Long> tagIds, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+        Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(pageable, tagIds, memberId);
+
+        return ResponseEntity.ok().body(ResultResponse.from(inspirationResponsePage));
     }
 
     @DeleteMapping("/untag/{id}/{tagId}")

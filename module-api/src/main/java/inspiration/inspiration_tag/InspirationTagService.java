@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -18,6 +20,13 @@ public class InspirationTagService {
     public InspirationTag findInspirationTag(Inspiration inspiration, Tag tag) {
         return inspirationTagRepository.findByInspirationAndTag(inspiration, tag)
                                         .orElseThrow(ResourceNotFoundException::new);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<InspirationTag> findInspirationByTags(List<Tag> tags) {
+        return inspirationTagRepository.findInspirationByTagIn(tags)
+                                         .orElseThrow(ResourceNotFoundException::new);
 
     }
 
