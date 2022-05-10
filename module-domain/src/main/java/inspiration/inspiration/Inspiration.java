@@ -35,7 +35,7 @@ public class Inspiration extends BaseTimeEntity {
     private String memo;
 
     @OneToMany(mappedBy = "inspiration", fetch = FetchType.LAZY)
-    private Set<InspirationTag> inspirationTags = new LinkedHashSet<>();
+    private List<InspirationTag> inspirationTags = new ArrayList<>();
 
     private Boolean isDeleted;
 

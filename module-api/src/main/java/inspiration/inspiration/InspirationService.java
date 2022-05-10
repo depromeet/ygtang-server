@@ -120,6 +120,30 @@ public class InspirationService {
         return inspiration.getId();
     }
 
+    @Transactional(readOnly = true)
+    public RestPage<InspirationResponse> findInspirationsByTags(Pageable pageable, List<Long> tagIds, Long memberId) {
+
+        Member member = memberService.findById(memberId);
+        List<Tag> tags = tagIds.stream()
+                                .map(tagService::getTag)
+                                .collect(Collectors.toList());
+
+        List<Inspiration> inspirations = inspirationRepository.findDistinctInspirationByTagIn(tags)
+                                                                .orElseThrow(ResourceNotFoundException::new);
+
+        List<Long> inspirationIds = inspirations.stream()
+                                                .map(Inspiration::getId)
+                                                .collect(Collectors.toList());
+
+        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIsDeletedAndIdIn(false,  inspirationIds, pageable);
+        inspirationPage
+                .forEach(
+                        inspiration ->
+                                inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
+        return new RestPage<>(inspirationPage.map(inspiration -> InspirationResponse.of(inspiration, getOG(inspiration.getType() ,inspiration.getContent()))));
+    }
+
+
     @CacheEvict(value = "inspiration", allEntries = true)
     public Long modifyMemo(InspirationModifyRequest request, Long memberId) {
 
