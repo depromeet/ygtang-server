@@ -26,7 +26,9 @@ public enum ExceptionType {
 
     FAILED_TO_SEND_MAIL("메일 전송에 실패하였습니다."),
 
-    USER_NOT_EXISTS("존재하지 않는 유저입니다."),
+    USER_NOT_EXISTS("존재하지 않는 사용자입니다."),
+
+    USER_EXISTS("존재하는 사용자 입니다."),
 
     EXPIRED_REFRESH_TOKEN("이미 만료된 리프레시 토큰 입니다."),
 

@@ -15,6 +15,7 @@ public class MailProperties {
     private final int port;
     private final String userName;
     private final String password;
-    private final String authMail;
+    private final String signUpEmailSendMail;
+    private final String updatePasswordEmailSendMail;
     private final String authToken;
 }
