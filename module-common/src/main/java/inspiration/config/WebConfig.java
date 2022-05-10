@@ -40,7 +40,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(this.apiInfo())
-                .host("13.209.174.149")
+                .host("ygtang.kr")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
