@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/signup")
@@ -17,7 +19,7 @@ public class SignUpController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
-    public Long singUp(@RequestBody SignUpRequest request) {
+    public Long singUp(@RequestBody @Valid SignUpRequest request) {
 
         return signupService.signUp(request);
     }
