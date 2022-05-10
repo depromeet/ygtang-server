@@ -2,10 +2,12 @@ package inspiration.v1.reissue;
 
 import inspiration.ResultResponse;
 import inspiration.auth.AuthService;
+import inspiration.config.AuthenticationPrincipal;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,11 +19,8 @@ public class ReissueController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
-    public ResultResponse reissue(
-            @RequestHeader(value = "X-AUTH-TOKEN") String accessToken,
-            @RequestHeader(value = "REFRESH-TOKEN") String refreshToken
-    ) {
+    public ResultResponse reissue(@RequestHeader(value = "REFRESH-TOKEN") String refreshToken, @ApiIgnore @AuthenticationPrincipal Long memberId) {
 
-        return authService.reissue(accessToken, refreshToken);
+        return authService.reissue(refreshToken, memberId);
     }
 }

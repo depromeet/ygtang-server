@@ -2,6 +2,7 @@ package inspiration.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
+import inspiration.config.AuthenticationPrincipal;
 import inspiration.config.security.JwtProvider;
 import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
@@ -14,7 +15,6 @@ import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,18 +49,16 @@ public class AuthService {
     }
 
     @Transactional
-    public ResultResponse reissue(String accessTokenRequest, String refreshTokenRequest) {
+    public ResultResponse reissue(String refreshTokenRequest, Long memberId) {
 
         if (!jwtProvider.validationToken(refreshTokenRequest)) {
             throw new RefreshTokenException();
         }
 
-        Authentication authentication = jwtProvider.getAuthentication(accessTokenRequest);
-
-        Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
 
-        String refreshToken = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
+        String refreshToken = redisTemplate.opsForValue().get(refreshTokenKey + memberId);
 
         if (refreshToken == null) {
             throw new RefreshTokenException();
@@ -70,9 +68,9 @@ public class AuthService {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        TokenResponse newTokenResponse = jwtProvider.createTokenDto(memberId, member.getRoles());
 
-        saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
+        saveRefreshToken(memberId, newTokenResponse.getRefreshToken());
 
         return ResultResponse.of(issueToken, newTokenResponse);
     }

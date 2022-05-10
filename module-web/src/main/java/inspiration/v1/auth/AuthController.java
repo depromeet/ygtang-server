@@ -66,9 +66,4 @@ public class AuthController {
 
         return emailAuthService.validAuthenticateEmailStatus(email);
     }
-
-    @GetMapping("/authorization")
-    public String getMemberInfo() {
-        return authService.getUserInfo();
-    }
 }
