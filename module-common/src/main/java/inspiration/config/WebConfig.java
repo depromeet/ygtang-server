@@ -6,6 +6,7 @@ import inspiration.enumeration.TokenType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -39,7 +40,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(this.apiInfo())
-//                .host("13.125.36.7")
+                .host("ygtang.kr")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
@@ -78,6 +79,16 @@ public class WebConfig extends WebMvcConfigurationSupport {
     protected void addArgumentResolvers(List argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
         argumentResolvers.add(new PageableHandlerMethodArgumentResolver());
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowCredentials(true)
+                .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS", "HEAD")
+                .maxAge(3600 * 24);
     }
 
     @Bean

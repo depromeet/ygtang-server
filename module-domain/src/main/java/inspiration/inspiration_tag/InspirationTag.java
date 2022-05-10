@@ -31,4 +31,8 @@ public class InspirationTag extends BaseTimeEntity {
         this.inspiration = inspiration;
         this.tag = tag;
     }
+
+    public static InspirationTag of(Inspiration inspiration, Tag tag) {
+        return new InspirationTag(inspiration, tag);
+    }
 }
