@@ -13,7 +13,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PutMapping("/{id}/passwords}")
+    @PutMapping("/{id}/passwords")
     @ApiOperation(value = "패스워드를 변경.", notes = "패스워드를 변경한다.")
     public void updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequest request) {
 
