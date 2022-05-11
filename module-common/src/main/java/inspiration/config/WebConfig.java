@@ -109,13 +109,14 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Getter @Setter
     @ApiModel
     static class Page {
-        @ApiModelProperty(value = "페이지 번호(0..N)")
+        @ApiModelProperty(value = "페이지 번호(0..N)", example = "0")
         private Integer page;
 
-        @ApiModelProperty(value = "페이지 크기", allowableValues="range[0, 100]")
+        @ApiModelProperty(value = "페이지 크기", allowableValues="range[0, 100]", example = "20")
         private Integer size;
 
         @ApiModelProperty(value = "정렬")
         private List<String> sort;
+
     }
 }
