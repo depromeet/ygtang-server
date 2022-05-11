@@ -34,6 +34,7 @@ public class JwtProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
     private String ROLES = "roles";
+    private String MEMBER_ID = "member_id";
     private final UserDetailsService userDetailsService;
     private final HttpServletResponse httpServletResponse;
 
@@ -42,10 +43,11 @@ public class JwtProvider {
         secretKey = Base64UrlCodec.BASE64URL.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenResponse createTokenDto(Long userPk, List<String> roles) {
+    public TokenResponse createTokenDto(Long memberId, List<String> roles) {
 
-        Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
+        Claims claims = Jwts.claims().setSubject(String.valueOf(memberId));
         claims.put(ROLES, roles);
+        claims.put(MEMBER_ID, memberId);
 
         Date now = new Date();
 
@@ -62,6 +64,7 @@ public class JwtProvider {
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
+                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
