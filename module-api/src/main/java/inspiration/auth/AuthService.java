@@ -15,6 +15,7 @@ import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,28 +50,31 @@ public class AuthService {
     }
 
     @Transactional
-    public ResultResponse reissue(String refreshTokenRequest, Long memberId) {
+    public ResultResponse reissue(String refreshToken) {
 
-        if (!jwtProvider.validationToken(refreshTokenRequest)) {
+        if (!jwtProvider.validationToken(refreshToken)) {
             throw new RefreshTokenException();
         }
 
-        Member member = memberRepository.findById(memberId)
+        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
+
+        Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
 
-        String refreshToken = redisTemplate.opsForValue().get(refreshTokenKey + memberId);
 
-        if (refreshToken == null) {
+        String refreshTokenInRedis = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
+
+        if (refreshTokenInRedis == null) {
             throw new RefreshTokenException();
         }
 
-        if (!refreshToken.equals(refreshTokenRequest)) {
+        if (!refreshTokenInRedis.equals(refreshToken)) {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponse newTokenResponse = jwtProvider.createTokenDto(memberId, member.getRoles());
+        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
 
-        saveRefreshToken(memberId, newTokenResponse.getRefreshToken());
+        saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
 
         return ResultResponse.of(issueToken, newTokenResponse);
     }
