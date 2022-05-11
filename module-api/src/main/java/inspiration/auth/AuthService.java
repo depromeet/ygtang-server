@@ -2,6 +2,7 @@ package inspiration.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
+import inspiration.config.AuthenticationPrincipal;
 import inspiration.config.security.JwtProvider;
 import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
@@ -49,24 +50,25 @@ public class AuthService {
     }
 
     @Transactional
-    public ResultResponse reissue(String accessTokenRequest, String refreshTokenRequest) {
+    public ResultResponse reissue(String refreshToken) {
 
-        if (!jwtProvider.validationToken(refreshTokenRequest)) {
+        if (!jwtProvider.validationToken(refreshToken)) {
             throw new RefreshTokenException();
         }
 
-        Authentication authentication = jwtProvider.getAuthentication(accessTokenRequest);
+        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
 
         Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
 
-        String refreshToken = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
 
-        if (refreshToken == null) {
+        String refreshTokenInRedis = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
+
+        if (refreshTokenInRedis == null) {
             throw new RefreshTokenException();
         }
 
-        if (!refreshToken.equals(refreshTokenRequest)) {
+        if (!refreshTokenInRedis.equals(refreshToken)) {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
@@ -105,6 +107,4 @@ public class AuthService {
             throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
         }
     }
-
-
 }

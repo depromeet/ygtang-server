@@ -17,11 +17,8 @@ public class ReissueController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "리프레쉬 토큰 재발급", notes = "리프레쉬 토큰을 재발급합니다.")
-    public ResultResponse reissue(
-            @RequestHeader(value = "X-AUTH-TOKEN") String accessToken,
-            @RequestHeader(value = "REFRESH-TOKEN") String refreshToken
-    ) {
+    public ResultResponse reissue(@RequestHeader(value = "REFRESH-TOKEN") String refreshToken) {
 
-        return authService.reissue(accessToken, refreshToken);
+        return authService.reissue(refreshToken);
     }
 }

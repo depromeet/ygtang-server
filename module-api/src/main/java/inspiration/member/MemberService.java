@@ -1,12 +1,11 @@
 package inspiration.member;
 
-import inspiration.ResultResponse;
-import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
-import inspiration.exception.ConflictRequestException;
+import inspiration.enumeration.RedisKey;
+import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
-import inspiration.member.request.SignUpRequest;
+import inspiration.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,53 +16,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final EmailAuthRepository emailAuthRepository;
+    private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = true)
-    public ResultResponse checkNickName(String nickname) {
-
-        isValidNickName(nickname);
-
-        return ResultResponse.from("사용할 수 있는 닉네임입니다.");
-    }
-
     @Transactional
-    public Long signUp(SignUpRequest request) {
+    public void updatePassword(Long memberId, String confirmPassword, String password) {
 
-        verifyEmail(request.getEmail());
-        isValidEmail(request.getEmail());
-        isValidNickName(request.getNickName());
-        confirmPasswordCheck(request.getConfirmPassword(), request.getPassword());
+        confirmPasswordCheck(confirmPassword, password);
 
-        return memberRepository.save(request.toEntity(passwordEncoder)).getId();
-    }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
-    private void isValidEmail(String email) {
+        String expiredKey = RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + member.getEmail();
 
-        if (memberRepository.existsByEmail(email)) {
-            throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
+        if (redisService.getData(expiredKey) == null) {
+            throw new EmailAuthenticatedTimeExpiredException();
         }
+
+        member.updatePassword(passwordEncoder.encode(password));
+
+        redisService.deleteData(expiredKey);
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
 
         if (!confirmPasswordCheck.equals(password)) {
             throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
-        }
-    }
-
-    private void verifyEmail(String email) {
-
-        if (!emailAuthRepository.existsByEmail(email)) {
-            throw new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage());
-        }
-    }
-
-    private void isValidNickName(String nickName) {
-
-        if (memberRepository.existsByNickname(nickName)) {
-            throw new ConflictRequestException(ExceptionType.EXISTS_NICKNAME.getMessage());
         }
     }
 

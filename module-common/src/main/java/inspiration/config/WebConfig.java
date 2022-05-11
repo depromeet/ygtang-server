@@ -50,7 +50,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
                 .apiInfo(this.apiInfo())
-                //.host("ygtang.kr")
+                .host("ygtang.kr")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
