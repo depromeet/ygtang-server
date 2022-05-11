@@ -45,15 +45,15 @@ public class JwtProvider {
 
     public TokenResponse createTokenDto(Long memberId, List<String> roles) {
 
-        Claims claims = Jwts.claims().setSubject(String.valueOf(memberId));
-        claims.put(ROLES, roles);
-        claims.put(MEMBER_ID, memberId);
+        Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
+        accessTokenClaims.put(ROLES, roles);
+        accessTokenClaims.put(MEMBER_ID, memberId);
 
         Date now = new Date();
 
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(claims)
+                .setClaims(accessTokenClaims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -61,14 +61,14 @@ public class JwtProvider {
 
         httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
-        claims = Jwts.claims().setSubject(String.valueOf(memberId));
-        claims.put(ROLES, roles);
-        claims.put(MEMBER_ID, memberId);
+        Claims refreshTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
+        refreshTokenClaims.put(ROLES, roles);
+        refreshTokenClaims.put(MEMBER_ID, memberId);
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(refreshTokenClaims)
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
-                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
