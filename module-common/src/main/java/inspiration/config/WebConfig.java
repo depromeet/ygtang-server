@@ -117,5 +117,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         @ApiModelProperty(value = "정렬")
         private List<String> sort;
+
     }
 }
