@@ -24,7 +24,7 @@ public class TagService {
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "tag", key = "{#memberId + #pageable.pageNumber}")
+    @Cacheable(value = "tag", key = "{#memberId + #pageable.pageNumber + #pageable.pageSize}")
     public RestPage<TagResponse> findTags(Pageable pageable, Long memberId) {
 
         Member member = memberService.findById(memberId);

@@ -43,7 +43,7 @@ public class InspirationService {
     private final InspirationTagService inspirationTagService;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId + #pageable.pageNumber}")
+    @Cacheable(value = "inspiration", key = "{#memberId + #pageable.pageNumber + #pageable.pageSize}")
     public RestPage<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
 
         Member member = memberService.findById(memberId);

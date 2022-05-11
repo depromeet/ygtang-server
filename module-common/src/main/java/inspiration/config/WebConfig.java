@@ -1,10 +1,16 @@
 package inspiration.config;
 
+import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Lists;
 import inspiration.enumeration.HttpHeaderType;
 import inspiration.enumeration.TokenType;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -12,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
@@ -27,6 +34,8 @@ import java.util.List;
 @EnableSwagger2
 public class WebConfig extends WebMvcConfigurationSupport {
 
+    TypeResolver typeResolver = new TypeResolver();
+
     private ApiInfo apiInfo() {
 
         return new ApiInfoBuilder()
@@ -39,8 +48,9 @@ public class WebConfig extends WebMvcConfigurationSupport {
     public Docket commonApi() {
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
                 .apiInfo(this.apiInfo())
-                .host("ygtang.kr")
+                //.host("ygtang.kr")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
@@ -94,5 +104,18 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver();
+    }
+
+    @Getter @Setter
+    @ApiModel
+    static class Page {
+        @ApiModelProperty(value = "페이지 번호(0..N)")
+        private Integer page;
+
+        @ApiModelProperty(value = "페이지 크기", allowableValues="range[0, 100]")
+        private Integer size;
+
+        @ApiModelProperty(value = "정렬")
+        private List<String> sort;
     }
 }
