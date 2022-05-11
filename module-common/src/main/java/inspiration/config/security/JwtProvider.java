@@ -61,6 +61,10 @@ public class JwtProvider {
 
         httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
+        claims = Jwts.claims().setSubject(String.valueOf(memberId));
+        claims.put(ROLES, roles);
+        claims.put(MEMBER_ID, memberId);
+
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
