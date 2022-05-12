@@ -64,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/auth/**", "/api/v1/signup", "/api/v1/reissue", "/health");
+                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/auth/**", "/api/v1/signup/**", "/api/v1/reissue", "/health");
     }
 
     private String[] addMatchers(String[] patterns) {
