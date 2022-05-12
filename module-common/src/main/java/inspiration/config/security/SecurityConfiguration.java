@@ -21,7 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    public static final String[] ALLOWED_URI_PATTERN = {"/api/v1/auth", "/api/v1/signup", "/api/v1/reissue", "/health"};
+    public static final String[] ALLOWED_URI_PATTERN = {"/api/v1/signup", "/api/v1/auth", "/api/v1/reissue", "/health"};
 
     @Bean
     @Override
@@ -53,7 +53,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .antMatchers(HttpMethod.GET, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .antMatchers(HttpMethod.DELETE, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
-                .antMatchers(HttpMethod.POST, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .antMatchers(HttpMethod.PUT, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .anyRequest().hasRole("USER")
 
@@ -64,7 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/auth/**", "/api/v1/signup/**", "/api/v1/reissue", "/health");
+                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/signup/**", "/api/v1/auth/**", "/api/v1/reissue", "/health");
     }
 
     private String[] addMatchers(String[] patterns) {
