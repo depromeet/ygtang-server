@@ -67,11 +67,11 @@ public class TagController {
             @ApiResponse(code = 201, message = "정상적으로 등록되었습니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> tagAdd(HttpServletRequest httpServletRequest, @RequestBody TagAddRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
-        Long id = tagService.addTag(request, memberId);
+    public ResponseEntity<TagResponse> tagAdd(HttpServletRequest httpServletRequest, @RequestBody TagAddRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+        TagResponse tagResponse = tagService.addTag(request, memberId);
 
-        final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + id);
-        return ResponseEntity.created(uri).build();
+        final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + tagResponse.getId());
+        return ResponseEntity.created(uri).body(tagResponse);
     }
 
     @DeleteMapping("/remove/{id}")

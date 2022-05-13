@@ -52,13 +52,14 @@ public class TagService {
     }
 
     @CacheEvict(value = "tag", allEntries = true)
-    public Long addTag(TagAddRequest request, Long memberId) {
+    public TagResponse addTag(TagAddRequest request, Long memberId) {
 
         Member member = memberService.findById(memberId);
 
         Tag tag = request.toEntity();
         tag.writeBy(member);
-        return tagRepository.save(tag).getId();
+        Tag savedTag = tagRepository.save(tag);
+        return TagResponse.from(savedTag);
     }
 
     public Tag getTag(Long id) {
