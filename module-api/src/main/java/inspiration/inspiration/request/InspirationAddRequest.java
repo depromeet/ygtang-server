@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -20,8 +21,10 @@ import java.util.List;
 public class InspirationAddRequest {
 
     @ApiModelProperty( notes = "IMAGE | LINK | TEXT")
+    @NotNull
     private InspirationType type;
     @ApiModelProperty(notes = "LINK, TEXT의 경우 해당 데이터 입력")
+    @NotNull
     private String content;
     @ApiModelProperty( notes = "메모 입력")
     private String memo;

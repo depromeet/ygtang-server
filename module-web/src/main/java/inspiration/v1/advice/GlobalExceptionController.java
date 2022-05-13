@@ -53,6 +53,15 @@ public class GlobalExceptionController {
         return ResultResponse.from(message);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResultResponse handleMethodArgumentNotValidException(ResourceNotFoundException exception) {
+        String message = exception.getMessage();
+        log.debug(message, exception);
+
+        return ResultResponse.from(message);
+    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(EmailNotAuthenticatedException.class)
     private ResultResponse handleEmailNotAuthenticatedException(EmailNotAuthenticatedException exception) {

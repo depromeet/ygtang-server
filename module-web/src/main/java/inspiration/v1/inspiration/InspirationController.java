@@ -21,6 +21,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class InspirationController {
             ,@ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationModify(HttpServletRequest httpServletRequest, @RequestBody  InspirationModifyRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResultResponse> inspirationModify(HttpServletRequest httpServletRequest, @RequestBody @Valid InspirationModifyRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId) {
         Long id = inspirationService.modifyMemo(request, memberId);
 
         final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + id);
@@ -79,7 +81,7 @@ public class InspirationController {
             ,@ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다. | 존재하지 않는 태그ID 입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationTagging(HttpServletRequest httpServletRequest, @RequestBody InspirationTagRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResultResponse> inspirationTagging(HttpServletRequest httpServletRequest, @RequestBody @Valid InspirationTagRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId) {
         Long id = inspirationService.tagInspiration(request, memberId);
 
         final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + id);
@@ -105,7 +107,9 @@ public class InspirationController {
             ,@ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다. | 존재하지 않는 태그ID 입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationUntagging(@PathVariable Long id, @PathVariable Long tagId, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResultResponse> inspirationUntagging(@PathVariable @NotNull Long id,
+                                                               @PathVariable @NotNull Long tagId,
+                                                               @ApiIgnore @AuthenticationPrincipal Long memberId) {
         inspirationService.unTagInspiration(id, tagId, memberId);
         return ResponseEntity.ok().build();
     }
@@ -117,7 +121,8 @@ public class InspirationController {
             ,@ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationRemove(@PathVariable Long id, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResultResponse> inspirationRemove(@PathVariable @NotNull Long id,
+                                                            @ApiIgnore @AuthenticationPrincipal Long memberId) {
         inspirationService.removeInspiration(id, memberId);
         return ResponseEntity.ok().build();
     }
@@ -129,7 +134,7 @@ public class InspirationController {
             ,@ApiResponse(code = 400, message = "적합하지 않은 링크입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> inspirationList(@RequestParam  String link) {
+    public ResponseEntity<ResultResponse> inspirationList(@RequestParam @NotBlank String link) {
         OpenGraphResponse openGraphResponse = inspirationService.getOG(link);
         return ResponseEntity.ok().body(ResultResponse.from(openGraphResponse));
     }
