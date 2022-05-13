@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -19,6 +20,7 @@ public class TagAddRequest {
 
     @ApiModelProperty(example = "태그등록 테스트", value = "태그등록 테스트")
     @Size(max = 100)
+    @NotNull
     private String content;
 
     public Tag toEntity() {

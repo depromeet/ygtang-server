@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 @RestController
@@ -33,7 +36,8 @@ public class TagController {
             @ApiResponse(code = 200, message = "성공입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> tagList(Pageable pageable, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+    public ResponseEntity<ResultResponse> tagList(Pageable pageable,
+                                                  @ApiIgnore @AuthenticationPrincipal Long memberId ) {
         Page<TagResponse> tagResponsePage = tagService.findTags(pageable, memberId);
         return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
     }
@@ -44,7 +48,9 @@ public class TagController {
             @ApiResponse(code = 200, message = "성공입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> indexTag(Pageable pageable, @PathVariable String keyword, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+    public ResponseEntity<ResultResponse> indexTag(Pageable pageable,
+                                                   @PathVariable @NotBlank  String keyword,
+                                                   @ApiIgnore @AuthenticationPrincipal Long memberId ) {
         Page<TagResponse> tagResponsePage = tagService.indexTags(pageable, keyword, memberId);
         return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
     }
@@ -55,7 +61,9 @@ public class TagController {
             @ApiResponse(code = 200, message = "성공입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<ResultResponse> searchTag(Pageable pageable, @PathVariable String keyword, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+    public ResponseEntity<ResultResponse> searchTag(Pageable pageable,
+                                                    @PathVariable @NotBlank  String keyword,
+                                                    @ApiIgnore @AuthenticationPrincipal Long memberId ) {
         Page<TagResponse> tagResponsePage = tagService.searchTags(pageable, keyword, memberId);
         return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
     }
@@ -67,7 +75,9 @@ public class TagController {
             @ApiResponse(code = 201, message = "정상적으로 등록되었습니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<TagResponse> tagAdd(HttpServletRequest httpServletRequest, @RequestBody TagAddRequest request, @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+    public ResponseEntity<TagResponse> tagAdd(HttpServletRequest httpServletRequest,
+                                              @RequestBody @Valid TagAddRequest request,
+                                              @ApiIgnore @AuthenticationPrincipal Long memberId ) {
         TagResponse tagResponse = tagService.addTag(request, memberId);
 
         final URI uri = URI.create(httpServletRequest.getRequestURI() + "/" + tagResponse.getId());
@@ -81,7 +91,8 @@ public class TagController {
             ,@ApiResponse(code = 400, message = "존재하지 않는 태그ID 입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> tagRemove(@PathVariable Long id, @ApiIgnore @AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<ResultResponse> tagRemove(@PathVariable @NotNull Long id,
+                                                    @ApiIgnore @AuthenticationPrincipal Long memberId) {
         tagService.removeTag(id, memberId);
         return ResponseEntity.ok().build();
     }
