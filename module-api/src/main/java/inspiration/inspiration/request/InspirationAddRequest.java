@@ -24,6 +24,7 @@ public class InspirationAddRequest {
     @NotNull
     private InspirationType type;
     @ApiModelProperty(notes = "LINK, TEXT의 경우 해당 데이터 입력")
+    @NotNull
     private String content;
     @ApiModelProperty( notes = "메모 입력")
     private String memo;
