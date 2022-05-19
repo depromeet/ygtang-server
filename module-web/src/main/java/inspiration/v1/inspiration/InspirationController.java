@@ -44,6 +44,18 @@ public class InspirationController {
         return ResponseEntity.ok().body(ResultResponse.from(inspirationResponsePage));
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation(value = "영감 조회", notes = "영감 id로 조회한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공입니다.")
+            , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
+    })
+    public ResponseEntity<ResultResponse> findInspiration(@PathVariable @NotNull  Long id,
+                                                          @ApiIgnore @AuthenticationPrincipal Long memberId ) {
+        InspirationResponse inspirationResponse = inspirationService.findInspiration(id, memberId);
+        return ResponseEntity.ok().body(ResultResponse.from(inspirationResponse));
+    }
+
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "영감 등록", notes = "영감 등록을 요청한다")

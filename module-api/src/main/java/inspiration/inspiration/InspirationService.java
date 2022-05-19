@@ -56,6 +56,18 @@ public class InspirationService {
         return new RestPage<>(inspirationPage.map(inspiration -> InspirationResponse.of(inspiration, getOG(inspiration.getType() ,inspiration.getContent()))));
     }
 
+    @Transactional(readOnly = true)
+    public InspirationResponse findInspiration(Long id, Long memberId) {
+
+        Member member = memberService.findById(memberId);
+
+        Inspiration inspiration = inspirationRepository.findAllByIsDeletedAndMemberAndId(false, member, id)
+                                                        .orElseThrow(ResourceNotFoundException::new);
+
+        inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()));
+        return InspirationResponse.of(inspiration, getOG(inspiration.getType(), inspiration.getContent()));
+    }
+
     private OpenGraphResponse getOG(InspirationType inspirationType, String link)  {
 
         if(inspirationType != InspirationType.LINK){
@@ -128,7 +140,7 @@ public class InspirationService {
                                 .map(tagService::getTag)
                                 .collect(Collectors.toList());
 
-        List<Inspiration> inspirations = inspirationRepository.findDistinctInspirationByTagIn(tags)
+        List<Inspiration> inspirations = inspirationRepository.findDistinctInspirationByTags(tags, Long.parseLong(String.valueOf(tags.size())))
                                                                 .orElseThrow(ResourceNotFoundException::new);
 
         List<Long> inspirationIds = inspirations.stream()

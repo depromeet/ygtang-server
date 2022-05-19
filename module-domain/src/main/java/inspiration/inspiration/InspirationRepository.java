@@ -1,6 +1,5 @@
 package inspiration.inspiration;
 
-import inspiration.inspiration_tag.InspirationTag;
 import inspiration.member.Member;
 import inspiration.tag.Tag;
 import org.springframework.data.domain.Page;
@@ -17,9 +16,10 @@ public interface InspirationRepository extends JpaRepository<Inspiration, Long>{
 
     Page<Inspiration> findAllByIsDeletedAndMember(boolean isDeleted, Member member, Pageable pageable);
 
+    Optional<Inspiration> findAllByIsDeletedAndMemberAndId(boolean isDeleted, Member member, Long id);
 
-    @Query(value = "select distinct it.inspiration from InspirationTag it where it.tag in :tags")
-    Optional<List<Inspiration>> findDistinctInspirationByTagIn(@Param("tags") List<Tag> tags);
+    @Query(value = "select it.inspiration from InspirationTag it where it.tag in :tags group by it.inspiration having count(it.inspiration) >= :count")
+    Optional<List<Inspiration>> findDistinctInspirationByTags(@Param("tags") List<Tag> tags, @Param("count") Long count);
 
     Page<Inspiration> findAllByIsDeletedAndIdIn(boolean isDeleted, List<Long> inspirationIds, Pageable pageable);
 }
