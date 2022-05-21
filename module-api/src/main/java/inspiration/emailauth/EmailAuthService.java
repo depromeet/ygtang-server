@@ -70,6 +70,10 @@ public class EmailAuthService {
             throw new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage());
         }
 
+        if(passwordAuthRepository.existsByEmail(email)) {
+            throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
+        }
+
         String authToken = AuthTokenUtil.getAuthToken();
 
         redisService.setDataWithExpiration(RedisKey.EAUTH_RESET_PASSWORD.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
