@@ -4,6 +4,7 @@ import inspiration.auth.AuthService;
 import inspiration.config.AuthenticationPrincipal;
 import inspiration.emailauth.request.SendEmailRequest;
 import inspiration.member.MemberService;
+import inspiration.member.request.UpdateNicknameRequest;
 import inspiration.member.request.UpdatePasswordRequest;
 import inspiration.member.response.MemberInfoResponse;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,13 @@ public class MemberController {
     public void resetPasswordEmailSend(@RequestBody @Valid SendEmailRequest request) {
 
         memberService.resetPasswordEmailSend(request.getEmail());
+    }
+
+    @PutMapping("/nickname/change")
+    @ApiOperation(value = "닉네임 변경", notes = "닉네임을 변경한다.")
+    public void changeNickname(@ApiIgnore @AuthenticationPrincipal Long memberId, @RequestBody @Valid UpdateNicknameRequest request) {
+
+        memberService.updateNickname(memberId, request.getNickname());
     }
 
     @PostMapping("/info")
