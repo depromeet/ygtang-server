@@ -11,6 +11,7 @@ import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
 import inspiration.member.Member;
 import inspiration.member.MemberRepository;
+import inspiration.member.response.MemberInfoResponse;
 import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,16 +81,12 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public String getUserInfo() {
+    public MemberInfoResponse getUserInfo() {
 
-        memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
-        String userEmail = memberRepository.findById(SecurityUtil.getCurrentMemberId()).get().getEmail();
-
-        log.info("현재 로그인한 사용자: " + userEmail);
-
-        return userEmail;
+        return MemberInfoResponse.of(member);
     }
     private void saveRefreshToken(Long memberId, String refreshToken) {
 
