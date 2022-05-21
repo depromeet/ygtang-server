@@ -6,12 +6,16 @@ import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
+import inspiration.member.Member;
 import inspiration.member.MemberRepository;
-import inspiration.member.MemberService;
+import inspiration.passwordauth.PasswordAuth;
+import inspiration.passwordauth.PasswordAuthRepository;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
+import inspiration.utils.GetResetPasswordUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
@@ -21,8 +25,10 @@ import org.springframework.web.servlet.view.RedirectView;
 public class EmailAuthService {
 
     private final EmailAuthRepository emailAuthRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordAuthRepository passwordAuthRepository;
     private final SignUpEmailSendService signUpEmailSendService;
-    private final UpdatePasswordEmailSendService updatePasswordEmailSendService;
+    private final ResetPasswordForAuthSendService resetPasswordForAuthSendService;
     private final RedisService redisService;
 
     @Transactional
@@ -35,16 +41,6 @@ public class EmailAuthService {
         redisService.setDataWithExpiration(RedisKey.EAUTH_SIGN_UP.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
 
         signUpEmailSendService.send(email, authToken);
-    }
-
-    @Transactional
-    public void updatePasswordEmailSend(String email) {
-
-        String authToken = AuthTokenUtil.getAuthToken();
-
-        redisService.setDataWithExpiration(RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + email, authToken, ExpireTimeConstants.expireUpdatePasswordAccessTokenTime);
-
-        updatePasswordEmailSendService.send(email, authToken);
     }
 
     @Transactional
@@ -68,27 +64,57 @@ public class EmailAuthService {
     }
 
     @Transactional
-    public RedirectView authenticateEmailOfUpdatePassword(String email) {
+    public void resetPasswordForAuthEmailSend(String email) {
 
-        String expiredKey = RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + email;
-        System.out.println(expiredKey);
-        System.out.println(redisService.getData(expiredKey));
+        if (!memberRepository.existsByEmail(email)) {
+            throw new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage());
+        }
+
+        String authToken = AuthTokenUtil.getAuthToken();
+
+        redisService.setDataWithExpiration(RedisKey.EAUTH_RESET_PASSWORD.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
+
+        resetPasswordForAuthSendService.send(email, authToken);
+    }
+
+    @Transactional
+    public RedirectView authenticateEmailOfResetPasswordForAuth(String email) {
+
+        String expiredKey = RedisKey.EAUTH_RESET_PASSWORD.getKey() + email;
+
         if (redisService.getData(expiredKey) == null) {
             throw new EmailAuthenticatedTimeExpiredException();
         }
+
+        redisService.deleteData(expiredKey);
+
+        passwordAuthRepository.save(
+                PasswordAuth.builder()
+                        .email(email)
+                        .isAuth(true)
+                        .build());
 
         return PolicyRedirectViewUtil.redirectView();
     }
 
     @Transactional(readOnly = true)
-    public ResultResponse validAuthenticateEmailStatus(String email) {
+    public ResultResponse validAuthenticateEmailStatusOfSignup(String email) {
 
         if (emailAuthRepository.existsByEmail(email)) {
-
-            return ResultResponse.of(ExceptionType.USER_EXISTS.getMessage(), true);
+            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
         }
 
-        return ResultResponse.of(ExceptionType.USER_NOT_EXISTS.getMessage(), false);
+        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
+    }
+
+    @Transactional(readOnly = true)
+    public ResultResponse validAuthenticateEmailStatusOfResetPassword(String email) {
+
+        if (passwordAuthRepository.existsByEmail(email)) {
+            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
+        }
+
+        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
     }
 
     private void verifyEmail(String email) {

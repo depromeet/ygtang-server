@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SignUpEmailSendService implements EmailSendService {
+public class ResetPasswordForAuthSendService implements EmailSendService {
 
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
-    private final static String SUBJECT = "이메일 인증";
+    private final static String SUBJECT = "비밀번호 초기화를 위한 이메일 인증";
     private final static String OPEN_HREF = "<a href=";
     private final static String CLOSE_HREF = "></a>";
 
@@ -27,7 +27,7 @@ public class SignUpEmailSendService implements EmailSendService {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setTo(email);
             simpleMailMessage.setSubject(SUBJECT);
-            simpleMailMessage.setText(OPEN_HREF + mailProperties.getSignUpEmailSendMail() + email + mailProperties.getAuthToken() + authToken + CLOSE_HREF);
+            simpleMailMessage.setText(OPEN_HREF + mailProperties.getResetPasswordForAuthSendMail() + email + mailProperties.getAuthToken() + authToken + CLOSE_HREF);
 
             mailSender.send(simpleMailMessage);
         } catch (Exception e) {

@@ -1,11 +1,12 @@
 package inspiration.member;
 
+import inspiration.emailauth.ResetPasswordEmailSendService;
 import inspiration.enumeration.ExceptionType;
-import inspiration.enumeration.RedisKey;
-import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
-import inspiration.redis.RedisService;
+import inspiration.passwordauth.PasswordAuth;
+import inspiration.passwordauth.PasswordAuthRepository;
+import inspiration.utils.GetResetPasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,26 +17,37 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final RedisService redisService;
+    private final PasswordAuthRepository passwordAuthRepository;
+    private final ResetPasswordEmailSendService resetPasswordEmailSendService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void updatePassword(Long memberId, String confirmPassword, String password) {
+    public void changePassword(Long memberId, String confirmPassword, String password) {
 
         confirmPasswordCheck(confirmPassword, password);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
-        String expiredKey = RedisKey.EAUTH_UPDATE_PASSWORD.getKey() + member.getEmail();
-
-        if (redisService.getData(expiredKey) == null) {
-            throw new EmailAuthenticatedTimeExpiredException();
-        }
-
         member.updatePassword(passwordEncoder.encode(password));
+    }
 
-        redisService.deleteData(expiredKey);
+    @Transactional
+    public void resetPasswordEmailSend(String email) {
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+
+        String resetPassword = GetResetPasswordUtil.getResetPassword();
+
+        resetPasswordEmailSendService.send(email, resetPassword);
+
+        member.updatePassword(passwordEncoder.encode(resetPassword));
+
+        PasswordAuth passwordAuth = passwordAuthRepository.findByEmail(member.getEmail())
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage()));
+
+        passwordAuthRepository.delete(passwordAuth);
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
