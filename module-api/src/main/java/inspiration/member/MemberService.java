@@ -45,7 +45,7 @@ public class MemberService {
         member.updatePassword(passwordEncoder.encode(resetPassword));
 
         PasswordAuth passwordAuth = passwordAuthRepository.findByEmail(member.getEmail())
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage()));
 
         passwordAuthRepository.delete(passwordAuth);
     }
