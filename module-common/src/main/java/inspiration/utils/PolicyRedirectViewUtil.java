@@ -4,7 +4,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 public class PolicyRedirectViewUtil {
 
-    private static final String REDIRECT_URL = "https://www.notion.so/depromeet/1ac8f67d1f794af1a1e9c7a6eafe1a51";
+    private static final String REDIRECT_URL = "https://gifted-puffin-352.notion.site/93d1471cbf364994b71f587c2cbb5a68";
 
     private static class LazyHolder {
         private static final RedirectView redirectView = new RedirectView();
