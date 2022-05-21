@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum RedisKey {
     REFRESH("REFRESH_"),
     EAUTH_SIGN_UP("EAUTH_SIGN_UP"),
-    EAUTH_UPDATE_PASSWORD("EAUTH_UPDATE_PASSWORD");
-
+    EAUTH_RESET_PASSWORD("EAUTH_RESET_PASSWORD"),
+    EAUTH_RESET_PASSWORD_IS_AUTH("TRUE");
     private final String key;
 
     RedisKey(String key) {

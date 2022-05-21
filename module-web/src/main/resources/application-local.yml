@@ -33,7 +33,7 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     sign-up-email-send-mail: ${SIGN_UP_EMAIL_SEND_MAIL}
-    update-password-email-send-mail: ${UPDATE_PASSWORD_EMAIL_SEND_MAIL}
+    reset-password-for-auth-send-mail: ${RESET_PASSWORD_FOR_AUTH_SEND_MAIL}
     auth-token: ${AUTH_TOKEN}
 
   jwt:
