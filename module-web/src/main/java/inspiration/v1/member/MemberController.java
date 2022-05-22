@@ -32,14 +32,6 @@ public class MemberController {
         memberService.changePassword(memberId, request.getConfirmPassword(), request.getPassword());
     }
 
-    @PostMapping("/sends-email/reset-passwords")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "초기화된 비밀번호를 이메일로 전송", notes = "초기화된 비밀번호를 이메일로 전송한다.")
-    public void resetPasswordEmailSend(@RequestBody @Valid SendEmailRequest request) {
-
-        memberService.resetPasswordEmailSend(request.getEmail());
-    }
-
     @PutMapping("/nickname/change")
     @ApiOperation(value = "닉네임 변경", notes = "닉네임을 변경한다.")
     public void changeNickname(@ApiIgnore @AuthenticationPrincipal Long memberId, @RequestBody @Valid UpdateNicknameRequest request) {
@@ -49,7 +41,15 @@ public class MemberController {
         memberService.changeNickname(memberId, request.getNickname());
     }
 
-    @PostMapping("/info")
+    @PostMapping("/sends-email/reset-passwords")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "초기화된 비밀번호를 이메일로 전송", notes = "초기화된 비밀번호를 이메일로 전송한다.")
+    public void resetPasswordEmailSend(@RequestBody @Valid SendEmailRequest request) {
+
+        memberService.resetPasswordEmailSend(request.getEmail());
+    }
+
+    @GetMapping("/info")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보를 조회한다.")
     public MemberInfoResponse getUserInfo() {
 
