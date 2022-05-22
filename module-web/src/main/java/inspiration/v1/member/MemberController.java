@@ -37,7 +37,7 @@ public class MemberController {
         memberService.resetPasswordEmailSend(request.getEmail());
     }
 
-    @PostMapping("/info")
+    @GetMapping("/info")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보를 조회한다.")
     public MemberInfoResponse getUserInfo() {
 
