@@ -50,6 +50,15 @@ public class MemberService {
         passwordAuthRepository.delete(passwordAuth);
     }
 
+    @Transactional
+    public void changeNickname(Long memberId, String nickname) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
+
+        member.updateNickname(nickname);
+    }
+
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
 
         if (!confirmPasswordCheck.equals(password)) {
