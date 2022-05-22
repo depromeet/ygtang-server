@@ -51,7 +51,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(Long memberId, String nickname) {
+    public void changeNickname(Long memberId, String nickname) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));

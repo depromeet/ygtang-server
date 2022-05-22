@@ -7,6 +7,7 @@ import inspiration.member.MemberService;
 import inspiration.member.request.UpdateNicknameRequest;
 import inspiration.member.request.UpdatePasswordRequest;
 import inspiration.member.response.MemberInfoResponse;
+import inspiration.signup.SignupService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AuthService authService;
+    private final SignupService signupService;
 
     @PutMapping("/passwords/change")
     @ApiOperation(value = "패스워드를 변경.", notes = "패스워드를 변경한다.")
@@ -42,7 +44,9 @@ public class MemberController {
     @ApiOperation(value = "닉네임 변경", notes = "닉네임을 변경한다.")
     public void changeNickname(@ApiIgnore @AuthenticationPrincipal Long memberId, @RequestBody @Valid UpdateNicknameRequest request) {
 
-        memberService.updateNickname(memberId, request.getNickname());
+        signupService.checkNickName(request.getNickname());
+
+        memberService.changeNickname(memberId, request.getNickname());
     }
 
     @PostMapping("/info")
