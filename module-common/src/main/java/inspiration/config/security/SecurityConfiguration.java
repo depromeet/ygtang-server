@@ -21,7 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    public static final String[] ALLOWED_URI_PATTERN = {"/api/v1/signup", "/api/v1/auth", "/api/v1/reissue", "/api/v1/members/sends-email/reset-passwords", "/health"};
+    public static final String[] ALLOWED_URI_PATTERN = {"/api/v1/signup", "/api/v1/auth", "/api/v1/reissue", "/api/v1/members/sends-email/reset-passwords", "/health", "/api/v1/auth/email/signup"};
 
     @Bean
     @Override
