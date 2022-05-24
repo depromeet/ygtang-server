@@ -181,6 +181,7 @@ public class InspirationService {
         inspiration.remove();
     }
 
+    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeAllInspiration(Long memberId) {
 
         Member member = memberService.findById(memberId);
