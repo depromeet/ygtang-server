@@ -14,6 +14,7 @@ import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.inspiration_tag.InspirationTag;
 import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
+import inspiration.member.MemberRepository;
 import inspiration.member.MemberService;
 import inspiration.tag.Tag;
 import inspiration.tag.TagService;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -177,6 +179,15 @@ public class InspirationService {
         }
 
         inspiration.remove();
+    }
+
+    public void removeAllInspiration(Long memberId) {
+
+        Member member = memberService.findById(memberId);
+
+        List<Inspiration> inspirations = inspirationRepository.findByIsDeletedAndMember(false, member);
+
+        inspirations.forEach(Inspiration::remove);
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)

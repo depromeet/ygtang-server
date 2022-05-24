@@ -139,6 +139,13 @@ public class InspirationController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/remove/all")
+    @ApiOperation(value = "영감 전체 삭제", notes = "해당 사용자의 영감을 전체 삭제한다.")
+    public void removeAllInspiration(@ApiIgnore @AuthenticationPrincipal Long memberId) {
+
+        inspirationService.removeAllInspiration(memberId);
+    }
+
     @GetMapping("/link/availiable")
     @ApiOperation(value = "링크 적합성 판단", notes = "링크 적합성을 판단한다")
     @ApiResponses({

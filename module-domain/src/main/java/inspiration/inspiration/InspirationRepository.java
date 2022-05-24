@@ -22,4 +22,6 @@ public interface InspirationRepository extends JpaRepository<Inspiration, Long>{
     Optional<List<Inspiration>> findDistinctInspirationByTags(@Param("tags") List<Tag> tags, @Param("count") Long count);
 
     Page<Inspiration> findAllByIsDeletedAndIdIn(boolean isDeleted, List<Long> inspirationIds, Pageable pageable);
+
+    List<Inspiration> findByIsDeletedAndMember(boolean isDeleted, Member member);
 }
