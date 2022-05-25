@@ -36,6 +36,10 @@ public class EmailAuthService {
 
         verifyEmail(email);
 
+        if(email.contains("+")) {
+            throw new PostNotFoundException("잘못된 이메일 형식입니다.");
+        }
+
         String authToken = AuthTokenUtil.getAuthToken();
 
         redisService.setDataWithExpiration(RedisKey.EAUTH_SIGN_UP.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
@@ -72,6 +76,10 @@ public class EmailAuthService {
 
         if(passwordAuthRepository.existsByEmail(email)) {
             throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
+        }
+
+        if(email.contains("+")) {
+            throw new PostNotFoundException("잘못된 이메일 형식입니다.");
         }
 
         String authToken = AuthTokenUtil.getAuthToken();
