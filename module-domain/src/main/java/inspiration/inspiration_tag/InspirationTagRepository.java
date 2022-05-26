@@ -13,4 +13,9 @@ public interface InspirationTagRepository extends JpaRepository<InspirationTag, 
     Optional<InspirationTag> findByInspirationAndTag(Inspiration inspiration, Tag tag);
 
     Optional<List<InspirationTag>> findInspirationByTagIn(List<Tag> tags);
+
+    void deleteAllByInspiration(Inspiration inspiration);
+
+    void deleteAllByInspirationIn(List<Inspiration> inspirations);
+
 }

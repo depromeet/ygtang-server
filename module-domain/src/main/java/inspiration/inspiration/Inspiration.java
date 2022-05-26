@@ -37,21 +37,12 @@ public class Inspiration extends BaseTimeEntity {
     @OneToMany(mappedBy = "inspiration", fetch = FetchType.LAZY)
     private List<InspirationTag> inspirationTags = new ArrayList<>();
 
-    private Boolean isDeleted;
-
-    private LocalDateTime delDateTime;
-
     public Inspiration(InspirationType type) {
         this.type = type;
     }
 
     public void setFilePath(String filePath) {
         this.content = filePath;
-    }
-
-    public void remove() {
-        this.isDeleted = true;
-        this.delDateTime = LocalDateTime.now();
     }
 
     public void modifyMemo(String memo) {
@@ -62,9 +53,9 @@ public class Inspiration extends BaseTimeEntity {
         this.member = member;
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.isDeleted = this.isDeleted != null && this.isDeleted;
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        this.isDeleted = this.isDeleted != null && this.isDeleted;
+//    }
 
 }

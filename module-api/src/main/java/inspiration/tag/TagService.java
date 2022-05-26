@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -76,5 +78,14 @@ public class TagService {
             throw new NoAccessAuthorizationException();
         }
         tagRepository.delete(tag);
+    }
+
+    @CacheEvict(value = "tag", allEntries = true)
+    public void removeAllTag(Long memberId) {
+        Member member = memberService.findById(memberId);
+
+        List<Tag> tags = tagRepository.findByMember(member);
+
+        tagRepository.deleteAll(tags);
     }
 }

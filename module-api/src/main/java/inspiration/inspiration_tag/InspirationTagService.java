@@ -37,4 +37,12 @@ public class InspirationTagService {
     public void delete(InspirationTag inspirationTag) {
         inspirationTagRepository.delete(inspirationTag);
     }
+
+    public void deleteAllByInspiration(Inspiration inspiration) {
+        inspirationTagRepository.deleteAllByInspiration(inspiration);
+    }
+
+    public void deleteAllByInspirationIn(List<Inspiration> inspirations) {
+        inspirationTagRepository.deleteAllByInspirationIn(inspirations);
+    }
 }

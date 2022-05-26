@@ -1,5 +1,6 @@
 package inspiration.member;
 
+import inspiration.emailauth.EmailAuthRepository;
 import inspiration.emailauth.ResetPasswordEmailSendService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final EmailAuthRepository emailAuthRepository;
     private final MemberRepository memberRepository;
     private final PasswordAuthRepository passwordAuthRepository;
     private final ResetPasswordEmailSendService resetPasswordEmailSendService;
@@ -57,6 +59,18 @@ public class MemberService {
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
 
         member.updateNickname(nickname);
+    }
+
+    @Transactional
+    public void removeUser(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
+
+        emailAuthRepository.deleteByEmail(member.getEmail());
+
+        memberRepository.deleteById(memberId);
+
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
