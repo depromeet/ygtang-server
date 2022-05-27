@@ -96,4 +96,10 @@ public class TagController {
         tagService.removeTag(id, memberId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/remove/all")
+    @ApiOperation(value = "태그 전체 삭제", notes = "태그를 전체삭제한다.")
+    public void tagRemoveAll(@ApiIgnore @AuthenticationPrincipal Long memberId) {
+        tagService.removeAllTag(memberId);
+    }
 }

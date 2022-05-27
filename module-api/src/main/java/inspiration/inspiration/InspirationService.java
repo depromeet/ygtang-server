@@ -12,6 +12,7 @@ import inspiration.inspiration.request.InspirationTagRequest;
 import inspiration.inspiration.response.InspirationResponse;
 import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.inspiration_tag.InspirationTag;
+import inspiration.inspiration_tag.InspirationTagRepository;
 import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
@@ -48,7 +49,7 @@ public class InspirationService {
 
         Member member = memberService.findById(memberId);
 
-        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIsDeletedAndMember(false, member, pageable);
+        Page<Inspiration> inspirationPage = inspirationRepository.findAllByMember(member, pageable);
         inspirationPage
                 .forEach(
                         inspiration ->
@@ -61,7 +62,7 @@ public class InspirationService {
 
         Member member = memberService.findById(memberId);
 
-        Inspiration inspiration = inspirationRepository.findAllByIsDeletedAndMemberAndId(false, member, id)
+        Inspiration inspiration = inspirationRepository.findAllByMemberAndId(member, id)
                                                         .orElseThrow(ResourceNotFoundException::new);
 
         inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()));
@@ -147,7 +148,7 @@ public class InspirationService {
                                                 .map(Inspiration::getId)
                                                 .collect(Collectors.toList());
 
-        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIsDeletedAndIdIn(false,  inspirationIds, pageable);
+        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIdIn(inspirationIds, pageable);
         inspirationPage
                 .forEach(
                         inspiration ->
@@ -168,6 +169,7 @@ public class InspirationService {
         return inspiration.getId();
     }
 
+    @Transactional
     @CacheEvict(value = "inspiration", allEntries = true)
     public void removeInspiration(Long id, Long memberId) {
         Inspiration inspiration = getInspiration(id);
@@ -176,7 +178,18 @@ public class InspirationService {
             throw new NoAccessAuthorizationException();
         }
 
-        inspiration.remove();
+        inspirationRepository.delete(inspiration);
+    }
+
+    public void removeAllInspiration(Long memberId) {
+        Member member = memberService.findById(memberId);
+
+        List<Inspiration> inspirations = inspirationRepository.findAllByMember(member);
+
+        inspirationTagService.deleteAllByInspirationIn(inspirations);
+
+        inspirationRepository.deleteAllByMember(member);
+
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)
@@ -217,6 +230,18 @@ public class InspirationService {
         inspirationTagService.delete(inspirationTag);
     }
 
+    @CacheEvict(value = "inspiration", allEntries = true)
+    public void unTagInspirationByInspiration(Long id, Long memberId) {
+
+        if(!getInspiration(id).getMember().isSameMember(memberId)) {
+            throw new NoAccessAuthorizationException();
+        }
+
+        Inspiration inspiration = getInspiration(id);
+
+        inspirationTagService.deleteAllByInspiration(inspiration);
+    }
+
     private void fileUpload(Inspiration inspiration, List<MultipartFile> multipartFiles) {
         List<String> fileNames = awsS3Service.uploadFile(multipartFiles);
         if(!fileNames.isEmpty()){
@@ -235,7 +260,4 @@ public class InspirationService {
         return inspirationRepository.findById(id)
                                     .orElseThrow(ResourceNotFoundException::new);
     }
-
-
-
 }

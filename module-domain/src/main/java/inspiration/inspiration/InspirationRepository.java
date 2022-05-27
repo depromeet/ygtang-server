@@ -14,12 +14,16 @@ import java.util.Optional;
 
 public interface InspirationRepository extends JpaRepository<Inspiration, Long>{
 
-    Page<Inspiration> findAllByIsDeletedAndMember(boolean isDeleted, Member member, Pageable pageable);
+    Page<Inspiration> findAllByMember(Member member, Pageable pageable);
 
-    Optional<Inspiration> findAllByIsDeletedAndMemberAndId(boolean isDeleted, Member member, Long id);
+    Optional<Inspiration> findAllByMemberAndId(Member member, Long id);
 
     @Query(value = "select it.inspiration from InspirationTag it where it.tag in :tags group by it.inspiration having count(it.inspiration) >= :count")
     Optional<List<Inspiration>> findDistinctInspirationByTags(@Param("tags") List<Tag> tags, @Param("count") Long count);
 
-    Page<Inspiration> findAllByIsDeletedAndIdIn(boolean isDeleted, List<Long> inspirationIds, Pageable pageable);
+    Page<Inspiration> findAllByIdIn(List<Long> inspirationIds, Pageable pageable);
+
+    List<Inspiration> findAllByMember(Member member);
+
+    void deleteAllByMember(Member member);
 }

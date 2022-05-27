@@ -3,11 +3,13 @@ package inspiration.v1.member;
 import inspiration.auth.AuthService;
 import inspiration.config.AuthenticationPrincipal;
 import inspiration.emailauth.request.SendEmailRequest;
+import inspiration.inspiration.InspirationService;
 import inspiration.member.MemberService;
 import inspiration.member.request.UpdateNicknameRequest;
 import inspiration.member.request.UpdatePasswordRequest;
 import inspiration.member.response.MemberInfoResponse;
 import inspiration.signup.SignupService;
+import inspiration.tag.TagService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
     private final SignupService signupService;
+    private final InspirationService inspirationService;
+    private final TagService tagService;
 
     @PutMapping("/passwords/change")
     @ApiOperation(value = "패스워드를 변경.", notes = "패스워드를 변경한다.")
@@ -54,5 +58,16 @@ public class MemberController {
     public MemberInfoResponse getUserInfo() {
 
         return authService.getUserInfo();
+    }
+
+    @DeleteMapping("/remove")
+    @ApiOperation(value = "계정 삭제", notes = "계정을 삭제한다.")
+    public void removeMember(@ApiIgnore @AuthenticationPrincipal Long memberId) {
+
+        inspirationService.removeAllInspiration(memberId);
+
+        tagService.removeAllTag(memberId);
+
+        memberService.removeUser(memberId);
     }
 }
