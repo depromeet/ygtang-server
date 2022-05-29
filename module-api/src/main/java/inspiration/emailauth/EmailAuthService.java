@@ -13,6 +13,7 @@ import inspiration.passwordauth.PasswordAuthRepository;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import inspiration.utils.GetResetPasswordUtil;
+import inspiration.utils.PasswordAuthRedirectViewUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,7 +107,7 @@ public class EmailAuthService {
                         .isAuth(true)
                         .build());
 
-        return PolicyRedirectViewUtil.redirectView();
+        return PasswordAuthRedirectViewUtil.redirectView(email);
     }
 
     @Transactional(readOnly = true)
