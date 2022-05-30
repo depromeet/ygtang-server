@@ -12,7 +12,6 @@ import inspiration.inspiration.request.InspirationTagRequest;
 import inspiration.inspiration.response.InspirationResponse;
 import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.inspiration_tag.InspirationTag;
-import inspiration.inspiration_tag.InspirationTagRepository;
 import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
@@ -181,6 +180,8 @@ public class InspirationService {
         inspirationRepository.delete(inspiration);
     }
 
+    @Transactional
+    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeAllInspiration(Long memberId) {
         Member member = memberService.findById(memberId);
 
