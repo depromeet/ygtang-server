@@ -64,7 +64,7 @@ public class SignUpEmailSendService implements EmailSendService {
             "        \"\n" +
             "        href=";
     private final static String CLOSE_HREF = "" +
-            "      >\n" +
+            ">\n" +
             "        이메일 인증하기\n" +
             "      </a>\n" +
             "    </main>\n" +
