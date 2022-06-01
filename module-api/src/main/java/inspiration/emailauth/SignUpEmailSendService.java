@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.internet.MimeMessage;
 
@@ -77,10 +75,10 @@ public class SignUpEmailSendService implements EmailSendService {
                 "        이메일 주소를 인증하면,<br />\n" +
                 "        영감을 자유롭게 추가할 수 있어요.<br />\n" +
                 "        아래 버튼을 눌러 이메일 주소를 인증해 주세요.<br />\n" +
-                "      </p>");
-        sb.append("\n");
-        sb.append("<a\n" +
-                "          style=\"\n" +
+                "      </p>\n" +
+                "\u200B\n" +
+                "      <a\n" +
+                "        style=\"\n" +
                 "          all: unset;\n" +
                 "          cursor: pointer;\n" +
                 "          padding: 16px;\n" +
@@ -88,13 +86,14 @@ public class SignUpEmailSendService implements EmailSendService {
                 "          border-radius: 4px;\n" +
                 "          color: #d6dbdc;\n" +
                 "        \"\n" +
-                "          href=" + link +
-                "  >\n" + "이메일 인증하기" +
-                "  </a>"
-        );
-        sb.append("    </main>\n" +
+                "        href= + " + link +
+                "      >\n" +
+                "        이메일 인증하기\n" +
+                "      </a>\n" +
+                "    </main>\n" +
                 "  </body>\n" +
                 "</html>");
+
         return sb.toString();
     }
 }
