@@ -86,7 +86,8 @@ public class SignUpEmailSendService implements EmailSendService {
                 "          border-radius: 4px;\n" +
                 "          color: #d6dbdc;\n" +
                 "        \"\n" +
-                "        href= + " + link +
+                "        href=" +
+                        link +
                 "      >\n" +
                 "        이메일 인증하기\n" +
                 "      </a>\n" +
