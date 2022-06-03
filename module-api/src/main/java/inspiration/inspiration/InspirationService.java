@@ -243,6 +243,19 @@ public class InspirationService {
         inspirationTagService.deleteAllByInspiration(inspiration);
     }
 
+    @CacheEvict(value = "inspiration", allEntries = true)
+    public void unTagInspirationByTag(Long tagId, Long memberId) {
+
+        Tag tag = tagService.getTag(tagId);
+
+        if(!tag.getMember().isSameMember(memberId)) {
+            throw new NoAccessAuthorizationException();
+        }
+
+        inspirationTagService.deleteAllByTag(tag);
+
+    }
+
     private void fileUpload(Inspiration inspiration, List<MultipartFile> multipartFiles) {
         List<String> fileNames = awsS3Service.uploadFile(multipartFiles);
         if(!fileNames.isEmpty()){

@@ -18,4 +18,6 @@ public interface InspirationTagRepository extends JpaRepository<InspirationTag, 
 
     void deleteAllByInspirationIn(List<Inspiration> inspirations);
 
+    void deleteAllByTag(Tag tag);
+
 }
