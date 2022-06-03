@@ -1,6 +1,7 @@
 package inspiration.v1.tag;
 
 import inspiration.config.AuthenticationPrincipal;
+import inspiration.inspiration.InspirationService;
 import inspiration.tag.TagService;
 import inspiration.tag.request.TagAddRequest;
 import inspiration.tag.response.TagResponse;
@@ -28,6 +29,7 @@ import java.net.URI;
 public class TagController {
 
     private final TagService tagService;
+    private final InspirationService inspirationService;
 
 
     @GetMapping("/list")
@@ -93,7 +95,11 @@ public class TagController {
     })
     public ResponseEntity<ResultResponse> tagRemove(@PathVariable @NotNull Long id,
                                                     @ApiIgnore @AuthenticationPrincipal Long memberId) {
+
+        inspirationService.unTagInspirationByTag(id, memberId);
+
         tagService.removeTag(id, memberId);
+
         return ResponseEntity.ok().build();
     }
 
