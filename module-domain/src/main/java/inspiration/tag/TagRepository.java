@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Long>{
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<Tag> findById(Long id);
     Page<Tag> findAllByMember(Member member, Pageable pageable);
 
