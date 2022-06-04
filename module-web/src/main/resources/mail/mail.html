@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin: 0; padding: 0">
+<main
+        style="
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 10px;
+      "
+>
+    <div style="height: 80px; margin-bottom: 36px">
+        <img
+                src="https://user-images.githubusercontent.com/26461307/171172952-92151475-8487-4dd7-9670-092a3cafd14f.png"
+                alt="ygtang text logo"
+                style="width: 100%; height: 100%; object-fit: contain"
+        />
+    </div>
+    <div style="width: 100%; height: 150px; margin-bottom: 50px">
+        <img
+                src="https://user-images.githubusercontent.com/26461307/171172966-42f47ec4-42c6-416d-ac12-bf26e2e2116f.png"
+                alt="ygtang logo"
+                style="width: 100%; height: 100%; object-fit: contain"
+        />
+    </div>
+    <p style="text-align: center; margin-bottom: 50px; line-height: 150%; color: #5a676a">
+        이메일 주소를 인증하면,<br />
+        영감을 자유롭게 추가할 수 있어요.<br />
+        아래 버튼을 눌러 이메일 주소를 인증해 주세요.<br />
+    </p>
+    <a
+            style="
+          all: unset;
+          cursor: pointer;
+          padding: 16px;
+          background-color: #f15a24;
+          border-radius: 4px;
+          color: #d6dbdc;
+        "
+            th:text="${link}"
+    >
+        이메일 인증하기
+    </a>
+</main>
+</body>
+</html>
