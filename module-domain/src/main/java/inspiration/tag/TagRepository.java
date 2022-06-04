@@ -10,11 +10,11 @@ import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface TagRepository extends JpaRepository<Tag, Long>{
 
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Tag> findById(Long id);
+
     Page<Tag> findAllByMember(Member member, Pageable pageable);
 
     Page<Tag> findAllByMemberAndContentContaining(Member member, String content, Pageable pageable);

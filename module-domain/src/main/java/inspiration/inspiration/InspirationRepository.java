@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface InspirationRepository extends JpaRepository<Inspiration, Long>{
 
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Inspiration> findById(Long id);
 
     Page<Inspiration> findAllByMember(Member member, Pageable pageable);

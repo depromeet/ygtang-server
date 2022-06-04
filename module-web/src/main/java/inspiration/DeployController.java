@@ -10,5 +10,4 @@ public class DeployController {
     public String checkHealth() {
         return "healthy";
     }
-
 }
