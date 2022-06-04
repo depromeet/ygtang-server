@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Member> findById(Long id);
+
     Optional<Member> findByEmail(String email);
 
     boolean existsByNickname(String nickName);
