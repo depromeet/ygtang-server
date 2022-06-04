@@ -23,13 +23,6 @@ public class InspirationTagService {
 
     }
 
-    @Transactional(readOnly = true)
-    public List<InspirationTag> findInspirationByTags(List<Tag> tags) {
-        return inspirationTagRepository.findInspirationByTagIn(tags)
-                                         .orElseThrow(ResourceNotFoundException::new);
-
-    }
-
     public InspirationTag save(InspirationTag inspirationTag) {
         return inspirationTagRepository.save(inspirationTag);
     }

@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -196,6 +197,7 @@ public class InspirationService {
 
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @CacheEvict(value = "inspiration", allEntries = true)
     public Long tagInspiration(InspirationTagRequest request, Long memberId) {
 
@@ -233,7 +235,8 @@ public class InspirationService {
         }
 
         InspirationTag inspirationTag = inspirationTagService.findInspirationTag(inspiration, tag);
-        inspirationTagService.delete(inspirationTag);
+        inspirationTagRepository.delete(inspirationTag);
+
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)
