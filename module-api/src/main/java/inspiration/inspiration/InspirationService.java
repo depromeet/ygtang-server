@@ -4,6 +4,7 @@ import com.github.siyoon210.ogparser4j.OgParser;
 import com.github.siyoon210.ogparser4j.OpenGraph;
 import inspiration.RestPage;
 import inspiration.aws.AwsS3Service;
+import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
 import inspiration.inspiration.request.InspirationAddRequest;
@@ -12,6 +13,7 @@ import inspiration.inspiration.request.InspirationTagRequest;
 import inspiration.inspiration.response.InspirationResponse;
 import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.inspiration_tag.InspirationTag;
+import inspiration.inspiration_tag.InspirationTagRepository;
 import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +44,7 @@ public class InspirationService {
     private final MemberService memberService;
     private final TagService tagService;
     private final InspirationTagService inspirationTagService;
+    private final InspirationTagRepository inspirationTagRepository;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId + #pageable.pageNumber + #pageable.pageSize}")
@@ -193,6 +197,7 @@ public class InspirationService {
 
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @CacheEvict(value = "inspiration", allEntries = true)
     public Long tagInspiration(InspirationTagRequest request, Long memberId) {
 
@@ -207,7 +212,9 @@ public class InspirationService {
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
         }
-
+        if (inspirationTagRepository.findByInspirationAndTag(inspiration, tag).isPresent()) {
+            throw new ConflictRequestException();
+        }
         inspirationTagService.save(new InspirationTag(inspiration, tag));
         return inspiration.getId();
     }
@@ -228,7 +235,8 @@ public class InspirationService {
         }
 
         InspirationTag inspirationTag = inspirationTagService.findInspirationTag(inspiration, tag);
-        inspirationTagService.delete(inspirationTag);
+        inspirationTagRepository.delete(inspirationTag);
+
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)

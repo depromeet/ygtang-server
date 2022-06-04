@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import javax.mail.internet.MimeMessage;
 
@@ -20,7 +18,6 @@ public class SignUpEmailSendService implements EmailSendService {
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
     private final static String SUBJECT = "이메일 인증";
-    private final TemplateEngine templateEngine;
 
     @Override
     public void send(String email, String authToken) {
