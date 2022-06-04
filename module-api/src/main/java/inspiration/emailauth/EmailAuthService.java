@@ -6,21 +6,20 @@ import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
-import inspiration.member.Member;
 import inspiration.member.MemberRepository;
 import inspiration.passwordauth.PasswordAuth;
 import inspiration.passwordauth.PasswordAuthRepository;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
-import inspiration.utils.GetResetPasswordUtil;
 import inspiration.utils.PasswordAuthRedirectViewUtil;
 import inspiration.utils.PolicyRedirectViewUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class EmailAuthService {
@@ -52,6 +51,7 @@ public class EmailAuthService {
     public RedirectView authenticateEmailOfSingUp(String email) {
 
         String expiredKey = RedisKey.EAUTH_SIGN_UP.getKey() + email;
+        log.info(email);
 
         if (redisService.getData(expiredKey) == null) {
             throw new EmailAuthenticatedTimeExpiredException();

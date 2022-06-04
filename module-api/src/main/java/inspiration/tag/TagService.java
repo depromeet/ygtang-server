@@ -1,6 +1,7 @@
 package inspiration.tag;
 
 import inspiration.RestPage;
+import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
 import inspiration.member.Member;
@@ -58,8 +59,12 @@ public class TagService {
 
         Member member = memberService.findById(memberId);
 
+        if (tagRepository.findAllByMemberAndContent(member, request.getContent()).isPresent()) {
+            throw new ConflictRequestException();
+        }
         Tag tag = request.toEntity();
         tag.writeBy(member);
+
         Tag savedTag = tagRepository.save(tag);
         return TagResponse.from(savedTag);
     }
