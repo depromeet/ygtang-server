@@ -4,6 +4,7 @@ import com.github.siyoon210.ogparser4j.OgParser;
 import com.github.siyoon210.ogparser4j.OpenGraph;
 import inspiration.RestPage;
 import inspiration.aws.AwsS3Service;
+import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
 import inspiration.inspiration.request.InspirationAddRequest;
@@ -12,6 +13,7 @@ import inspiration.inspiration.request.InspirationTagRequest;
 import inspiration.inspiration.response.InspirationResponse;
 import inspiration.inspiration.response.OpenGraphResponse;
 import inspiration.inspiration_tag.InspirationTag;
+import inspiration.inspiration_tag.InspirationTagRepository;
 import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
@@ -41,6 +43,7 @@ public class InspirationService {
     private final MemberService memberService;
     private final TagService tagService;
     private final InspirationTagService inspirationTagService;
+    private final InspirationTagRepository inspirationTagRepository;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId + #pageable.pageNumber + #pageable.pageSize}")
@@ -207,7 +210,9 @@ public class InspirationService {
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
         }
-
+        if (inspirationTagRepository.findByInspirationAndTag(inspiration, tag).isPresent()) {
+            throw new ConflictRequestException();
+        }
         inspirationTagService.save(new InspirationTag(inspiration, tag));
         return inspiration.getId();
     }
