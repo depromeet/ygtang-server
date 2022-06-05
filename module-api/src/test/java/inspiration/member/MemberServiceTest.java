@@ -25,6 +25,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     dkslhgalidgj
+    ㅁㄴㅇㄴㅁㅇ
 
     @InjectMocks
     private MemberService memberService;
