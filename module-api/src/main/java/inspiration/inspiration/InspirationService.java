@@ -20,6 +20,8 @@ import inspiration.member.MemberService;
 import inspiration.tag.Tag;
 import inspiration.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,7 +32,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +72,6 @@ public class InspirationService {
     public InspirationResponse findInspiration(Long id, Long memberId) {
 
         Member member = memberService.findById(memberId);
-
         Inspiration inspiration = inspirationRepository.findAllByMemberAndId(member, id)
                                                         .orElseThrow(ResourceNotFoundException::new);
 
@@ -80,32 +86,63 @@ public class InspirationService {
         }
         try {
             link = URLDecoder.decode(link, "UTF-8");
-
-            String image = getOGContent("image", link);
-            String siteName = getOGContent("content", link);
-            String title = getOGContent("title", link);
-            String url = getOGContent("url", link);
-            String description = getOGContent("description", link);
-            return OpenGraphResponse.of(HttpStatus.OK.value(), image, siteName, title, url, description);
-
-        } catch (Exception e) {
+            URL req = new URL(link);
+            HttpURLConnection huc = (HttpURLConnection) req.openConnection();
+            int responseCode = huc.getResponseCode();
+            if (responseCode != HttpStatus.OK.value()) {
+                return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+        } catch (IOException e) {
             return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
+        String image = getContent("image", link);
+        String siteName = getContent("content", link);
+        String title = getContent("title", link);
+        String url = getContent("url", link);
+        String description = getContent("description", link);
+        url = url == null ? link : url;
+        return OpenGraphResponse.of(HttpStatus.OK.value(), image, siteName, title, url, description);
     }
 
-    private String getOGContent(String content, String link) {
+    private String getContent(String content, String link) {
 
+        String parseData = getOGContent(content, link);
+        if (parseData != null) {
+            return parseData;
+        }
+        return getTagContent(content, link);
+    }
+
+    private String getOGContent(String content, String link)  {
+
+        String ogContent = null;
+        OgParser ogParser = new OgParser();
+        OpenGraph openGraph = ogParser.getOpenGraphOf(link);
         try {
-            OgParser ogParser = new OgParser();
-            OpenGraph openGraph = ogParser.getOpenGraphOf(link);
-
             if (content.equals("image")) {
-                return openGraph.getContentOf(content, 0).getValue();
+                ogContent = openGraph.getContentOf(content, 0).getValue();
             }
-            return  openGraph.getContentOf(content).getValue();
+            ogContent = openGraph.getContentOf(content).getValue();
+        } catch (NullPointerException e) {
+            return null;
+        }
+        return ogContent;
+    }
+
+    private String getTagContent(String content, String link) {
+
+        String tagContent = null;
+        try {
+            Document doc = Jsoup.connect(link).get();
+            if(content.equals("description")){
+                tagContent =  doc.select("meta[name=description]").get(0).attr("content");
+            } else if (content.equals("title")) {
+                tagContent = doc.title();
+            }
         } catch (Exception e) {
             return null;
         }
+        return tagContent;
     }
 
     public OpenGraphResponse getOG(String link) {

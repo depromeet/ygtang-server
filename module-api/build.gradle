@@ -26,5 +26,6 @@ dependencies {
 
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation 'com.github.siyoon210:ogparser4j:1.0.1'
+    implementation 'org.jsoup:jsoup:1.15.1'
 
 }
