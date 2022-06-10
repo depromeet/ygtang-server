@@ -61,6 +61,7 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "inspiration", key = "{#memberId + #id}")
     public InspirationResponse findInspiration(Long id, Long memberId) {
 
         Member member = memberService.findById(memberId);
