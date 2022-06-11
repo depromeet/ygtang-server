@@ -80,6 +80,7 @@ public class JwtProvider {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .memberId(memberId)
                 .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
                 .build();
     }
