@@ -42,9 +42,9 @@ public class SignupService {
     }
 
     @Transactional
-    public void updateExtraInfo(ExtraInfoRequest request) {
+    public void updateExtraInfo(String email, ExtraInfoRequest request) {
 
-        Member member = memberRepository.findById(request.getMemberId())
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         member.updateExtraInfo(request.getGender(), request.getAge(), request.getJob());
