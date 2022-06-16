@@ -5,9 +5,10 @@ import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
+import inspiration.member.Member;
 import inspiration.member.MemberRepository;
 import inspiration.member.request.SignUpRequest;
-import inspiration.redis.RedisService;
+import inspiration.member.request.ExtraInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,15 @@ public class SignupService {
         isValidNickName(nickname);
 
         return ResultResponse.from("사용할 수 있는 닉네임입니다.");
+    }
+
+    @Transactional
+    public void updateExtraInfo(ExtraInfoRequest request) {
+
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+
+        member.updateExtraInfo(request.getGender(), request.getAge(), request.getJob());
     }
 
     public ResultResponse validSignUpEmailStatus(String email) {

@@ -5,7 +5,6 @@ import inspiration.emailauth.ResetPasswordEmailSendService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
-import inspiration.member.request.UpdateExtraInfoRequest;
 import inspiration.passwordauth.PasswordAuth;
 import inspiration.passwordauth.PasswordAuthRepository;
 import inspiration.utils.GetResetPasswordUtil;
@@ -72,15 +71,6 @@ public class MemberService {
 
         memberRepository.deleteById(memberId);
 
-    }
-
-    @Transactional
-    public void updateExtraInfo(Long memberId, UpdateExtraInfoRequest request) {
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
-
-        member.updateExtraInfo(request.getGender(), request.getAge(), request.getJob());
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {

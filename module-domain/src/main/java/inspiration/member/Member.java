@@ -2,8 +2,6 @@ package inspiration.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import inspiration.date.BaseTimeEntity;
-import inspiration.enumeration.AgeType;
-import inspiration.enumeration.GenderType;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,13 +40,15 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @Column
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @Column
-    private AgeType age;
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private AgeGroupType age_group;
 
-    @Column
+    @Column(nullable = true)
     private String job;
 
     public void updatePassword(String password) {
@@ -61,10 +61,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.nickname = nickname;
     }
 
-    public void updateExtraInfo(GenderType gender, AgeType age, String job) {
+    public void updateExtraInfo(GenderType gender, AgeGroupType age_group, String job) {
 
         this.gender = gender;
-        this.age = age;
+        this.age_group = age_group;
         this.job = job;
     }
 
