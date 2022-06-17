@@ -65,7 +65,7 @@ public class MemberService {
     public void removeUser(Long memberId) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
+                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         emailAuthRepository.deleteByEmail(member.getEmail());
 

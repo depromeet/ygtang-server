@@ -40,6 +40,17 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private GenderType gender;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private AgeGroupType age_group;
+
+    @Column(nullable = true)
+    private String job;
+
     public void updatePassword(String password) {
 
         this.password = password;
@@ -48,6 +59,13 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void updateNickname(String nickname) {
 
         this.nickname = nickname;
+    }
+
+    public void updateExtraInfo(GenderType gender, AgeGroupType age_group, String job) {
+
+        this.gender = gender;
+        this.age_group = age_group;
+        this.job = job;
     }
 
     @Override

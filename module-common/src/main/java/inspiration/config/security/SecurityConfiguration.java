@@ -54,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .antMatchers(HttpMethod.DELETE, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .antMatchers(HttpMethod.PUT, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.PATCH, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
                 .anyRequest().hasRole("USER")
 
                 .and()

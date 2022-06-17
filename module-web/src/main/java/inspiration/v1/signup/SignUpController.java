@@ -1,7 +1,9 @@
 package inspiration.v1.signup;
 
 import inspiration.ResultResponse;
+import inspiration.config.AuthenticationPrincipal;
 import inspiration.member.request.SignUpRequest;
+import inspiration.member.request.ExtraInfoRequest;
 import inspiration.signup.SignupService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,15 @@ public class SignUpController {
     public ResultResponse singUp(@RequestBody @Valid SignUpRequest request) {
 
         return signupService.signUp(request);
+    }
+
+    @PatchMapping("/extra-informations")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "사용자 추가 정보", notes = "사용자 추가 정보를 저장합니다.")
+    public void updateExtraInfo(@RequestBody @Valid ExtraInfoRequest request,
+                                @RequestParam(value = "email") String email) {
+
+        signupService.updateExtraInfo(email, request);
     }
 
     @GetMapping("/nicknames/{nickname}/exists")
