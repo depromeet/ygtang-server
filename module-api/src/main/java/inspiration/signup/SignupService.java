@@ -1,8 +1,11 @@
 package inspiration.signup;
 
 import inspiration.ResultResponse;
+import inspiration.config.security.JwtProvider;
+import inspiration.config.security.TokenResponse;
 import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
+import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.member.Member;
@@ -10,9 +13,12 @@ import inspiration.member.MemberRepository;
 import inspiration.member.request.SignUpRequest;
 import inspiration.member.request.ExtraInfoRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -21,16 +27,23 @@ public class SignupService {
     private final MemberRepository memberRepository;
     private final EmailAuthRepository emailAuthRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final StringRedisTemplate redisTemplate;
+    private final String REFRESH_TOKEN_KEY = "refreshToken : ";
 
     @Transactional
-    public Long signUp(SignUpRequest request) {
+    public ResultResponse signUp(SignUpRequest request) {
 
         verifyEmail(request.getEmail());
         isValidEmail(request.getEmail());
         isValidNickName(request.getNickName());
         confirmPasswordCheck(request.getConfirmPassword(), request.getPassword());
 
-        return memberRepository.save(request.toEntity(passwordEncoder)).getId();
+        Member member = memberRepository.save(request.toEntity(passwordEncoder));
+        TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
+
+        return ResultResponse.of(REFRESH_TOKEN_KEY, tokenResponse);
     }
 
     @Transactional(readOnly = true)
@@ -87,4 +100,9 @@ public class SignupService {
             throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
         }
     }
+
+    private void saveRefreshToken(Long memberId, String refreshToken) {
+        redisTemplate.opsForValue().set(REFRESH_TOKEN_KEY + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+    }
+
 }

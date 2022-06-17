@@ -16,5 +16,7 @@ public class TokenResponse {
     private String refreshToken;
 
     private Long accessTokenExpireDate;
+
+    private long memberId;
 }
 

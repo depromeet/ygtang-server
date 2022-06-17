@@ -33,11 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,7 @@ public class InspirationService {
     private final InspirationTagRepository inspirationTagRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId + #pageable.pageNumber + #pageable.pageSize}")
+    @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
     public RestPage<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -68,7 +66,7 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId + #id}")
+    @Cacheable(value = "inspiration", key = "{#memberId, #id}")
     public InspirationResponse findInspiration(Long id, Long memberId) {
 
         Member member = memberService.findById(memberId);
