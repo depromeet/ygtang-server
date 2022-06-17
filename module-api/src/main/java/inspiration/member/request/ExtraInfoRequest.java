@@ -14,12 +14,13 @@ import javax.validation.constraints.NotNull;
 public class ExtraInfoRequest {
 
     @ApiModelProperty( notes = "F | M | N")
-    @NotNull
+    @NotNull(message = "성별은 필수 입력입니다.")
     private GenderType gender;
 
     @ApiModelProperty( notes = "UNDER_20S | EARLY_20S | LATE_20S | EARLY_30S | OLDER_35")
-    @NotNull
+    @NotNull(message = "나이는 필수 입력입니다.")
     private AgeGroupType age;
 
+    @NotNull(message = "관심 직무는 필수 입력입니다.")
     private String job;
 }

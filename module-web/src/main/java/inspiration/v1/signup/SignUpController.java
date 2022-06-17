@@ -27,7 +27,7 @@ public class SignUpController {
     }
 
     @PatchMapping("/extra-informations")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "사용자 추가 정보", notes = "사용자 추가 정보를 저장합니다.")
     public void updateExtraInfo(@RequestBody @Valid ExtraInfoRequest request,
                                 @RequestParam(value = "email") String email) {
