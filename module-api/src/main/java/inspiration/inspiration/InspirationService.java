@@ -18,6 +18,7 @@ import inspiration.inspiration_tag.InspirationTagService;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
 import inspiration.tag.Tag;
+import inspiration.tag.TagRepository;
 import inspiration.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -50,6 +51,7 @@ public class InspirationService {
     private final TagService tagService;
     private final InspirationTagService inspirationTagService;
     private final InspirationTagRepository inspirationTagRepository;
+    private final TagRepository tagRepository;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
@@ -230,6 +232,8 @@ public class InspirationService {
         inspirationTagService.deleteAllByInspirationIn(inspirations);
 
         inspirationRepository.deleteAllByMember(member);
+
+        tagRepository.deleteAllByMember(member);
 
     }
 
