@@ -7,11 +7,13 @@ import inspiration.config.security.JwtProvider;
 import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
+import inspiration.enumeration.TokenType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
 import inspiration.member.Member;
 import inspiration.member.MemberRepository;
 import inspiration.member.response.MemberInfoResponse;
+import inspiration.redis.RedisService;
 import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -30,8 +34,10 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final StringRedisTemplate redisTemplate;
+    private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final HttpServletResponse httpServletResponse;
 
     private final String refreshTokenKey = "refreshToken : ";
     private final String issueToken = "refreshToken : ";
@@ -42,6 +48,27 @@ public class AuthService {
         Member member = checkEmail(request.getEmail());
 
         verifyPassword(request.getPassword(), member.getPassword());
+
+        String refreshToken = redisService.getData(refreshTokenKey + member.getId());
+
+        if(refreshToken != null) {
+
+            String accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
+
+            Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
+            cookie.setPath("/");
+            cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
+            httpServletResponse.addCookie(cookie);
+
+            TokenResponse tokenResponse = TokenResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .memberId(member.getId())
+                    .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                    .build();
+
+            return ResultResponse.of(issueToken, tokenResponse);
+        }
 
         TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
 
