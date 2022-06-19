@@ -2,7 +2,6 @@ package inspiration.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
-import inspiration.config.AuthenticationPrincipal;
 import inspiration.config.security.JwtProvider;
 import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
@@ -128,6 +127,7 @@ public class AuthService {
         TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
 
         saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
+        saveAccessToken(member.getId(), newTokenResponse.getAccessToken());
 
         return ResultResponse.of(issueToken, newTokenResponse);
     }
