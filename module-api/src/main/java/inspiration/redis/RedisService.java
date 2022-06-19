@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -15,7 +17,9 @@ public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String getData(String key) {
-
+        if(redisTemplate.opsForValue().get(key) == null) {
+            return null;
+        }
         return redisTemplate.opsForValue().get(key);
     }
 

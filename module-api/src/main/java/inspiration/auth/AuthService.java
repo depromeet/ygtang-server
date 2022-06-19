@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -40,20 +41,31 @@ public class AuthService {
     private final HttpServletResponse httpServletResponse;
 
     private final String refreshTokenKey = "refreshToken : ";
+    private final String accessTokenKey = "accessToken : ";
     private final String issueToken = "refreshToken : ";
 
     @Transactional
     public ResultResponse login(LoginRequest request) {
 
         Member member = checkEmail(request.getEmail());
-
         verifyPassword(request.getPassword(), member.getPassword());
 
+        String accessToken = redisService.getData(accessTokenKey + member.getId());
         String refreshToken = redisService.getData(refreshTokenKey + member.getId());
 
-        if(refreshToken != null) {
 
-            String accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
+        if (accessToken == null && refreshToken == null) {
+            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+
+            saveAccessToken(member.getId(), tokenResponse.getAccessToken());
+            saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
+
+            return ResultResponse.of(issueToken, tokenResponse);
+        }
+
+        if (accessToken == null) {
+            accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
+            httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
             Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
             cookie.setPath("/");
@@ -67,15 +79,28 @@ public class AuthService {
                     .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
                     .build();
 
+            saveAccessToken(member.getId(), tokenResponse.getAccessToken());
+
             return ResultResponse.of(issueToken, tokenResponse);
         }
 
-        TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
 
-        saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
+        Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
+        httpServletResponse.addCookie(cookie);
+
+        TokenResponse tokenResponse = TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .memberId(member.getId())
+                .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                .build();
 
         return ResultResponse.of(issueToken, tokenResponse);
     }
+
 
     @Transactional
     public ResultResponse reissue(String refreshToken) {
@@ -115,9 +140,15 @@ public class AuthService {
 
         return MemberInfoResponse.of(member);
     }
+
     private void saveRefreshToken(Long memberId, String refreshToken) {
 
         redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+    }
+
+    private void saveAccessToken(Long memberId, String refreshToken) {
+
+        redisTemplate.opsForValue().set(accessTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
     }
 
     private Member checkEmail(String email) {
