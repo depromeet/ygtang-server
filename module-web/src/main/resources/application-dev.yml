@@ -2,6 +2,11 @@ server:
   port: ${DEV_PORT}
 
 spring:
+  logging:
+    slack:
+      webhook-uri: ${ERROR_LOG_POST_SLACK_URL}
+    config: classpath:logback-spring.xml
+
   application:
     name: inspriation
 

@@ -21,7 +21,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResultResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -30,7 +30,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResultResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String message = Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -39,7 +39,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResultResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -48,7 +48,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(PostNotFoundException.class)
     protected ResultResponse handleNotFoundException(PostNotFoundException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -57,7 +57,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResultResponse handleMethodArgumentNotValidException(ResourceNotFoundException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -66,7 +66,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(EmailNotAuthenticatedException.class)
     private ResultResponse handleEmailNotAuthenticatedException(EmailNotAuthenticatedException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -75,7 +75,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(EmailAuthenticatedTimeExpiredException.class)
     private ResultResponse handleEmailAuthenticatedTimeExpiredException(EmailAuthenticatedTimeExpiredException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -84,7 +84,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(UnauthorizedAccessRequestException.class)
     private ResultResponse handleUnauthorizedAccessRequestException(UnauthorizedAccessRequestException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -94,7 +94,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(InvalidTokenException.class)
     private ResultResponse handleInvalidTokenException(InvalidTokenException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -103,7 +103,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(NoAccessAuthorizationException.class)
     private ResultResponse handleNoAccessAuthorizationException(NoAccessAuthorizationException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -112,7 +112,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(ConflictRequestException.class)
     private ResultResponse handleConflictRequestException(ConflictRequestException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
@@ -121,7 +121,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(RefreshTokenException.class)
     private ResultResponse handleRefreshTokenException(RefreshTokenException exception) {
         String message = exception.getMessage();
-        log.debug(message, exception);
+        log.error(message, exception);
 
         return ResultResponse.from(message);
     }
