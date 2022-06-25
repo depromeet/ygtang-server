@@ -4,7 +4,7 @@ server:
 spring:
   logging:
     slack:
-      webhook-uri: ${ERROR_LOG_POST_SLACK_URL}
+      webhook-uri: https://hooks.slack.com/services/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
     config: classpath:logback-spring.xml
 
   application:
