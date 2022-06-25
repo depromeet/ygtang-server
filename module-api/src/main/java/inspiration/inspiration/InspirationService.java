@@ -177,7 +177,6 @@ public class InspirationService {
     @Transactional(readOnly = true)
     public RestPage<InspirationResponse> findInspirationsByTags(Pageable pageable, List<Long> tagIds, Long memberId) {
 
-        Member member = memberService.findById(memberId);
         List<Tag> tags = tagIds.stream()
                                 .map(tagService::getTag)
                                 .collect(Collectors.toList());

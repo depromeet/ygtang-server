@@ -1,8 +1,8 @@
 package inspiration.signup;
 
 import inspiration.ResultResponse;
-import inspiration.config.security.JwtProvider;
-import inspiration.config.security.TokenResponse;
+import inspiration.auth.JwtProvider;
+import inspiration.auth.TokenResponse;
 import inspiration.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;

@@ -1,6 +1,6 @@
 package inspiration.v1.inspiration;
 
-import inspiration.config.AuthenticationPrincipal;
+import inspiration.jobs.AuthenticationPrincipal;
 import inspiration.inspiration.InspirationService;
 import inspiration.inspiration.request.InspirationAddRequest;
 import inspiration.inspiration.request.InspirationModifyRequest;
