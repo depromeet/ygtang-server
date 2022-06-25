@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
+    <property resource="application-local.yml" />
     <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
     <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-        <webhookUri>https://hooks.slack.com/services/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</webhookUri>
+        <webhookUri>${webhook}</webhookUri>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level --- [%thread] %logger{35} : %msg %n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
         </layout>
-        <username>영감탱 로그 모니터링</username>
+        <username>영감탱 에러 모니터링</username>
         <iconEmoji>:stuck_out_tongue_winking_eye:</iconEmoji>
         <colorCoding>true</colorCoding>
     </appender>
+
 
     <!-- Consol appender 설정 -->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
