@@ -2,8 +2,6 @@ package inspiration.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
-import inspiration.config.security.JwtProvider;
-import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.TokenType;
