@@ -1,8 +1,0 @@
-server:
-  port: 8086
-
-spring:
-  batch:
-    initialize-schema: always		# batch 스키마 자동 생성
-    job:
-      enabled: false			# 시작과 동시에 실행되는건 방지
