@@ -1,9 +1,6 @@
 server:
   port: ${DEV_PORT}
 
-uri:
-  webhook: ${ERROR_LOG_POST_SLACK_URL}
-
 spring:
   application:
     name: inspriation
