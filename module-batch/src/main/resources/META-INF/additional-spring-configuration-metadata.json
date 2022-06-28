@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.job",
+      "type": "java.lang.String",
+      "description": "Description for spring.job."
+  }
+] }

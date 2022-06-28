@@ -1,7 +1,7 @@
 package inspiration.v1.member;
 
 import inspiration.auth.AuthService;
-import inspiration.config.AuthenticationPrincipal;
+import inspiration.jobs.AuthenticationPrincipal;
 import inspiration.emailauth.request.SendEmailRequest;
 import inspiration.inspiration.InspirationService;
 import inspiration.member.MemberService;

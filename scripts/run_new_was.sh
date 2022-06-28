@@ -23,7 +23,7 @@ get_pid=$(echo ${ps} | cut -d " " -f2)
 
 if [ -n "${get_pid}" ]
 then
-    result1=$(kill -9 ${get_pid})
+    result=$(kill -9 ${get_pid})
     echo process is killed.
 else
     echo running process not found.

@@ -27,10 +27,6 @@ public class InspirationTagService {
         return inspirationTagRepository.save(inspirationTag);
     }
 
-    public void delete(InspirationTag inspirationTag) {
-        inspirationTagRepository.delete(inspirationTag);
-    }
-
     public void deleteAllByInspiration(Inspiration inspiration) {
         inspirationTagRepository.deleteAllByInspiration(inspiration);
     }

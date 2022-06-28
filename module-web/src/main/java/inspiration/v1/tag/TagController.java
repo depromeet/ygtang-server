@@ -1,6 +1,6 @@
 package inspiration.v1.tag;
 
-import inspiration.config.AuthenticationPrincipal;
+import inspiration.jobs.AuthenticationPrincipal;
 import inspiration.inspiration.InspirationService;
 import inspiration.tag.TagService;
 import inspiration.tag.request.TagAddRequest;

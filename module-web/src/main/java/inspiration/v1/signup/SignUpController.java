@@ -1,7 +1,6 @@
 package inspiration.v1.signup;
 
 import inspiration.ResultResponse;
-import inspiration.config.AuthenticationPrincipal;
 import inspiration.member.request.SignUpRequest;
 import inspiration.member.request.ExtraInfoRequest;
 import inspiration.signup.SignupService;

@@ -2,8 +2,6 @@ package inspiration.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.request.LoginRequest;
-import inspiration.config.security.JwtProvider;
-import inspiration.config.security.TokenResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.TokenType;
@@ -24,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
