@@ -35,6 +35,7 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
+
 .vscode/
 /module-domain/src/main/resources/
 /module-api/src/main/resources/
