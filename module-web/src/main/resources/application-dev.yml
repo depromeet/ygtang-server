@@ -1,14 +1,64 @@
 server:
   port: ${DEV_PORT}
 
+uri:
+  webhook: ${ERROR_LOG_POST_SLACK_URL}
+
 spring:
   application:
     name: inspriation
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    sign-up-email-send-mail: ${SIGN_UP_EMAIL_SEND_MAIL}
+    reset-password-for-auth-send-mail: ${RESET_PASSWORD_FOR_AUTH_SEND_MAIL}
+    auth-token: ${AUTH_TOKEN}
+
+  jwt:
+    secret: ${SECRET_KEY}
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+  cache:
+    type: redis
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    s3:
+      bucket: ${S3_BUCKET}
+    stack:
+      auto: false
 
 logging:
   level:
