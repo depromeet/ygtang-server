@@ -36,7 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
-/log/
 /module-domain/src/main/resources/
 /module-api/src/main/resources/
 /module-common/src/main/resources/

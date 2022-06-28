@@ -39,6 +39,27 @@ public class JwtProvider {
         secretKey = Base64UrlCodec.BASE64URL.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    public String createAccessToken(Long memberId, List<String> roles) {
+
+        Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
+        accessTokenClaims.put(ROLES, roles);
+        accessTokenClaims.put(MEMBER_ID, memberId);
+
+        Date now = new Date();
+
+        String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(accessTokenClaims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
+
+        return accessToken;
+    }
+
     public TokenResponse createTokenDto(Long memberId, List<String> roles) {
 
         Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
