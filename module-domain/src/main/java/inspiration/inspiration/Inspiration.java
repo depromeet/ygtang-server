@@ -6,7 +6,6 @@ import inspiration.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -53,9 +52,5 @@ public class Inspiration extends BaseTimeEntity {
         this.member = member;
     }
 
-//    @PrePersist
-//    public void prePersist() {
-//        this.isDeleted = this.isDeleted != null && this.isDeleted;
-//    }
 
 }

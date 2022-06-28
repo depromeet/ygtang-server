@@ -5,6 +5,7 @@ import inspiration.emailauth.ResetPasswordEmailSendService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
+import inspiration.member.response.MemberResponse;
 import inspiration.passwordauth.PasswordAuth;
 import inspiration.passwordauth.PasswordAuthRepository;
 import inspiration.utils.GetResetPasswordUtil;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -84,4 +88,12 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(UnauthorizedAccessRequestException::new);
     }
+
+    public List<MemberResponse> findAll() {
+        return memberRepository.findAll()
+                                .stream()
+                                .map(MemberResponse::of)
+                                .collect(Collectors.toList());
+    }
+
 }
