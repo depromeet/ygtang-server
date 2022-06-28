@@ -21,7 +21,6 @@ echo process info: ${ps}
 
 get_pid=$(echo ${ps} | cut -d " " -f2)
 
-
 if [ -n "${get_pid}" ]
 then
     result1=$(kill -9 ${get_pid})
