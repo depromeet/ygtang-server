@@ -37,7 +37,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
     TypeResolver typeResolver = new TypeResolver();
 
     private ApiInfo apiInfo() {
-
         return new ApiInfoBuilder()
                 .title("영감탱 API")
                 .description("영감탱 API 서버입니다.")
@@ -50,7 +49,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
                 .apiInfo(this.apiInfo())
-                //.host("ygtang.kr")
+                .host("ygtang.kr")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
