@@ -76,12 +76,12 @@
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=spring security&logoColor=white">
 <img src="https://img.shields.io/badge/jwt-6DB33F?style=for-the-badge&logo=jwt&logoColor=white">
-<img src="https://img.shields.io/badge/gradle-6DB33F?style=for-the-badge&logo=/gradle-&logoColor=white">
 <img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=JPA&logoColor=white">
+<img src="https://img.shields.io/badge/gradle-6DB33F?style=for-the-badge&logo=gradle&logoColor=white">
 
 <img src="https://img.shields.io/badge/mysql-1C9AD6?style=for-the-badge&logo=mysql&logoColor=orange">
 <img src="https://img.shields.io/badge/redis-1C9AD6?style=for-the-badge&logo=redis&logoColor=orange">
-<img src="https://img.shields.io/badge/flaway-1C9AD6?style=for-the-badge&logo=flaway&logoColor=orange">
+<img src="https://img.shields.io/badge/flyway-1C9AD6?style=for-the-badge&logo=flyway&logoColor=orange">
 
 <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
 <img src="https://img.shields.io/badge/nginx-232F3E?style=for-the-badge&logo=nginx&logoColor=white">
@@ -94,9 +94,7 @@
 
 ## Server Architecture
 
-/*
-추가 요망
-*/
+![image](https://user-images.githubusercontent.com/63771579/176728690-aaa9304b-8cb9-4912-8b51-6c3c5505f102.png)
 
 ## Directory structure
 
@@ -107,14 +105,14 @@
 └── module-web
 ```
 
-![무제 drawio (1)](https://user-images.githubusercontent.com/43127088/176721025-c51224f1-b009-4392-9481-f9e9cb8f3236.png)
+![무제 drawio (1)](https://user-images.githubusercontent.com/63771579/176728300-316d5533-fa98-48a9-a7d0-327b08e2e0f0.png)
 
 
 **왜 멀티모듈을 사용했을까요?**
 
 - 의존 관계 및 결합도를 줄이고, 응집성을 높입니다.
 - 코드의 중복을 줄입니다.
-- 각 모듈의 기능을 파악하기 쉬으므로, 이해하기 쉽고 유지보수에 용이한 코드가 됩니다.
+- 각 모듈의 기능을 파악하기 쉬우므로, 이해하기 쉽고 유지보수에 용이한 코드가 됩니다.
 - 빌드를 쉽게 진행할 수 있습니다.
 
 <br />
