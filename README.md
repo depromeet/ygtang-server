@@ -74,9 +74,10 @@
 <img src="https://img.shields.io/badge/smtp-FFF000?style=for-the-badge&logo=java&logoColor=white">
 
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/jwt-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/gradle-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=spring security&logoColor=white">
+<img src="https://img.shields.io/badge/jwt-6DB33F?style=for-the-badge&logo=jwt&logoColor=white">
+<img src="https://img.shields.io/badge/gradle-6DB33F?style=for-the-badge&logo=/gradle-&logoColor=white">
+<img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=JPA&logoColor=white">
 
 <img src="https://img.shields.io/badge/mysql-1C9AD6?style=for-the-badge&logo=mysql&logoColor=orange">
 <img src="https://img.shields.io/badge/redis-1C9AD6?style=for-the-badge&logo=redis&logoColor=orange">
@@ -106,7 +107,8 @@
 └── module-web
 ```
 
-![무제 drawio](https://user-images.githubusercontent.com/43127088/176717312-45e56ee3-aa10-440d-9638-007394355144.png)
+![무제 drawio (1)](https://user-images.githubusercontent.com/43127088/176721025-c51224f1-b009-4392-9481-f9e9cb8f3236.png)
+
 
 **왜 멀티모듈을 사용했을까요?**
 
