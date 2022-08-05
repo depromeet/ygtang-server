@@ -19,7 +19,9 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
     @Override
     public List<OgMetaElement> getOgMetaElementsFrom(String url) {
         try {
-            final Document document = Jsoup.connect(url).get();
+            final Document document = Jsoup.connect(url)
+                    .timeout(1000)
+                    .get();
             final Elements metaElements = document.select("meta");
             List<OgMetaElement> ogMetaElements = metaElements.stream()
                     .filter(m -> m.attr("property").startsWith("og:"))
