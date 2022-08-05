@@ -1,12 +1,12 @@
 package inspiration.inspiration;
 
-import com.github.siyoon210.ogparser4j.OgParser;
-import com.github.siyoon210.ogparser4j.OpenGraph;
 import inspiration.RestPage;
 import inspiration.aws.AwsS3Service;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
+import inspiration.inspiration.opengraph.OpenGraphService;
+import inspiration.inspiration.opengraph.OpenGraphVo;
 import inspiration.inspiration.request.InspirationAddRequest;
 import inspiration.inspiration.request.InspirationModifyRequest;
 import inspiration.inspiration.request.InspirationTagRequest;
@@ -21,8 +21,6 @@ import inspiration.tag.Tag;
 import inspiration.tag.TagRepository;
 import inspiration.tag.TagService;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -33,11 +31,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -52,6 +47,7 @@ public class InspirationService {
     private final InspirationTagService inspirationTagService;
     private final InspirationTagRepository inspirationTagRepository;
     private final TagRepository tagRepository;
+    private final OpenGraphService openGraphService;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
@@ -64,7 +60,7 @@ public class InspirationService {
                 .forEach(
                         inspiration ->
                                 inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
-        return new RestPage<>(inspirationPage.map(inspiration -> InspirationResponse.of(inspiration, getOG(inspiration.getType() ,inspiration.getContent()))));
+        return new RestPage<>(inspirationPage.map(inspiration -> InspirationResponse.of(inspiration, getOpenGraphResponse(inspiration.getType(), inspiration.getContent()))));
     }
 
     @Transactional(readOnly = true)
@@ -76,77 +72,30 @@ public class InspirationService {
                                                         .orElseThrow(ResourceNotFoundException::new);
 
         inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()));
-        return InspirationResponse.of(inspiration, getOG(inspiration.getType(), inspiration.getContent()));
+        return InspirationResponse.of(inspiration, getOpenGraphResponse(inspiration.getType(), inspiration.getContent()));
     }
 
-    private OpenGraphResponse getOG(InspirationType inspirationType, String link)  {
-
-        if(inspirationType != InspirationType.LINK){
+    private OpenGraphResponse getOpenGraphResponse(InspirationType inspirationType, String link) {
+        if (inspirationType != InspirationType.LINK) {
             return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        try {
-            link = URLDecoder.decode(link, "UTF-8");
-            URL req = new URL(link);
-            HttpURLConnection huc = (HttpURLConnection) req.openConnection();
-            int responseCode = huc.getResponseCode();
-            if (responseCode != HttpStatus.OK.value()) {
-                return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
-        } catch (IOException e) {
+        Optional<OpenGraphVo> openGraphVoOptional = openGraphService.getMetadata(link);
+        if (openGraphVoOptional.isEmpty()) {
             return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        String image = getContent("image", link);
-        String siteName = getContent("content", link);
-        String title = getContent("title", link);
-        String url = getContent("url", link);
-        String description = getContent("description", link);
-        url = url == null ? link : url;
-        return OpenGraphResponse.of(HttpStatus.OK.value(), image, siteName, title, url, description);
+        OpenGraphVo openGraphVo = openGraphVoOptional.get();
+        return OpenGraphResponse.of(
+                HttpStatus.OK.value(),
+                openGraphVo.getImage(),
+                openGraphVo.getSiteName(),
+                openGraphVo.getTitle(),
+                openGraphVo.getUrl() != null ? openGraphVo.getUrl() : link,
+                openGraphVo.getDescription()
+        );
     }
 
-    private String getContent(String content, String link) {
-
-        String parseData = getOGContent(content, link);
-        if (parseData != null) {
-            return parseData;
-        }
-        return getTagContent(content, link);
-    }
-
-    private String getOGContent(String content, String link)  {
-
-        String ogContent = null;
-        OgParser ogParser = new OgParser();
-        OpenGraph openGraph = ogParser.getOpenGraphOf(link);
-        try {
-            if (content.equals("image")) {
-                ogContent = openGraph.getContentOf(content, 0).getValue();
-            }
-            ogContent = openGraph.getContentOf(content).getValue();
-        } catch (NullPointerException e) {
-            return null;
-        }
-        return ogContent;
-    }
-
-    private String getTagContent(String content, String link) {
-
-        String tagContent = null;
-        try {
-            Document doc = Jsoup.connect(link).get();
-            if(content.equals("description")){
-                tagContent =  doc.select("meta[name=description]").get(0).attr("content");
-            } else if (content.equals("title")) {
-                tagContent = doc.title();
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return tagContent;
-    }
-
-    public OpenGraphResponse getOG(String link) {
-        return getOG(InspirationType.LINK, link);
+    public OpenGraphResponse getOpenGraphResponse(String link) {
+        return getOpenGraphResponse(InspirationType.LINK, link);
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)
@@ -193,7 +142,12 @@ public class InspirationService {
                 .forEach(
                         inspiration ->
                                 inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
-        return new RestPage<>(inspirationPage.map(inspiration -> InspirationResponse.of(inspiration, getOG(inspiration.getType() ,inspiration.getContent()))));
+        return new RestPage<>(
+                inspirationPage.map(inspiration -> InspirationResponse.of(
+                        inspiration,
+                        getOpenGraphResponse(inspiration.getType() ,inspiration.getContent()))
+                )
+        );
     }
 
 
