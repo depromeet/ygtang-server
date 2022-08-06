@@ -16,12 +16,12 @@ public class OpenGraphServiceImpl implements OpenGraphService {
         }
         return Optional.of(
                 OpenGraphVo.builder()
-                        .image(getValueSafely(openGraph, "image"))
-                        .siteName(getValueSafely(openGraph, "content"))
-                        .title(getValueSafely(openGraph, "title"))
-                        .url(getValueSafely(openGraph, "url"))
-                        .description(getValueSafely(openGraph, "description"))
-                        .build()
+                           .image(getValueSafely(openGraph, "image"))
+                           .siteName(getValueSafely(openGraph, "content"))
+                           .title(getValueSafely(openGraph, "title"))
+                           .url(getValueSafely(openGraph, "url"))
+                           .description(getValueSafely(openGraph, "description"))
+                           .build()
         );
     }
 

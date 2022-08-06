@@ -20,17 +20,17 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
     public List<OgMetaElement> getOgMetaElementsFrom(String url) {
         try {
             final Document document = Jsoup.connect(url)
-                    .timeout(1000)
-                    .get();
+                                           .timeout(1000)
+                                           .get();
             final Elements metaElements = document.select("meta");
             List<OgMetaElement> ogMetaElements = metaElements.stream()
-                    .filter(m -> m.attr("property").startsWith("og:"))
-                    .map(m -> {
-                        final String property = m.attr("property").substring(3).trim();
-                        final String content = m.attr("content");
-                        return new OgMetaElement(property, content);
-                    })
-                    .collect(Collectors.toList());
+                                                             .filter(m -> m.attr("property").startsWith("og:"))
+                                                             .map(m -> {
+                                                                 final String property = m.attr("property").substring(3).trim();
+                                                                 final String content = m.attr("content");
+                                                                 return new OgMetaElement(property, content);
+                                                             })
+                                                             .collect(Collectors.toList());
             addDescriptionIfNotExists(ogMetaElements, document);
             addTitleIfNotExists(ogMetaElements, document);
             return ogMetaElements;
@@ -42,8 +42,8 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
 
     private void addDescriptionIfNotExists(List<OgMetaElement> ogMetaElements, Document document) {
         Optional<OgMetaElement> descriptionOptional = ogMetaElements.stream()
-                .filter(it -> "description".equals(it.getProperty()))
-                .findFirst();
+                                                                    .filter(it -> "description".equals(it.getProperty()))
+                                                                    .findFirst();
         if (descriptionOptional.isEmpty() || !StringUtils.hasLength(descriptionOptional.get().getContent())) {
             Elements metaDescription = document.select("meta[name=description]");
             if (!metaDescription.isEmpty()) {
@@ -56,8 +56,8 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
 
     private void addTitleIfNotExists(List<OgMetaElement> ogMetaElements, Document document) {
         Optional<OgMetaElement> titleOptional = ogMetaElements.stream()
-                .filter(it -> "title".equals(it.getProperty()))
-                .findFirst();
+                                                              .filter(it -> "title".equals(it.getProperty()))
+                                                              .findFirst();
         if (titleOptional.isEmpty() || !StringUtils.hasLength(titleOptional.get().getContent())) {
             ogMetaElements.add(new OgMetaElement("title", document.title()));
         }
