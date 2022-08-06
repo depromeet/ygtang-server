@@ -158,7 +158,7 @@ public class InspirationController {
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
     public ResponseEntity<ResultResponse> inspirationList(@RequestParam @NotBlank String link) {
-        OpenGraphResponse openGraphResponse = inspirationService.getOG(link);
+        OpenGraphResponse openGraphResponse = inspirationService.getOpenGraphResponse(link);
         return ResponseEntity.ok().body(ResultResponse.from(openGraphResponse));
     }
 }
