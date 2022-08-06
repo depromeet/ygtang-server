@@ -3,7 +3,7 @@ bootJar {
 }
 
 jar {
-    enabled = true
+    enabled = false
     archivesBaseName = 'inspiration'
 }
 version = '0.0.1-SNAPSHOT'
