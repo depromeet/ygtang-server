@@ -31,29 +31,35 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
                         return new OgMetaElement(property, content);
                     })
                     .collect(Collectors.toList());
-
-            // description, title 값 비어있는 경우 보정
-            Optional<OgMetaElement> descriptionOptional = ogMetaElements.stream()
-                    .filter(it -> "description".equals(it.getProperty()))
-                    .findFirst();
-            if (descriptionOptional.isEmpty() || !StringUtils.hasLength(descriptionOptional.get().getContent())) {
-                Elements metaDescription = document.select("meta[name=description]");
-                if (!metaDescription.isEmpty()) {
-                    ogMetaElements.add(
-                            new OgMetaElement("description", metaDescription.get(0).attr("content"))
-                    );
-                }
-            }
-            Optional<OgMetaElement> titleOptional = ogMetaElements.stream()
-                    .filter(it -> "title".equals(it.getProperty()))
-                    .findFirst();
-            if (titleOptional.isEmpty() || !StringUtils.hasLength(titleOptional.get().getContent())) {
-                ogMetaElements.add(new OgMetaElement("title", document.title()));
-            }
+            addDescriptionIfNotExists(ogMetaElements, document);
+            addTitleIfNotExists(ogMetaElements, document);
             return ogMetaElements;
         } catch (IOException | IndexOutOfBoundsException | IllegalArgumentException e) {
             log.warn("Failed to parse OpenGraph Metadata. url:{}", url, e);
             return Collections.emptyList();
+        }
+    }
+
+    private void addDescriptionIfNotExists(List<OgMetaElement> ogMetaElements, Document document) {
+        Optional<OgMetaElement> descriptionOptional = ogMetaElements.stream()
+                .filter(it -> "description".equals(it.getProperty()))
+                .findFirst();
+        if (descriptionOptional.isEmpty() || !StringUtils.hasLength(descriptionOptional.get().getContent())) {
+            Elements metaDescription = document.select("meta[name=description]");
+            if (!metaDescription.isEmpty()) {
+                ogMetaElements.add(
+                        new OgMetaElement("description", metaDescription.get(0).attr("content"))
+                );
+            }
+        }
+    }
+
+    private void addTitleIfNotExists(List<OgMetaElement> ogMetaElements, Document document) {
+        Optional<OgMetaElement> titleOptional = ogMetaElements.stream()
+                .filter(it -> "title".equals(it.getProperty()))
+                .findFirst();
+        if (titleOptional.isEmpty() || !StringUtils.hasLength(titleOptional.get().getContent())) {
+            ogMetaElements.add(new OgMetaElement("title", document.title()));
         }
     }
 }
