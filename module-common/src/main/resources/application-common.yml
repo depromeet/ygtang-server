@@ -1,0 +1,13 @@
+spring:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    sign-up-email-send-mail: ${SIGN_UP_EMAIL_SEND_MAIL}
+    reset-password-for-auth-send-mail: ${RESET_PASSWORD_FOR_AUTH_SEND_MAIL}
+    auth-token: ${AUTH_TOKEN}
