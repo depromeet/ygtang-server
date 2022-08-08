@@ -18,17 +18,6 @@ import java.util.Optional;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionController {
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            HttpRequestMethodNotSupportedException.class,
-            MethodArgumentNotValidException.class,
-            MethodArgumentTypeMismatchException.class,
-            ResourceNotFoundException.class
-    })
-    protected ResultResponse handleBadRequestException(Exception e) {
-        log.warn("BAD_REQUEST", e);
-        return ResultResponse.from(e.getMessage());
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -40,6 +29,17 @@ public class GlobalExceptionController {
                         .map(DefaultMessageSourceResolvable::getDefaultMessage)
                         .orElseGet(e::getMessage)
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+            HttpRequestMethodNotSupportedException.class,
+            MethodArgumentTypeMismatchException.class,
+            ResourceNotFoundException.class
+    })
+    protected ResultResponse handleBadRequestException(Exception e) {
+        log.warn("BAD_REQUEST", e);
+        return ResultResponse.from(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
