@@ -18,3 +18,7 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+
+ygtang:
+  server:
+    host: localhost

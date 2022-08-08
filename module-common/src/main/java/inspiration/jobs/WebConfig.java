@@ -7,7 +7,9 @@ import inspiration.enumeration.TokenType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +34,13 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
+@RequiredArgsConstructor
 public class WebConfig extends WebMvcConfigurationSupport {
 
-    TypeResolver typeResolver = new TypeResolver();
+    @Value("${ygtang.server.host}")
+    private String ygtangServerHost;
+
+    private final TypeResolver typeResolver = new TypeResolver();
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -49,7 +55,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
                 .apiInfo(this.apiInfo())
-                .host("ygtang.kr")
+                .host(ygtangServerHost)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("inspiration.v1"))
                 .paths(PathSelectors.any())
