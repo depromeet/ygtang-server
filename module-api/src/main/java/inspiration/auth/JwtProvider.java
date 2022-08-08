@@ -29,8 +29,8 @@ public class JwtProvider {
 
     @Value("spring.jwt.secret")
     private String secretKey;
-    private String ROLES = "roles";
-    private String MEMBER_ID = "member_id";
+    private final String ROLES = "roles";
+    private final String MEMBER_ID = "member_id";
     private final UserDetailsService userDetailsService;
     private final HttpServletResponse httpServletResponse;
 
@@ -132,13 +132,13 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.error("잘못된 Jwt 서명입니다.");
+            log.error("잘못된 Jwt 서명입니다. token: {}", token, e);
         } catch (ExpiredJwtException e) {
-            log.error("만료된 토큰입니다.");
+            log.error("만료된 토큰입니다. token: {}", token, e);
         } catch (UnsupportedJwtException e) {
-            log.error("지원하지 않는 토큰입니다.");
+            log.error("지원하지 않는 토큰입니다. token: {}", token, e);
         } catch (IllegalArgumentException e) {
-            log.error("잘못된 토큰입니다.");
+            log.error("잘못된 토큰입니다. token: {}", token, e);
         }
         return false;
     }
