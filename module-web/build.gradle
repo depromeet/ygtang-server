@@ -1,3 +1,5 @@
+apply plugin: "com.gorylenko.gradle-git-properties"
+
 bootJar {
     enabled = true
 }
