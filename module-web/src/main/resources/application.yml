@@ -2,3 +2,8 @@ spring:
   profiles:
     active:
       - dev
+
+management:
+  server:
+    port: 8081
+    address: 127.0.0.1
