@@ -2,6 +2,10 @@ package inspiration.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.ResultResponse;
+import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
+import inspiration.auth.jwt.JwtAuthenticationProvider;
+import inspiration.auth.jwt.JwtProvider;
+import inspiration.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,13 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/api/v1/members/sends-email/reset-passwords",
     };
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    private final MemberService memberService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -52,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                             log.warn("UNAUTHORIZED", authException);
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            objectMapper.writeValue(
+                            apiResponseObjectMapper().writeValue(
                                     response.getOutputStream(),
                                     ResultResponse.from("인증이 필요한 요청입니다.")
                             );
@@ -63,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                             log.warn("FORBIDDEN", accessDeniedException);
                             response.setStatus(HttpStatus.FORBIDDEN.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            objectMapper.writeValue(
+                            apiResponseObjectMapper().writeValue(
                                     response.getOutputStream(),
                                     ResultResponse.from("접근 권한이 없습니다.")
                             );
@@ -84,7 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasRole("USER")
 
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(jwtAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
     }
 
     @Override
@@ -98,5 +96,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/swagger/**",
                 "/health"
         );
+    }
+
+    @Bean
+    public JwtPreAuthenticatedProcessingFilter jwtAuthenticationFilter() {
+        JwtPreAuthenticatedProcessingFilter filter = new JwtPreAuthenticatedProcessingFilter();
+        filter.setAuthenticationManager(new ProviderManager(new JwtAuthenticationProvider(jwtProvider, memberService)));
+        return filter;
+    }
+
+    @Bean
+    public ObjectMapper apiResponseObjectMapper() {
+        return new ObjectMapper();
     }
 }

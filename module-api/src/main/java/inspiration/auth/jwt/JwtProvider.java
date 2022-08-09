@@ -1,5 +1,6 @@
-package inspiration.auth;
+package inspiration.auth.jwt;
 
+import inspiration.auth.TokenResponse;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.TokenType;
 import inspiration.exception.UnauthorizedAccessRequestException;
@@ -115,7 +116,7 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    private Claims parseClaims(String token) {
+    public Claims parseClaims(String token) {
         try {
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {

@@ -1,6 +1,7 @@
 package inspiration.auth;
 
 import inspiration.ResultResponse;
+import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequest;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
