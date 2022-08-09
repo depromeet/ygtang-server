@@ -3,25 +3,20 @@ package inspiration.auth.jwt;
 import inspiration.auth.TokenResponse;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.TokenType;
-import inspiration.exception.UnauthorizedAccessRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +27,6 @@ public class JwtProvider {
     private String secretKey;
     private final String ROLES = "roles";
     private final String MEMBER_ID = "member_id";
-    private final UserDetailsService userDetailsService;
     private final HttpServletResponse httpServletResponse;
 
     @PostConstruct
@@ -103,44 +97,33 @@ public class JwtProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String token) {
-
-        Claims claims = parseClaims(token);
-
-        if (claims.get(ROLES) == null) {
-            throw new UnauthorizedAccessRequestException();
-        }
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
-    public Claims parseClaims(String token) {
+    public Optional<Long> resolveMemberId(String token) {
+        final Claims claims;
         try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
-
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(TokenType.ACCESS_TOKEN.getMessage());
-    }
-
-    public boolean validationToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
+            claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         } catch (SecurityException | MalformedJwtException e) {
             log.error("잘못된 Jwt 서명입니다. token: {}", token, e);
+            return Optional.empty();
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다. token: {}", token, e);
+            return Optional.empty();
         } catch (UnsupportedJwtException e) {
             log.error("지원하지 않는 토큰입니다. token: {}", token, e);
+            return Optional.empty();
         } catch (IllegalArgumentException e) {
             log.error("잘못된 토큰입니다. token: {}", token, e);
+            return Optional.empty();
         }
-        return false;
+        if (claims.get(ROLES) == null) {
+            log.error("잘못된 토큰입니다. 'roles' claim 이 있어야합니다. token: {}", token);
+            return Optional.empty();
+        }
+        try {
+            return Optional.ofNullable(claims.getSubject())
+                           .map(Long::parseLong);
+        } catch (NumberFormatException e) {
+            log.error("잘못된 토큰입니다. 'sub' claim 이 Long 타입이어야합니다. token: {}", token);
+            return Optional.empty();
+        }
     }
 }

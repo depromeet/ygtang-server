@@ -3,7 +3,6 @@ package inspiration.auth.jwt;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import inspiration.member.Member;
 import inspiration.member.MemberService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -28,21 +27,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         String token = authentication.getPrincipal().toString();
 
-        if (token == null || !jwtProvider.validationToken(token)) {
-            throw new BadCredentialsException("Validation failed");
-        }
-
-        Claims claims = jwtProvider.parseClaims(token);
-        if (claims.get("roles") == null) {
-            throw new BadCredentialsException("Token must contain claim 'roles'. token: " + token);
-        }
-
-        final long memberId;
-        try {
-            memberId = Long.parseLong(claims.getSubject());
-        } catch (NumberFormatException e) {
-            throw new BadCredentialsException("Failed to get subject from token. token: " + token, e);
-        }
+        Long memberId = jwtProvider.resolveMemberId(token)
+                                   .orElseThrow(() -> new BadCredentialsException("Validation failed"));
 
         final Member member;
         try {
