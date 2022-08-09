@@ -65,3 +65,12 @@ logging:
 ygtang:
   server:
     host: ${YGTANG_SERVER_HOST}
+
+management:
+  server:
+    port: 8081
+    address: 127.0.0.1
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"

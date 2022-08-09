@@ -14,6 +14,10 @@ buildscript {
 
 }
 
+plugins {
+    id "com.gorylenko.gradle-git-properties" version "$gradleGitPropertiesPluginVersion" apply false
+}
+
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
