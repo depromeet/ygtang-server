@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (token != null && jwtProvider.validationToken(token)) {
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
             return;
         }
         throw new PreAuthenticatedCredentialsNotFoundException("Failed to verify token. token:" + token);
