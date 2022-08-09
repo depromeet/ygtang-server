@@ -10,7 +10,6 @@
 
         <root level="INFO">
             <appender-ref ref="Console" />
-            <appender-ref ref="ASYNC_SLACK"/>
         </root>
     </springProfile>
 
