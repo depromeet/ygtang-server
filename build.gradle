@@ -48,6 +48,8 @@ subprojects {
 
         // test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'com.h2database:h2'
+        testImplementation "it.ozimov:embedded-redis:$embeddedRedisVersion"
     }
     test {
         useJUnitPlatform()
