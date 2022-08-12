@@ -1,6 +1,5 @@
 package inspiration.auth;
 
-import inspiration.exception.PostNotFoundException;
 import inspiration.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
 
         return memberRepository.findById(Long.parseLong(userPk))
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found. memberId: " + userPk));
     }
 }

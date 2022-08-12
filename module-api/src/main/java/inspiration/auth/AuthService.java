@@ -1,6 +1,7 @@
 package inspiration.auth;
 
 import inspiration.ResultResponse;
+import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequest;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
@@ -15,7 +16,6 @@ import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,16 +100,10 @@ public class AuthService {
 
     @Transactional
     public ResultResponse reissue(String refreshToken) {
-
-        if (!jwtProvider.validationToken(refreshToken)) {
-            throw new RefreshTokenException();
-        }
-
-        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
-
-        Member member = memberRepository.findById(Long.parseLong(authentication.getName()))
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
-
+        Long memberId = jwtProvider.resolveMemberId(refreshToken)
+                                   .orElseThrow(RefreshTokenException::new);
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
 
         String refreshTokenInRedis = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
 

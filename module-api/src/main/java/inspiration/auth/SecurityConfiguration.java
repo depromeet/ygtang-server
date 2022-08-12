@@ -1,33 +1,37 @@
 package inspiration.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import inspiration.ResultResponse;
+import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
+import inspiration.auth.jwt.JwtAuthenticationProvider;
+import inspiration.auth.jwt.JwtProvider;
+import inspiration.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
+    public static final String[] ALLOWED_URI_PATTERN = new String[]{
+            "/api/v1/signup/**",
+            "/api/v1/auth/**",
+            "/api/v1/reissue",
+            "/api/v1/members/sends-email/reset-passwords",
+    };
     private final JwtProvider jwtProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    public static final String[] ALLOWED_URI_PATTERN = {"/api/v1/signup", "/api/v1/auth", "/api/v1/reissue", "/api/v1/members/sends-email/reset-passwords", "/health", "/api/v1/auth/email/signup" };
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    private final MemberService memberService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,8 +45,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
 
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(
+                        (request, response, authException) -> {
+                            log.warn("UNAUTHORIZED", authException);
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            apiResponseObjectMapper().writeValue(
+                                    response.getOutputStream(),
+                                    ResultResponse.from("인증이 필요한 요청입니다.")
+                            );
+                        }
+                )
+                .accessDeniedHandler(
+                        (request, response, accessDeniedException) -> {
+                            log.warn("FORBIDDEN", accessDeniedException);
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            apiResponseObjectMapper().writeValue(
+                                    response.getOutputStream(),
+                                    ResultResponse.from("접근 권한이 없습니다.")
+                            );
+                        }
+                )
 
                 .and()
                 .sessionManagement()
@@ -50,27 +74,40 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
-                .antMatchers(HttpMethod.GET, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
-                .antMatchers(HttpMethod.DELETE, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
-                .antMatchers(HttpMethod.PUT, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
-                .antMatchers(HttpMethod.PATCH, addMatchers(ALLOWED_URI_PATTERN)).permitAll()
+                .antMatchers(HttpMethod.POST, ALLOWED_URI_PATTERN).permitAll()
+                .antMatchers(HttpMethod.GET, ALLOWED_URI_PATTERN).permitAll()
+                .antMatchers(HttpMethod.DELETE, ALLOWED_URI_PATTERN).permitAll()
+                .antMatchers(HttpMethod.PUT, ALLOWED_URI_PATTERN).permitAll()
+                .antMatchers(HttpMethod.PATCH, ALLOWED_URI_PATTERN).permitAll()
                 .anyRequest().hasRole("USER")
 
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(jwtAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/v1/signup/**", "/api/v1/auth/**", "/api/v1/reissue", "/api/v1/members/sends-email/reset-passwords", "/health",
-                "/actuator/**"
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+        web.ignoring().antMatchers(
+                "/v2/api-docs",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/swagger/**",
+                "/health"
         );
     }
 
-    private String[] addMatchers(String[] patterns) {
-        return Arrays.stream(patterns).map(pattern -> pattern.concat("/**")).collect(Collectors.toList()).toArray(String[]::new);
+    @Bean
+    public JwtPreAuthenticatedProcessingFilter jwtAuthenticationFilter() {
+        JwtPreAuthenticatedProcessingFilter filter = new JwtPreAuthenticatedProcessingFilter();
+        filter.setAuthenticationManager(new ProviderManager(new JwtAuthenticationProvider(jwtProvider, memberService)));
+        return filter;
+    }
+
+    @Bean
+    public ObjectMapper apiResponseObjectMapper() {
+        return new ObjectMapper();
     }
 
 }
