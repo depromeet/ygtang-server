@@ -27,10 +27,4 @@ public class JpaConfig {
     public DataSource ygtangDataSource() {
         return new HikariDataSource(ygtangDataSourceProperties());
     }
-
-//    @Bean
-//    public EntityManagerFactory entityManagerFactory(EntityManagerFactoryBuilder builder) {
-//        return builder.withDataSource(ygtangDataSource())
-//                      .build();
-//    }
 }
