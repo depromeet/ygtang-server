@@ -1,0 +1,48 @@
+uri:
+  webhook:
+
+spring:
+  application:
+    name: inspriation
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: username
+    password: password
+    sign-up-email-send-mail:
+    reset-password-for-auth-send-mail:
+    auth-token:
+  jwt:
+    secret:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  cache:
+    type: redis
+  flyway:
+    enabled: false
+cloud:
+  aws:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket:
+
+ygtang:
+  server:
+    host: ygtang.server.host
+
+management:
+  server:
+    port: 8081
