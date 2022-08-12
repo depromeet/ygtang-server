@@ -2,10 +2,12 @@ package inspiration.v1.auth;
 
 import inspiration.ResultResponse;
 import inspiration.auth.AuthService;
+import inspiration.auth.TokenResponse;
 import inspiration.auth.request.LoginRequest;
-import inspiration.emailauth.EmailAuthService;
-import inspiration.emailauth.request.AuthenticateEmailRequest;
-import inspiration.emailauth.request.SendEmailRequest;
+import inspiration.domain.emailauth.EmailAuthService;
+import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
+import inspiration.domain.emailauth.request.SendEmailRequest;
+import inspiration.v1.TokenHelper;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,13 +23,18 @@ public class AuthController {
 
     private final EmailAuthService emailAuthService;
     private final AuthService authService;
+    private final TokenHelper tokenHelper;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "로그인", notes = "이메일로 로그인을 합니다.")
-    public ResultResponse login(@RequestBody LoginRequest request) {
-
-        return authService.login(request);
+    public ResultResponse<TokenResponse> login(
+            @RequestBody LoginRequest request
+    ) {
+        ResultResponse<TokenResponse> loginResult = authService.login(request);
+        tokenHelper.addHeaderForAccessToken(loginResult);
+        tokenHelper.addCookieForRefreshToken(loginResult);
+        return loginResult;
     }
 
     @PostMapping("/sends-email/signup")

@@ -1,15 +1,15 @@
 package inspiration.v1.member;
 
 import inspiration.auth.AuthService;
-import inspiration.jobs.AuthenticationPrincipal;
-import inspiration.emailauth.request.SendEmailRequest;
-import inspiration.inspiration.InspirationService;
-import inspiration.member.MemberService;
-import inspiration.member.request.UpdateNicknameRequest;
-import inspiration.member.request.UpdatePasswordRequest;
-import inspiration.member.response.MemberInfoResponse;
+import inspiration.domain.emailauth.request.SendEmailRequest;
+import inspiration.domain.inspiration.InspirationService;
+import inspiration.domain.member.MemberService;
+import inspiration.domain.member.request.UpdateNicknameRequest;
+import inspiration.domain.member.request.UpdatePasswordRequest;
+import inspiration.domain.member.response.MemberInfoResponse;
+import inspiration.domain.tag.TagService;
+import inspiration.infrastructure.AuthenticationPrincipal;
 import inspiration.signup.SignupService;
-import inspiration.tag.TagService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

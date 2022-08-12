@@ -8,9 +8,9 @@ import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.TokenType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
-import inspiration.member.Member;
-import inspiration.member.MemberRepository;
-import inspiration.member.response.MemberInfoResponse;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.response.MemberInfoResponse;
 import inspiration.redis.RedisService;
 import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +34,13 @@ public class AuthService {
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final HttpServletResponse httpServletResponse;
 
     private final String refreshTokenKey = "refreshToken : ";
     private final String accessTokenKey = "accessToken : ";
     private final String issueToken = "refreshToken : ";
 
     @Transactional
-    public ResultResponse login(LoginRequest request) {
+    public ResultResponse<TokenResponse> login(LoginRequest request) {
 
         Member member = checkEmail(request.getEmail());
         verifyPassword(request.getPassword(), member.getPassword());
@@ -61,12 +60,6 @@ public class AuthService {
 
         if (accessToken == null) {
             accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
-            httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
-
-            Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
-            cookie.setPath("/");
-            cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
-            httpServletResponse.addCookie(cookie);
 
             TokenResponse tokenResponse = TokenResponse.builder()
                     .accessToken(accessToken)
@@ -79,13 +72,6 @@ public class AuthService {
 
             return ResultResponse.of(issueToken, tokenResponse);
         }
-
-        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
-
-        Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
-        httpServletResponse.addCookie(cookie);
 
         TokenResponse tokenResponse = TokenResponse.builder()
                 .accessToken(accessToken)

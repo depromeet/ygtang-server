@@ -8,6 +8,7 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+    database-platform: org.hibernate.dialect.H2Dialect
   redis:
     host: 127.0.0.1
     port: 6379
@@ -42,6 +43,12 @@ cloud:
 ygtang:
   server:
     host: ygtang.server.host
+  domain:
+    datasource:
+      jdbcUrl: jdbc:h2:mem:;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
 
 management:
   server:

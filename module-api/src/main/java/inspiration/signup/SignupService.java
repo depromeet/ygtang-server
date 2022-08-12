@@ -3,15 +3,15 @@ package inspiration.signup;
 import inspiration.ResultResponse;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.TokenResponse;
-import inspiration.emailauth.EmailAuthRepository;
+import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
-import inspiration.member.Member;
-import inspiration.member.MemberRepository;
-import inspiration.member.request.SignUpRequest;
-import inspiration.member.request.ExtraInfoRequest;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.request.SignUpRequest;
+import inspiration.domain.member.request.ExtraInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ public class SignupService {
     private final String REFRESH_TOKEN_KEY = "refreshToken : ";
 
     @Transactional
-    public ResultResponse signUp(SignUpRequest request) {
+    public ResultResponse<TokenResponse> signUp(SignUpRequest request) {
 
         verifyEmail(request.getEmail());
         isValidEmail(request.getEmail());

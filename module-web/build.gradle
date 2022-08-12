@@ -1,5 +1,19 @@
 apply plugin: "com.gorylenko.gradle-git-properties"
 
+dependencies {
+    implementation project(':module-domain')
+    implementation project(':module-api')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    implementation("io.springfox:springfox-swagger2:2.9.2")
+}
+
 bootJar {
     enabled = true
 }
@@ -7,22 +21,4 @@ bootJar {
 jar {
     enabled = true
     archivesBaseName = 'inspiration'
-}
-version = '0.0.1-SNAPSHOT'
-
-dependencies {
-    implementation project(':module-common')
-    implementation project(':module-api')
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.5.4'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-    implementation("io.springfox:springfox-swagger-ui:2.9.2")
-    implementation("io.springfox:springfox-swagger2:2.9.2")
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 }
