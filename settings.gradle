@@ -1,4 +1,5 @@
 rootProject.name = 'Inspiration'
 include 'module-api'
+include 'module-batch'
 include 'module-domain'
 include 'module-web'
