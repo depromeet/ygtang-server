@@ -109,4 +109,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public ObjectMapper apiResponseObjectMapper() {
         return new ObjectMapper();
     }
+
 }
