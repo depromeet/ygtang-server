@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface InspirationRepository extends JpaRepository<Inspiration, Long> {
+public interface InspirationRepository extends JpaRepository<Inspiration, Long>, InspirationRepositoryCustom {
 
     Optional<Inspiration> findById(Long id);
 
