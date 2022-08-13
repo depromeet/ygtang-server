@@ -1,7 +1,8 @@
 package inspiration.application.member;
 
 import inspiration.domain.member.Member;
-import inspiration.domain.member.MemberService;
+import inspiration.domain.member.MemberRepository;
+import inspiration.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -32,7 +33,7 @@ public class MemberInfoConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Bean
     public Job memberInfoJob(Step memberInfoStep) {
@@ -57,7 +58,8 @@ public class MemberInfoConfig {
             @Value("#{jobParameters['memberId']}") Long memberId
     ) {
         return (contribution, chunkContext) -> {
-            Member member = memberService.findById(memberId);
+            Member member = memberRepository.findByMemberId(memberId)
+                                            .orElseThrow(() -> new ResourceNotFoundException("Member not found. memberId: " + memberId));
             log.info("member: {}", member);
             return RepeatStatus.FINISHED;
         };
