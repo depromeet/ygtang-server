@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -31,10 +32,10 @@ public class InspirationRepositoryImpl extends QuerydslRepositorySupport impleme
             Pageable pageable
     ) {
         BooleanExpression expression = qInspiration.member.id.eq(memberId);
-        if (tagIds != null && !tagIds.isEmpty()) {
+        if (!CollectionUtils.isEmpty(tagIds)) {
             expression = expression.and(qInspirationTag.tag.id.in(tagIds));
         }
-        if (inspirationTypes != null && !inspirationTypes.isEmpty()) {
+        if (!CollectionUtils.isEmpty(inspirationTypes)) {
             expression = expression.and(qInspiration.type.in(inspirationTypes));
         }
         if (createdDateTimeFrom != null) {
