@@ -13,6 +13,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"inspirationTags"})
 public class Inspiration extends BaseTimeEntity {
 
     @Id
