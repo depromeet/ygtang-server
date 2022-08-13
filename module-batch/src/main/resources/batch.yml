@@ -1,0 +1,12 @@
+# FIXME: web 관련 dependency compile time 에 제외해야함
+spring:
+  main:
+    web-application-type: none
+
+ygtang:
+  batch:
+    datasource:
+      url: jdbc:mysql://${DB_HOST}:${DB_PORT}/spring_batch?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver

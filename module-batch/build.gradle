@@ -1,0 +1,15 @@
+dependencies {
+    implementation project(':module-domain')
+    implementation project(':module-api')
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+    archivesBaseName = 'inspiration'
+}

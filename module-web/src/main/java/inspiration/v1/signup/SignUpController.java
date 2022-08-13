@@ -1,9 +1,11 @@
 package inspiration.v1.signup;
 
 import inspiration.ResultResponse;
-import inspiration.member.request.SignUpRequest;
-import inspiration.member.request.ExtraInfoRequest;
+import inspiration.auth.TokenResponse;
+import inspiration.domain.member.request.SignUpRequest;
+import inspiration.domain.member.request.ExtraInfoRequest;
 import inspiration.signup.SignupService;
+import inspiration.v1.TokenHelper;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,13 +18,17 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/signup")
 public class SignUpController {
     private final SignupService signupService;
+    private final TokenHelper tokenHelper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
-    public ResultResponse singUp(@RequestBody @Valid SignUpRequest request) {
+    public ResultResponse<TokenResponse> signUp(@RequestBody @Valid SignUpRequest request) {
 
-        return signupService.signUp(request);
+        ResultResponse<TokenResponse> signUpResult = signupService.signUp(request);
+        tokenHelper.addHeaderForAccessToken(signUpResult);
+        tokenHelper.addCookieForRefreshToken(signUpResult);
+        return signUpResult;
     }
 
     @PatchMapping("/extra-informations")

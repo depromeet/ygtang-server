@@ -1,12 +1,12 @@
 package inspiration.v1.inspiration;
 
-import inspiration.jobs.AuthenticationPrincipal;
-import inspiration.inspiration.InspirationService;
-import inspiration.inspiration.request.InspirationAddRequest;
-import inspiration.inspiration.request.InspirationModifyRequest;
-import inspiration.inspiration.request.InspirationTagRequest;
-import inspiration.inspiration.response.InspirationResponse;
-import inspiration.inspiration.response.OpenGraphResponse;
+import inspiration.infrastructure.AuthenticationPrincipal;
+import inspiration.domain.inspiration.InspirationService;
+import inspiration.domain.inspiration.request.InspirationAddRequest;
+import inspiration.domain.inspiration.request.InspirationModifyRequest;
+import inspiration.domain.inspiration.request.InspirationTagRequest;
+import inspiration.domain.inspiration.response.InspirationResponse;
+import inspiration.domain.inspiration.response.OpenGraphResponse;
 import inspiration.v1.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

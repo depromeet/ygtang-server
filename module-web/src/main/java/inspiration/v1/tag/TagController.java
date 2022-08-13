@@ -1,10 +1,10 @@
 package inspiration.v1.tag;
 
-import inspiration.jobs.AuthenticationPrincipal;
-import inspiration.inspiration.InspirationService;
-import inspiration.tag.TagService;
-import inspiration.tag.request.TagAddRequest;
-import inspiration.tag.response.TagResponse;
+import inspiration.infrastructure.AuthenticationPrincipal;
+import inspiration.domain.inspiration.InspirationService;
+import inspiration.domain.tag.TagService;
+import inspiration.domain.tag.request.TagAddRequest;
+import inspiration.domain.tag.response.TagResponse;
 import inspiration.v1.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

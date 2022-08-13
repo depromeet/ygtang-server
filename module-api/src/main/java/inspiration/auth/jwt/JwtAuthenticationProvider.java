@@ -1,8 +1,8 @@
 package inspiration.auth.jwt;
 
 import inspiration.exception.UnauthorizedAccessRequestException;
-import inspiration.member.Member;
-import inspiration.member.MemberService;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;

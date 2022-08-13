@@ -1,6 +1,6 @@
 package inspiration;
 
-import inspiration.property.RedisProperties;
+import inspiration.infrastructure.redis.RedisProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import redis.embedded.RedisServer;
 

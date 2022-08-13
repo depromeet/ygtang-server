@@ -27,7 +27,6 @@ public class JwtProvider {
     private String secretKey;
     private final String ROLES = "roles";
     private final String MEMBER_ID = "member_id";
-    private final HttpServletResponse httpServletResponse;
 
     @PostConstruct
     protected void init() {
@@ -42,17 +41,13 @@ public class JwtProvider {
 
         Date now = new Date();
 
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(accessTokenClaims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
-        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
-
-        return accessToken;
     }
 
     public TokenResponse createTokenDto(Long memberId, List<String> roles) {
@@ -71,8 +66,6 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        httpServletResponse.setHeader(TokenType.ACCESS_TOKEN.getMessage(), accessToken);
-
         Claims refreshTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
         refreshTokenClaims.put(ROLES, roles);
         refreshTokenClaims.put(MEMBER_ID, memberId);
@@ -83,11 +76,6 @@ public class JwtProvider {
                 .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
-        Cookie cookie = new Cookie(TokenType.REFRESH_TOKEN.getMessage(), refreshToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(Math.toIntExact(ExpireTimeConstants.accessTokenValidMillisecond));
-        httpServletResponse.addCookie(cookie);
 
         return TokenResponse.builder()
                 .accessToken(accessToken)

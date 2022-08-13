@@ -1,6 +1,6 @@
 package inspiration.auth;
 
-import inspiration.member.MemberRepository;
+import inspiration.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
