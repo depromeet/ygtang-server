@@ -7,9 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.validation.constraints.*;
 import java.util.Collections;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class SignUpRequest {
 
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
@@ -33,14 +31,6 @@ public class SignUpRequest {
         return Member.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .nickname(nickName)
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build();
-    }
-
-    public Member toEntity() {
-        return Member.builder()
-                .email(email)
                 .nickname(nickName)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();

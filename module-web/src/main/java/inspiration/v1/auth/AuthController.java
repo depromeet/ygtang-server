@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
+@SuppressWarnings("ClassCanBeRecord")
 public class AuthController {
 
     private final EmailAuthService emailAuthService;

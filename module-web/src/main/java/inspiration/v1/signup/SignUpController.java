@@ -15,6 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/signup")
+@SuppressWarnings("ClassCanBeRecord")
 public class SignUpController {
     private final SignupService signupService;
 
@@ -23,8 +24,7 @@ public class SignUpController {
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
     public ResultResponse<TokenResponse> signUp(@RequestBody @Valid SignUpRequest request) {
 
-        ResultResponse<TokenResponse> signUpResult = signupService.signUp(request);
-        return signUpResult;
+        return signupService.signUp(request);
     }
 
     @PatchMapping("/extra-informations")
