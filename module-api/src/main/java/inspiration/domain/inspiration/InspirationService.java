@@ -21,6 +21,7 @@ import inspiration.domain.tag.Tag;
 import inspiration.domain.tag.TagRepository;
 import inspiration.domain.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -172,6 +174,15 @@ public class InspirationService {
             throw new NoAccessAuthorizationException();
         }
 
+        if (inspiration.hasFile()) {
+            String filename = inspiration.getContent();
+            try {
+                awsS3Service.deleteFile(filename);
+            } catch (Exception e) {
+                log.error("Failed to delete file. filename: {}", filename, e);
+            }
+        }
+
         inspirationRepository.delete(inspiration);
     }
 
@@ -182,12 +193,22 @@ public class InspirationService {
 
         List<Inspiration> inspirations = inspirationRepository.findAllByMember(member);
 
+        inspirations.stream()
+                    .filter(Inspiration::hasFile)
+                    .map(Inspiration::getContent)
+                    .forEach(filename -> {
+                        try {
+                            awsS3Service.deleteFile(filename);
+                        } catch (Exception e) {
+                            log.error("Failed to delete file. filename: {}", filename, e);
+                        }
+                    });
+
         inspirationTagService.deleteAllByInspirationIn(inspirations);
 
         inspirationRepository.deleteAllByMember(member);
 
         tagRepository.deleteAllByMember(member);
-
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
