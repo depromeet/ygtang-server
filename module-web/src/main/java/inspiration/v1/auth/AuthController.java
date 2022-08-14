@@ -7,10 +7,9 @@ import inspiration.auth.request.LoginRequest;
 import inspiration.domain.emailauth.EmailAuthService;
 import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
-import inspiration.redirect.PasswordAuthRedirectViewUtil;
-import inspiration.redirect.PolicyRedirectViewUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,6 +23,11 @@ public class AuthController {
 
     private final EmailAuthService emailAuthService;
     private final AuthService authService;
+
+    @Value("${ygtang.redirect-url.password-auth}")
+    private String passwordAuthRedirectUrl;
+    @Value("${ygtang.redirect-url.policy}")
+    private String policyRedirectUrl;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,7 +60,7 @@ public class AuthController {
     public RedirectView authenticateEmailOfSingUp(@ModelAttribute AuthenticateEmailRequest request) {
 
         emailAuthService.authenticateEmailOfSignUp(request.getEmail());
-        return PolicyRedirectViewUtil.redirectView();
+        return new RedirectView(policyRedirectUrl);
     }
 
     @GetMapping("/email/passwords/reset")
@@ -64,7 +68,7 @@ public class AuthController {
     public RedirectView authenticateEmailOfResetPasswordForAuth(@ModelAttribute AuthenticateEmailRequest request) {
 
         emailAuthService.authenticateEmailOfResetPasswordForAuth(request.getEmail());
-        return PasswordAuthRedirectViewUtil.redirectView(request.getEmail());
+        return new RedirectView(policyRedirectUrl + request.getEmail());
     }
 
     @GetMapping("/signup/email/{email}/status")

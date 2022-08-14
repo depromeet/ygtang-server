@@ -49,6 +49,10 @@ ygtang:
       username: sa
       password:
       driver-class-name: org.h2.Driver
+  redirect-url:
+    password-auth:
+    policy:
+
 
 management:
   server:
