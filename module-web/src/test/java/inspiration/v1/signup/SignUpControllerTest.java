@@ -1,6 +1,7 @@
 package inspiration.v1.signup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inspiration.TestRedisConfiguration;
 import inspiration.domain.emailauth.SignUpEmailSendService;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.domain.member.Member;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = TestRedisConfiguration.class)
 @AutoConfigureMockMvc
 @Transactional
 class SignUpControllerTest {
