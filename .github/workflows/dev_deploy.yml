@@ -31,12 +31,17 @@ jobs:
         run: ./gradlew build 
         shell: bash
 
+      - name: Make Directory for deliver
+        run: mkdir deploy
+
+      - name: Copy Jar
+        run: cp ./module-web/build/libs/*.jar ./deploy/
+
       - name: Make zip file
-        run: zip -r ./$GITHUB_SHA.zip .
+        run: zip -r ./$GITHUB_SHA.zip ./deploy/
         shell: bash
 
-
-      - name: Configure AWS credentials 
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1 
         with: 
           aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}

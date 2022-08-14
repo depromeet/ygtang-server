@@ -30,11 +30,16 @@ jobs:
       - name: Build with Gradle 
         run: ./gradlew build 
         shell: bash
-    
-      - name: Make zip file 
-        run: zip -r ./$GITHUB_SHA.zip . 
-        shell: bash 
 
+      - name: Make Directory for deliver
+        run: mkdir deploy
+
+      - name: Copy Jar
+        run: cp ./module-web/build/libs/*.jar ./deploy/
+
+      - name: Make zip file 
+        run: zip -r ./$GITHUB_SHA.zip ./deploy/
+        shell: bash 
 
       - name: Configure AWS credentials 
         uses: aws-actions/configure-aws-credentials@v1 
