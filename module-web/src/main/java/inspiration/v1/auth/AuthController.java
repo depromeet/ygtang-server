@@ -7,7 +7,6 @@ import inspiration.auth.request.LoginRequest;
 import inspiration.domain.emailauth.EmailAuthService;
 import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
-import inspiration.v1.TokenHelper;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ public class AuthController {
 
     private final EmailAuthService emailAuthService;
     private final AuthService authService;
-    private final TokenHelper tokenHelper;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,10 +29,8 @@ public class AuthController {
     public ResultResponse<TokenResponse> login(
             @RequestBody LoginRequest request
     ) {
-        ResultResponse<TokenResponse> loginResult = authService.login(request);
-        tokenHelper.addHeaderForAccessToken(loginResult);
-        tokenHelper.addCookieForRefreshToken(loginResult);
-        return loginResult;
+
+        return authService.login(request);
     }
 
     @PostMapping("/sends-email/signup")

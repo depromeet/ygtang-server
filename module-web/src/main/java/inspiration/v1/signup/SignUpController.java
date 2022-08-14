@@ -2,10 +2,9 @@ package inspiration.v1.signup;
 
 import inspiration.ResultResponse;
 import inspiration.auth.TokenResponse;
-import inspiration.domain.member.request.SignUpRequest;
 import inspiration.domain.member.request.ExtraInfoRequest;
+import inspiration.domain.member.request.SignUpRequest;
 import inspiration.signup.SignupService;
-import inspiration.v1.TokenHelper;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/signup")
 public class SignUpController {
     private final SignupService signupService;
-    private final TokenHelper tokenHelper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -26,8 +24,6 @@ public class SignUpController {
     public ResultResponse<TokenResponse> signUp(@RequestBody @Valid SignUpRequest request) {
 
         ResultResponse<TokenResponse> signUpResult = signupService.signUp(request);
-        tokenHelper.addHeaderForAccessToken(signUpResult);
-        tokenHelper.addCookieForRefreshToken(signUpResult);
         return signUpResult;
     }
 
