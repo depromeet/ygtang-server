@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/sends-email/signup")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입을 위해 이메일 인증 링크 요청", notes = "회원가입을 위해 이메일에 인증 링크를 요청한다")
-    public void signUpEmailSend(@RequestBody @Valid SendEmailRequest request) {
+    public void sendEmailForSignup(@RequestBody @Valid SendEmailRequest request) {
 
         emailAuthService.signUpEmailSend(request.getEmail());
     }
@@ -53,7 +53,7 @@ public class AuthController {
     @ApiOperation(value = "회원가입을 위한 이메일 인증.", notes = "링크를 클릭하면 회원가입을 위한 이메일 인증에 성공한다.")
     public RedirectView authenticateEmailOfSingUp(@ModelAttribute AuthenticateEmailRequest request) {
 
-        return emailAuthService.authenticateEmailOfSingUp(request.getEmail());
+        return emailAuthService.authenticateEmailOfSignUp(request.getEmail());
     }
 
     @GetMapping("/email/passwords/reset")

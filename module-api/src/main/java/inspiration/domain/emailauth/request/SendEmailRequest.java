@@ -1,14 +1,11 @@
 package inspiration.domain.emailauth.request;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class SendEmailRequest {
 
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
