@@ -7,6 +7,8 @@ import inspiration.auth.request.LoginRequest;
 import inspiration.domain.emailauth.EmailAuthService;
 import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
+import inspiration.redirect.PasswordAuthRedirectViewUtil;
+import inspiration.redirect.PolicyRedirectViewUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,14 +55,16 @@ public class AuthController {
     @ApiOperation(value = "회원가입을 위한 이메일 인증.", notes = "링크를 클릭하면 회원가입을 위한 이메일 인증에 성공한다.")
     public RedirectView authenticateEmailOfSingUp(@ModelAttribute AuthenticateEmailRequest request) {
 
-        return emailAuthService.authenticateEmailOfSingUp(request.getEmail());
+        emailAuthService.authenticateEmailOfSignUp(request.getEmail());
+        return PolicyRedirectViewUtil.redirectView();
     }
 
     @GetMapping("/email/passwords/reset")
     @ApiOperation(value = "비밀번호 초기화를 위한 이메일 인증", notes = "링크를 클릭하면 비밀번호 초기화를 위한 이메일 인증에 성공한다.")
     public RedirectView authenticateEmailOfResetPasswordForAuth(@ModelAttribute AuthenticateEmailRequest request) {
 
-        return emailAuthService.authenticateEmailOfResetPasswordForAuth(request.getEmail());
+        emailAuthService.authenticateEmailOfResetPasswordForAuth(request.getEmail());
+        return PasswordAuthRedirectViewUtil.redirectView(request.getEmail());
     }
 
     @GetMapping("/signup/email/{email}/status")

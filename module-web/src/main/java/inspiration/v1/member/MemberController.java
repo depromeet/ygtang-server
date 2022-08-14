@@ -55,9 +55,9 @@ public class MemberController {
 
     @GetMapping("/info")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보를 조회한다.")
-    public MemberInfoResponse getUserInfo() {
+    public MemberInfoResponse getUserInfo(@ApiIgnore @AuthenticationPrincipal Long memberId) {
 
-        return authService.getUserInfo();
+        return authService.getUserInfo(memberId);
     }
 
     @DeleteMapping("/remove")

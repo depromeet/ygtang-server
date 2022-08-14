@@ -1,4 +1,4 @@
-package inspiration.utils;
+package inspiration.redirect;
 
 import org.springframework.web.servlet.view.RedirectView;
 
