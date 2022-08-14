@@ -5,10 +5,35 @@ services:
     image: spring
     container_name: ${ACTIVE}
     ports:
-      - "${PORT}:${PORT}"
+      - "8080:8080"
+      - "8081:8081"
     volumes:
       - ./build/libs/:/root/
     environment:
-      active: ${ACTIVE}
-      project_name: ${PROJECT_NAME}
-      version: ${VERSION}
+      - "JAVA_OPTS=${JAVA_OPTS}"
+      - "PROJECT_NAME=${PROJECT_NAME}"
+      - "VERSION=${VERSION}"
+      - "DEV_PORT=${DEV_PORT}"
+      - "ACTIVE=${ACTIVE}"
+      - "ERROR_LOG_POST_SLACK_URL=${ERROR_LOG_POST_SLACK_URL}"
+      - "DB_HOST=${DB_HOST}"
+      - "DB_PORT=${DB_PORT}"
+      - "DB_USER=${DB_USER}"
+      - "DB_PASSWORD=${DB_PASSWORD}"
+      - "REDIS_HOST=${REDIS_HOST}"
+      - "REDIS_PORT=${REDIS_PORT}"
+      - "MAIL_HOST=${MAIL_HOST}"
+      - "MAIL_PORT=${MAIL_PORT}"
+      - "MAIL_USERNAME=${MAIL_USERNAME}"
+      - "MAIL_PASSWORD=${MAIL_PASSWORD}"
+      - "SIGN_UP_EMAIL_SEND_MAIL=${SIGN_UP_EMAIL_SEND_MAIL}"
+      - "RESET_PASSWORD_FOR_AUTH_SEND_MAIL=${RESET_PASSWORD_FOR_AUTH_SEND_MAIL}"
+      - "AUTH_TOKEN=${AUTH_TOKEN}"
+      - "POLICY_URL=${POLICY_URL}"
+      - "SECRET_KEY=${SECRET_KEY}"
+      - "S3_ACCESS_KEY=${S3_ACCESS_KEY}"
+      - "S3_SECRET_KEY=${S3_SECRET_KEY}"
+      - "S3_REGION=${S3_REGION}"
+      - "S3_BUCKET=${S3_BUCKET}"
+
+
