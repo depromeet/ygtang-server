@@ -46,7 +46,7 @@ public class AuthService {
 
 
         if (accessToken == null && refreshToken == null) {
-            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId());
 
             saveAccessToken(member.getId(), tokenResponse.getAccessToken());
             saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
@@ -55,7 +55,7 @@ public class AuthService {
         }
 
         if (accessToken == null) {
-            accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
+            accessToken = jwtProvider.createAccessToken(member.getId());
 
             TokenResponse tokenResponse = TokenResponse.builder()
                     .accessToken(accessToken)
@@ -97,7 +97,7 @@ public class AuthService {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId());
 
         saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
         saveAccessToken(member.getId(), newTokenResponse.getAccessToken());

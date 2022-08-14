@@ -4,8 +4,9 @@ import inspiration.domain.member.Member;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.*;
-import java.util.Collections;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -31,18 +32,9 @@ public class SignUpRequest {
     @Builder
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .nickname(nickName)
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build();
-    }
-
-    public Member toEntity() {
-        return Member.builder()
-                .email(email)
-                .nickname(nickName)
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build();
+                     .email(email)
+                     .password(passwordEncoder.encode(password))
+                     .nickname(nickName)
+                     .build();
     }
 }
