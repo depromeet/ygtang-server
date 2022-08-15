@@ -35,8 +35,6 @@ class AuthControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private RedisService redisService;
-    @Autowired
-    private EmailAuthRepository emailAuthRepository;
     @MockBean
     private SignUpEmailSendService signUpEmailSendService;
 
