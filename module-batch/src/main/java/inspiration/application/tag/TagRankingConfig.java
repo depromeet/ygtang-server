@@ -78,15 +78,9 @@ public class TagRankingConfig {
     @StepScope
     public Tasklet tagRankingTasklet() {
         return (contribution, chunkContext) -> {
-            // query data
             List<TagRankingVo> tagRankingVoList = getTagRankingVoList();
-
-            // convert to file
             File csvFile = toCsvFile(tagRankingVoList);
-
-            // send file to slack
             sendFileToSlack(csvFile);
-
             return RepeatStatus.FINISHED;
         };
     }
