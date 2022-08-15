@@ -53,6 +53,9 @@ jobs:
           mkdir deploy/scripts
           cp ./scripts/* ./deploy/scripts/
 
+      - name: Copy Jar
+        run: cp ./module-web/build/libs/*.jar ./deploy/
+
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip ./deploy/
         shell: bash
