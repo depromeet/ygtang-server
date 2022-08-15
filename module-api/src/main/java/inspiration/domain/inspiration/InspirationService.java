@@ -174,6 +174,8 @@ public class InspirationService {
             throw new NoAccessAuthorizationException();
         }
 
+        inspirationRepository.delete(inspiration);
+
         if (inspiration.hasFile()) {
             String filename = inspiration.getContent();
             try {
@@ -182,8 +184,6 @@ public class InspirationService {
                 log.error("Failed to delete file. filename: {}", filename, e);
             }
         }
-
-        inspirationRepository.delete(inspiration);
     }
 
     @Transactional
@@ -192,6 +192,12 @@ public class InspirationService {
         Member member = memberService.findById(memberId);
 
         List<Inspiration> inspirations = inspirationRepository.findAllByMember(member);
+
+        inspirationTagService.deleteAllByInspirationIn(inspirations);
+
+        inspirationRepository.deleteAllByMember(member);
+
+        tagRepository.deleteAllByMember(member);
 
         inspirations.stream()
                     .filter(Inspiration::hasFile)
@@ -204,11 +210,6 @@ public class InspirationService {
                         }
                     });
 
-        inspirationTagService.deleteAllByInspirationIn(inspirations);
-
-        inspirationRepository.deleteAllByMember(member);
-
-        tagRepository.deleteAllByMember(member);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
