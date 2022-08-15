@@ -11,6 +11,8 @@ cp ${APP_PATH}/source/module-web/build/libs/* ${APP_PATH}/source
 
 export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
 
+docker stop ${ACTIVE}
+sleep 3
 docker-compose -f ${APP_PATH}/source/docker-compose.yml up -d --force-recreate
 sleep 10
 

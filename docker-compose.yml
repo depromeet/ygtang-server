@@ -2,11 +2,12 @@ version: "3"
 services:
   spring1:
     build: .
-    image: spring
+    image: ${PROJECT_NAME}-${VERSION}
     container_name: ${ACTIVE}
     ports:
       - "8080:8080"
       - "8081:8081"
+      - "5005:5005"
     volumes:
       - ./build/libs/:/root/
     environment:
