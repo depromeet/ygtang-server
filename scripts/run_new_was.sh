@@ -7,7 +7,6 @@ ABSDIR=$(dirname $ABSPATH)
 APP_PATH=/home/ubuntu/app/inspiration
 
 cp ${APP_PATH}/deploy/.env ${APP_PATH}/source/.env
-cp ${APP_PATH}/source/module-web/build/libs/* ${APP_PATH}/source
 
 export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
 
