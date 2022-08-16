@@ -37,6 +37,22 @@ jobs:
       - name: Copy Jar
         run: cp ./module-web/build/libs/*.jar ./deploy/
 
+      # appspec.yml Copy
+      - name: Copy appspec
+        run: cp ./appspec.yml ./deploy/
+
+      # Dockerfile Copy
+      - name: Copy Dockerfile
+        run: |
+          cp ./dockerfile ./deploy/
+          cp ./docker-compose.yml ./deploy/
+
+      # script file Copy
+      - name: Copy shell
+        run: |
+          mkdir deploy/scripts
+          cp ./scripts/* ./deploy/scripts/
+
       - name: Make zip file 
         run: zip -r ./$GITHUB_SHA.zip ./deploy/
         shell: bash 
