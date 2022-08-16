@@ -48,7 +48,7 @@ public class EmailAuthService {
     }
 
     @Transactional
-    public RedirectView authenticateEmailOfSingUp(String email) {
+    public RedirectView authenticateEmailOfSignUp(String email) {
 
         String expiredKey = RedisKey.EAUTH_SIGN_UP.getKey() + email;
         log.info(email);
