@@ -11,13 +11,10 @@ import inspiration.domain.passwordauth.PasswordAuth;
 import inspiration.domain.passwordauth.PasswordAuthRepository;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
-import inspiration.utils.PasswordAuthRedirectViewUtil;
-import inspiration.utils.PolicyRedirectViewUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +45,7 @@ public class EmailAuthService {
     }
 
     @Transactional
-    public RedirectView authenticateEmailOfSignUp(String email) {
+    public void authenticateEmailOfSignUp(String email) {
 
         String expiredKey = RedisKey.EAUTH_SIGN_UP.getKey() + email;
         log.info(email);
@@ -64,8 +61,6 @@ public class EmailAuthService {
                         .email(email)
                         .isAuth(true)
                         .build());
-
-        return PolicyRedirectViewUtil.redirectView();
     }
 
     @Transactional
@@ -91,7 +86,7 @@ public class EmailAuthService {
     }
 
     @Transactional
-    public RedirectView authenticateEmailOfResetPasswordForAuth(String email) {
+    public void authenticateEmailOfResetPasswordForAuth(String email) {
 
         String expiredKey = RedisKey.EAUTH_RESET_PASSWORD.getKey() + email;
 
@@ -106,8 +101,6 @@ public class EmailAuthService {
                         .email(email)
                         .isAuth(true)
                         .build());
-
-        return PasswordAuthRedirectViewUtil.redirectView(email);
     }
 
     @Transactional(readOnly = true)

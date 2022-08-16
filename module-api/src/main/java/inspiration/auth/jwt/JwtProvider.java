@@ -25,7 +25,6 @@ public class JwtProvider {
 
     @Value("spring.jwt.secret")
     private String secretKey;
-    private final String ROLES = "roles";
     private final String MEMBER_ID = "member_id";
 
     @PostConstruct
@@ -33,10 +32,9 @@ public class JwtProvider {
         secretKey = Base64UrlCodec.BASE64URL.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(Long memberId, List<String> roles) {
+    public String createAccessToken(Long memberId) {
 
         Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
-        accessTokenClaims.put(ROLES, roles);
         accessTokenClaims.put(MEMBER_ID, memberId);
 
         Date now = new Date();
@@ -50,10 +48,9 @@ public class JwtProvider {
                 .compact();
     }
 
-    public TokenResponse createTokenDto(Long memberId, List<String> roles) {
+    public TokenResponse createTokenDto(Long memberId) {
 
         Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
-        accessTokenClaims.put(ROLES, roles);
         accessTokenClaims.put(MEMBER_ID, memberId);
 
         Date now = new Date();
@@ -67,7 +64,6 @@ public class JwtProvider {
                 .compact();
 
         Claims refreshTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
-        refreshTokenClaims.put(ROLES, roles);
         refreshTokenClaims.put(MEMBER_ID, memberId);
 
         String refreshToken = Jwts.builder()
@@ -100,10 +96,6 @@ public class JwtProvider {
             return Optional.empty();
         } catch (IllegalArgumentException e) {
             log.error("잘못된 토큰입니다. token: {}", token, e);
-            return Optional.empty();
-        }
-        if (claims.get(ROLES) == null) {
-            log.error("잘못된 토큰입니다. 'roles' claim 이 있어야합니다. token: {}", token);
             return Optional.empty();
         }
         try {

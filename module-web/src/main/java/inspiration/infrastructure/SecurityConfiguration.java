@@ -2,8 +2,8 @@ package inspiration.infrastructure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.ResultResponse;
-import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
 import inspiration.auth.jwt.JwtAuthenticationProvider;
+import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.domain.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -103,8 +104,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtPreAuthenticatedProcessingFilter jwtAuthenticationFilter() {
         JwtPreAuthenticatedProcessingFilter filter = new JwtPreAuthenticatedProcessingFilter();
-        filter.setAuthenticationManager(new ProviderManager(new JwtAuthenticationProvider(jwtProvider, memberService)));
+        filter.setAuthenticationManager(jwtAuthenticationManager());
         return filter;
+    }
+
+    @Bean
+    public AuthenticationManager jwtAuthenticationManager() {
+        return new ProviderManager(
+                new JwtAuthenticationProvider(jwtProvider, memberService)
+        );
     }
 
     @Bean

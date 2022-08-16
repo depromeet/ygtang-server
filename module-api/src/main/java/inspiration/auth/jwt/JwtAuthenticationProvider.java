@@ -10,7 +10,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+
+import java.util.Collections;
 
 @SuppressWarnings("ClassCanBeRecord")
 @Slf4j
@@ -40,7 +43,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return new PreAuthenticatedAuthenticationToken(
                 member.getId(),
                 null,
-                member.getAuthorities()
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
 

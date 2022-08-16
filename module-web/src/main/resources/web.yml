@@ -7,10 +7,6 @@ server:
   cache:
     type: redis
 
-ygtang:
-  server:
-    host: ${YGTANG_SERVER_HOST}
-
 management:
   server:
     port: 8081

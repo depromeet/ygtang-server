@@ -5,14 +5,12 @@ import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequest;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
-import inspiration.enumeration.TokenType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
 import inspiration.domain.member.response.MemberInfoResponse;
 import inspiration.redis.RedisService;
-import inspiration.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -50,7 +46,7 @@ public class AuthService {
 
 
         if (accessToken == null && refreshToken == null) {
-            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId());
 
             saveAccessToken(member.getId(), tokenResponse.getAccessToken());
             saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
@@ -59,7 +55,7 @@ public class AuthService {
         }
 
         if (accessToken == null) {
-            accessToken = jwtProvider.createAccessToken(member.getId(), member.getRoles());
+            accessToken = jwtProvider.createAccessToken(member.getId());
 
             TokenResponse tokenResponse = TokenResponse.builder()
                     .accessToken(accessToken)
@@ -101,7 +97,7 @@ public class AuthService {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId(), member.getRoles());
+        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId());
 
         saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
         saveAccessToken(member.getId(), newTokenResponse.getAccessToken());
@@ -110,9 +106,9 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public MemberInfoResponse getUserInfo() {
+    public MemberInfoResponse getUserInfo(Long memberId) {
 
-        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         return MemberInfoResponse.of(member);
