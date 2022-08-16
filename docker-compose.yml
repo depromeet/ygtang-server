@@ -9,7 +9,7 @@ services:
       - "8081:8081"
       - "5005:5005"
     volumes:
-      - ./build/libs/:/root/
+      - ./:/root/
     environment:
       - "JAVA_OPTS=${JAVA_OPTS}"
       - "PROJECT_NAME=${PROJECT_NAME}"
