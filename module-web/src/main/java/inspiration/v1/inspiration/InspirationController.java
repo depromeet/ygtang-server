@@ -1,5 +1,6 @@
 package inspiration.v1.inspiration;
 
+import inspiration.domain.inspiration.InspirationType;
 import inspiration.infrastructure.AuthenticationPrincipal;
 import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.inspiration.request.InspirationAddRequest;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -101,13 +104,17 @@ public class InspirationController {
     }
 
     @PostMapping ("/tag/")
-    @ApiOperation(value = "태그로 영감조회", notes = "태그로 영감 조회를 요청한다")
+    @ApiOperation(value = "영감 필터링", notes = "조건(영감 타입, 영감 생성 일자)에 맞는 영감 조회를 요청한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<ResultResponse> findInspirationByTag(Pageable pageable, @RequestBody List<Long> tagIds, @ApiIgnore @AuthenticationPrincipal Long memberId) {
-        Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(pageable, tagIds, memberId);
+    public ResponseEntity<ResultResponse> findInspirationByTag(Pageable pageable, @RequestBody List<Long> tagIds,
+                                                               @RequestParam(required = false) List<InspirationType> types,
+                                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMddHHmmss") LocalDateTime timeFrom,
+                                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMddHHmmss") LocalDateTime timeTo,
+                                                               @ApiIgnore @AuthenticationPrincipal Long memberId) {
+        Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(pageable, tagIds, types, timeFrom, timeTo.plusDays(1), memberId);
 
         return ResponseEntity.ok().body(ResultResponse.from(inspirationResponsePage));
     }
