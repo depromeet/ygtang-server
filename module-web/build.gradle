@@ -19,6 +19,6 @@ bootJar {
 }
 
 jar {
-    enabled = true
+    enabled = false
     archivesBaseName = 'inspiration'
 }
