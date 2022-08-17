@@ -4,6 +4,8 @@ import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Lists;
 import inspiration.enumeration.HttpHeaderType;
 import inspiration.enumeration.TokenType;
+import inspiration.infrastructure.formatter.LocalDateFormatter;
+import inspiration.infrastructure.formatter.LocalDateTimeFormatter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -111,7 +114,15 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new AuthenticationPrincipalArgumentResolver();
     }
 
-    @Getter @Setter
+    @Override
+    protected void addFormatters(FormatterRegistry registry) {
+        super.addFormatters(registry);
+        registry.addFormatter(new LocalDateFormatter());
+        registry.addFormatter(new LocalDateTimeFormatter());
+    }
+
+    @Getter
+    @Setter
     @ApiModel
     static class Page {
         @ApiModelProperty(value = "페이지 번호(0..N)", example = "0")
