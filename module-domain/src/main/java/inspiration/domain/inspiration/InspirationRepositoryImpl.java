@@ -46,7 +46,7 @@ public class InspirationRepositoryImpl extends QuerydslRepositorySupport impleme
         }
 
         JPQLQuery<Inspiration> query = from(qInspiration)
-                                               .innerJoin(qInspiration.inspirationTags, qInspirationTag)
+                                               .leftJoin(qInspiration.inspirationTags, qInspirationTag)
                                                .where(expression)
                                                .distinct();
         Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query);

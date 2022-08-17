@@ -104,17 +104,17 @@ public class InspirationController {
     }
 
     @PostMapping ("/tag/")
-    @ApiOperation(value = "영감 필터링", notes = "조건(영감 타입, 영감 생성 일자)에 맞는 영감 조회를 요청한다")
+    @ApiOperation(value = "영감 필터링", notes = "조건(태그, 영감 타입, 영감 생성 일자)에 맞는 영감 조회를 요청한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공입니다.")
             , @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
     public ResponseEntity<ResultResponse> findInspirationByTag(Pageable pageable, @RequestBody List<Long> tagIds,
                                                                @RequestParam(required = false) List<InspirationType> types,
-                                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMddHHmmss") LocalDateTime timeFrom,
-                                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyyMMddHHmmss") LocalDateTime timeTo,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdDateTimeFrom,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdDateTimeTo,
                                                                @ApiIgnore @AuthenticationPrincipal Long memberId) {
-        Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(pageable, tagIds, types, timeFrom, timeTo.plusDays(1), memberId);
+        Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(tagIds, types, createdDateTimeFrom, createdDateTimeTo, memberId, pageable);
 
         return ResponseEntity.ok().body(ResultResponse.from(inspirationResponsePage));
     }

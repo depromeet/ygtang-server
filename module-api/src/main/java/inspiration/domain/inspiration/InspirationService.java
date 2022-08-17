@@ -21,7 +21,6 @@ import inspiration.domain.tag.Tag;
 import inspiration.domain.tag.TagRepository;
 import inspiration.domain.tag.TagService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -126,8 +125,9 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    public RestPage<InspirationResponse> findInspirationsByTags(Pageable pageable, List<Long> tagIds, List<InspirationType> types,
-                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo, Long memberId) {
+    public RestPage<InspirationResponse> findInspirationsByTags(List<Long> tagIds, List<InspirationType> types,
+                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo,
+                                                                Long memberId, Pageable pageable) {
 
         Page<Inspiration> inspirationPage = inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(memberId, tagIds, types, createdDateTimeFrom, createdDateTimeTo, pageable);
 
