@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -124,24 +125,18 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    public RestPage<InspirationResponse> findInspirationsByTags(Pageable pageable, List<Long> tagIds, Long memberId) {
+    public RestPage<InspirationResponse> findInspirationsByTags(List<Long> tagIds, List<InspirationType> types,
+                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo,
+                                                                Long memberId, Pageable pageable) {
 
-        List<Tag> tags = tagIds.stream()
-                                .map(tagService::getTag)
-                                .collect(Collectors.toList());
+        Page<Inspiration> inspirationPage = inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(memberId, tagIds, types, createdDateTimeFrom, createdDateTimeTo, pageable);
 
-        List<Inspiration> inspirations = inspirationRepository.findDistinctInspirationByTags(tags, Long.parseLong(String.valueOf(tags.size())))
-                                                                .orElseThrow(ResourceNotFoundException::new);
-
-        List<Long> inspirationIds = inspirations.stream()
-                                                .map(Inspiration::getId)
-                                                .collect(Collectors.toList());
-
-        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIdIn(inspirationIds, pageable);
         inspirationPage
                 .forEach(
                         inspiration ->
-                                inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
+                                inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()))
+                );
+
         return new RestPage<>(
                 inspirationPage.map(inspiration -> InspirationResponse.of(
                         inspiration,
