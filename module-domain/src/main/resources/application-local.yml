@@ -4,3 +4,29 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  flyway:
+    url: ENC(Qagc87PeOwmR8Zh73hU/bii+ZjzTPI7shAmw3pPxdLqXHF5MXACQparai0qWTUb6rBMXGPuqohNDhKfKx/wc21ysVuOCel9WEf2R0Le/RJhI8oVlaHZMmp6eq/yR2lsbW1ZB+n7zIi2gKgOTu2U9g4zRcA8EH3KTLK5+ps998vZRyCOIg8gW9/IJab5A8uSIgnUjwjJGdxAYcNd6+PMoceEhDfeW6wVldT7KNQeHhjofmi565uyWGQtHTfOQHbjcaBjH5CtI7/tWGaYVxdpLlC+d6kZ2wm/7H4rB0oGa9DZw7dy1JE4ymFcL67b6p2mEsi6ysBMZ+fTypM90Snb8RA==)
+    user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
+    password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+  redis:
+    host: ENC(FoC+EvHKz29ZSqPQCnXY8NyTCPSnvKFxjbwGgUJ88OcSmviRFlwfovZA/BWF130jmfn3fDknMvfibDJW/6vO3M9xy2qQHVKBqrHldicepAxl9ThB+aT84ZOPtN/b/Brf)
+    port: 6379
+  mail:
+    sign-up-email-send-mail: ENC(TxvKgsUqqpgYeMzecLx4+iVEt2RQL1J8F24/ttMYgkboMeX2e1PE9L5VNk85RKVgZttx5x8p6dNin6mZaSZLomOSMlIiN2B5STL5LBGgmqhR8lYnKfVtyANliIit9pdH)
+    reset-password-for-auth-send-mail: ENC(2HO9hovu42xvdGvyYqoh2VhBxxl5Hp8gqopWj2vGlAiVrIBC0Bj0Be6iEbBVWuIWxgim0Uoznu3wRdT5LmbaKc/iLdluzHsB6xDbxiN5JA7PT3AxgLwZNAQ2q5bQ2v8w)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(fSugXvM7vE9xH3LO8SjlJHeDPAz3Grh9Z0soZW4YoXmtz/FP2nlFrzOw+dPd2qpQz8a7c60fKdgI/uOSJ8upzw==)
+      secret-key: ENC(YiKVUKqdW6IeY+zcvhSzhb65e1rVU5MFn174HDKFBb0xinizK9EwCsdj06ZAeEh7sAuWJ/DnI/w5/gC5bE4cRjO82NRIAT9aSVG2VVsemmc=)
+    s3:
+      bucket: ENC(hrPVDZuG83TgagLFUG7MchbMlA30RYJJU1sW8ToTYyUguoCcZiLVgtALJwQq6JRPZzfa2/WX6k0I2o/FiTurHA==)
+
+ygtang:
+  domain:
+    datasource:
+      jdbcUrl: ENC(Qagc87PeOwmR8Zh73hU/bii+ZjzTPI7shAmw3pPxdLqXHF5MXACQparai0qWTUb6rBMXGPuqohNDhKfKx/wc21ysVuOCel9WEf2R0Le/RJhI8oVlaHZMmp6eq/yR2lsbW1ZB+n7zIi2gKgOTu2U9g4zRcA8EH3KTLK5+ps998vZRyCOIg8gW9/IJab5A8uSIgnUjwjJGdxAYcNd6+PMoceEhDfeW6wVldT7KNQeHhjofmi565uyWGQtHTfOQHbjcaBjH5CtI7/tWGaYVxdpLlC+d6kZ2wm/7H4rB0oGa9DZw7dy1JE4ymFcL67b6p2mEsi6ysBMZ+fTypM90Snb8RA==)
+      username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
+      password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+      driver-class-name: com.mysql.cj.jdbc.Driver

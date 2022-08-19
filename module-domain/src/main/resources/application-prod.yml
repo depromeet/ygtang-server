@@ -1,0 +1,30 @@
+spring:
+  flyway:
+    url: ENC(DiuH5gQbIMnSu4B1O0TC+AQrUHJGyjA+lkVRRuFmEzVVHDDlKo6fKZEJX+UibptIx415dJbnuPPLwKap1WzTNmNXvFEWcvAgoGw8WAXQoF41SbPuWxzhIDg5mg/PhvrCCtC7UCsOpel1EqcTFn+49nPZP59vIlvAqgzQCxfyYqh4dn1NF/qs2HesVCrUefPQorG/yk1LI1c5rfhnWQhjuxdWDi7fVkISxM15csTifiqTOhcziVkaWkd/QnnD3Z3YJBUTTkykJ7dUQpVluX1SNZWsKGtBNKjYtqS2T6BzbdH7m1jtyQp4XzrH+SoPrZjSPEhHCQ6XkG3JMg40ygY62Q==)
+    user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
+    password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+  redis:
+    host: ENC(019slyR3n+gWa0DJd5h9mV5EFpZpTPQBXuCILhV31gjPZimc0GMVK40UBBcpMeWi)
+    port: 6379
+  mail:
+    sign-up-email-send-mail: ENC(zyANvPjCAYiH+b6CSKvf0B3vMD1eU7NaOfqeUWVs2Mj4eCMvDa7Y6qpAV5h02jbihEC/I6zmjIZqsPu1VTdUadTTuVPVcLyqTJGlRYS5rLlEcXGhZ4zg+Nu8+3S8otsn)
+    reset-password-for-auth-send-mail: ENC(TtTKtnwv64ttIONkMuT1SF6r/iU2NWV+hI17DTupgugbuj50RsiIsEXowUUmFoVz7fh01FBNkq0dKhkaDEK+BLWtRchs9Z+koSAMSNqvGhby2+8rHzRfIL3FMTzEGeHt)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(z604OvMg8DC1QJ7EmDy5rbaZusHJDVqNB/5QFpXEogERDROq1xQJIJYeVOrbTlf+kSFUq92HXsp9qjLArxDLjg==)
+      secret-key: ENC(Ex+M59/bYV59b9OQy+ZTwHgdhsw/lzVBidiBzr5nyu8uXb6GrM1k+KfLusS0dTt38KzK8wKd9r5kvFU60ML1i5y061xyeRWunnBuvUWwXrQ=)
+    s3:
+      bucket: ENC(R9pmaGtILn87+LKOpZHuj7rrEMm+4zV7cUUWs08/kQyZqKI6dMKYTg6/ZpZZ2SkExhq+inG0Ar/9CUEIQmhvmQ==)
+
+ygtang:
+  domain:
+    datasource:
+      jdbcUrl: ENC(DiuH5gQbIMnSu4B1O0TC+AQrUHJGyjA+lkVRRuFmEzVVHDDlKo6fKZEJX+UibptIx415dJbnuPPLwKap1WzTNmNXvFEWcvAgoGw8WAXQoF41SbPuWxzhIDg5mg/PhvrCCtC7UCsOpel1EqcTFn+49nPZP59vIlvAqgzQCxfyYqh4dn1NF/qs2HesVCrUefPQorG/yk1LI1c5rfhnWQhjuxdWDi7fVkISxM15csTifiqTOhcziVkaWkd/QnnD3Z3YJBUTTkykJ7dUQpVluX1SNZWsKGtBNKjYtqS2T6BzbdH7m1jtyQp4XzrH+SoPrZjSPEhHCQ6XkG3JMg40ygY62Q==)
+      username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
+      password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+uri:
+  webhook: ENC(d6rn2vUIq/fnrv6k5m9EhuVtKxJGXm6Qf5NPGgaPMHa1yBld8nFPwxTh/XX9iVqweVSvnLXj0RNYQ9vNsoOiR1YtfqQi7jBFDtGYT7T8KEHZ6FVnwx499LoHKHAZBKF4GoX1kawUV7iPP+tSr5UvNkZkjGEYUqBzqmVgXvTXZng=)

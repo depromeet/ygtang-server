@@ -27,7 +27,7 @@ public class ResetPasswordForAuthSendService implements EmailSendService {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setTo(email);
             simpleMailMessage.setSubject(SUBJECT);
-            simpleMailMessage.setText(OPEN_HREF + mailProperties.getResetPasswordForAuthSendMail() + email + mailProperties.getAuthToken() + authToken + CLOSE_HREF);
+            simpleMailMessage.setText(OPEN_HREF + mailProperties.getResetPasswordForAuthSendMail() + email + "&authToken=" + authToken + CLOSE_HREF);
 
             mailSender.send(simpleMailMessage);
         } catch (Exception e) {
