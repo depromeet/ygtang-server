@@ -38,3 +38,7 @@ out/
 ### VS Code ###
 
 .vscode/
+
+# tomcat access log
+/work/
+/logs/
