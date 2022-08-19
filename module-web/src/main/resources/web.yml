@@ -4,6 +4,10 @@ server:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  tomcat:
+    basedir: .
+    accesslog:
+      enabled: true
 
 management:
   server:

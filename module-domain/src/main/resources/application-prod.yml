@@ -18,6 +18,10 @@ cloud:
     s3:
       bucket: ENC(R9pmaGtILn87+LKOpZHuj7rrEMm+4zV7cUUWs08/kQyZqKI6dMKYTg6/ZpZZ2SkExhq+inG0Ar/9CUEIQmhvmQ==)
 
+logging:
+  file:
+    name: spring.log
+
 ygtang:
   domain:
     datasource:

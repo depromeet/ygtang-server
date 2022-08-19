@@ -15,6 +15,10 @@ spring:
     sign-up-email-send-mail: ENC(v8vfcMSRTQlJR/sRIpLnWAuYzJz0trJL6yKadnmztGC9N6dD1Bo1nh9xMSdFnHZky/TRWW9uf0oVteh6Z57R0YjLYnOEJAyDmCgrv+x5JqLTPlFlCPpVAwCFx29nJc/m)
     reset-password-for-auth-send-mail: ENC(GeC90mA3UZZDdttZYktCwjx5gl00nT+ZGOOlCmT3UuTzwgvnGBqby+LjMl1BVfJ6B0leFjbJVUbkkykNQ0i/9/f6MPYopOgJy0sCaL8QlypSmzJy5Vkq98KTbAu18nsg)
 
+logging:
+  file:
+    name: spring.log
+
 cloud:
   aws:
     credentials:
