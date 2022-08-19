@@ -2,7 +2,6 @@ package inspiration.v1.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.TestRedisConfiguration;
-import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.domain.emailauth.SignUpEmailSendService;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.enumeration.RedisKey;
