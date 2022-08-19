@@ -10,3 +10,8 @@ ygtang:
       username: ${DB_USER}
       password: ${DB_PASSWORD}
       driver-class-name: com.mysql.cj.jdbc.Driver
+  slack:
+    token:
+      bot: ${YGTANG_SLACK_TOKEN_BOT}
+    channel:
+      monitoring-dev: "#monitoring-yg-dev"

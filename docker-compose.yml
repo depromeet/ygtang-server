@@ -36,5 +36,6 @@ services:
       - "S3_SECRET_KEY=${S3_SECRET_KEY}"
       - "S3_REGION=${S3_REGION}"
       - "S3_BUCKET=${S3_BUCKET}"
+      - "YGTANG_SERVER_HOST=${YGTANG_SERVER_HOST}"
 
 

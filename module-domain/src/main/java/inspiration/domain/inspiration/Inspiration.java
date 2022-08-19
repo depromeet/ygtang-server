@@ -21,7 +21,7 @@ public class Inspiration extends BaseTimeEntity {
     @Column(name = "inspiration_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -53,5 +53,7 @@ public class Inspiration extends BaseTimeEntity {
         this.member = member;
     }
 
-
+    public boolean hasFile() {
+        return type == InspirationType.IMAGE;
+    }
 }

@@ -21,6 +21,7 @@ import inspiration.domain.tag.Tag;
 import inspiration.domain.tag.TagRepository;
 import inspiration.domain.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -31,10 +32,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -124,24 +127,18 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    public RestPage<InspirationResponse> findInspirationsByTags(Pageable pageable, List<Long> tagIds, Long memberId) {
+    public RestPage<InspirationResponse> findInspirationsByTags(List<Long> tagIds, List<InspirationType> types,
+                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo,
+                                                                Long memberId, Pageable pageable) {
 
-        List<Tag> tags = tagIds.stream()
-                                .map(tagService::getTag)
-                                .collect(Collectors.toList());
+        Page<Inspiration> inspirationPage = inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(memberId, tagIds, types, createdDateTimeFrom, createdDateTimeTo, pageable);
 
-        List<Inspiration> inspirations = inspirationRepository.findDistinctInspirationByTags(tags, Long.parseLong(String.valueOf(tags.size())))
-                                                                .orElseThrow(ResourceNotFoundException::new);
-
-        List<Long> inspirationIds = inspirations.stream()
-                                                .map(Inspiration::getId)
-                                                .collect(Collectors.toList());
-
-        Page<Inspiration> inspirationPage = inspirationRepository.findAllByIdIn(inspirationIds, pageable);
         inspirationPage
                 .forEach(
                         inspiration ->
-                                inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent())));
+                                inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()))
+                );
+
         return new RestPage<>(
                 inspirationPage.map(inspiration -> InspirationResponse.of(
                         inspiration,
@@ -173,6 +170,15 @@ public class InspirationService {
         }
 
         inspirationRepository.delete(inspiration);
+
+        if (inspiration.hasFile()) {
+            String filename = inspiration.getContent();
+            try {
+                awsS3Service.deleteFile(filename);
+            } catch (Exception e) {
+                log.error("Failed to delete file. filename: {}", filename, e);
+            }
+        }
     }
 
     @Transactional
@@ -187,6 +193,17 @@ public class InspirationService {
         inspirationRepository.deleteAllByMember(member);
 
         tagRepository.deleteAllByMember(member);
+
+        inspirations.stream()
+                    .filter(Inspiration::hasFile)
+                    .map(Inspiration::getContent)
+                    .forEach(filename -> {
+                        try {
+                            awsS3Service.deleteFile(filename);
+                        } catch (Exception e) {
+                            log.error("Failed to delete file. filename: {}", filename, e);
+                        }
+                    });
 
     }
 
