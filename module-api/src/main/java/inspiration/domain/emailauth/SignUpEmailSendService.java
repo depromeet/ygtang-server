@@ -22,7 +22,7 @@ public class SignUpEmailSendService implements EmailSendService {
     @Override
     public void send(String email, String authToken) {
 
-        String link = mailProperties.getSignUpEmailSendMail() + email + mailProperties.getAuthToken() + authToken;
+        String link = mailProperties.getSignUpEmailSendMail() + email + "&authToken=" + authToken;
 
         try {
             MimeMessage simpleMailMessage = mailSender.createMimeMessage();
