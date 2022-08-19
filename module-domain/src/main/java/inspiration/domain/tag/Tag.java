@@ -23,7 +23,7 @@ public class Tag extends BaseTimeEntity {
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
     private List<InspirationTag> inspirationTags;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -33,11 +33,5 @@ public class Tag extends BaseTimeEntity {
     public void writeBy(Member member) {
         this.member = member;
     }
-
-
-//    public void taggedBy(Inspiration inspiration) {
-//        this.inspirations.add(inspiration);
-//        inspiration.tagInspiration(this);
-//    }
 
 }
