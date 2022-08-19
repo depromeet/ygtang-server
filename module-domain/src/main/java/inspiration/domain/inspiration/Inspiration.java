@@ -53,5 +53,7 @@ public class Inspiration extends BaseTimeEntity {
         this.member = member;
     }
 
-
+    public boolean hasFile() {
+        return type == InspirationType.IMAGE;
+    }
 }
