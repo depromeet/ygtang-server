@@ -3,13 +3,13 @@ package inspiration.auth;
 import inspiration.ResultResponse;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequest;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.response.MemberInfoResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
-import inspiration.domain.member.Member;
-import inspiration.domain.member.MemberRepository;
-import inspiration.domain.member.response.MemberInfoResponse;
 import inspiration.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,44 +41,56 @@ public class AuthService {
         Member member = checkEmail(request.getEmail());
         verifyPassword(request.getPassword(), member.getPassword());
 
-        String accessToken = redisService.getData(accessTokenKey + member.getId());
-        String refreshToken = redisService.getData(refreshTokenKey + member.getId());
-
-
-        if (accessToken == null && refreshToken == null) {
-            TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId());
-
-            saveAccessToken(member.getId(), tokenResponse.getAccessToken());
-            saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
-
-            return ResultResponse.of(issueToken, tokenResponse);
-        }
-
-        if (accessToken == null) {
-            accessToken = jwtProvider.createAccessToken(member.getId());
-
-            TokenResponse tokenResponse = TokenResponse.builder()
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .memberId(member.getId())
-                    .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
-                    .build();
-
-            saveAccessToken(member.getId(), tokenResponse.getAccessToken());
-
-            return ResultResponse.of(issueToken, tokenResponse);
-        }
-
         TokenResponse tokenResponse = TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .memberId(member.getId())
-                .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
-                .build();
+                                                   .accessToken(resolveAccessToken(member.getId()))
+                                                   .refreshToken(resolveRefreshToken(member.getId()))
+                                                   .memberId(member.getId())
+                                                   .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                                                   .build();
 
         return ResultResponse.of(issueToken, tokenResponse);
     }
 
+    private Member checkEmail(String email) {
+        return memberRepository.findByEmail(email)
+                               .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIl_NOT_FOUND.getMessage()));
+    }
+
+    private void verifyPassword(String requestPassword, String realPassword) {
+        if (!passwordEncoder.matches(requestPassword, realPassword)) {
+            throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
+        }
+    }
+
+    private String resolveAccessToken(Long memberId) {
+        String accessToken = redisService.getData(accessTokenKey + memberId);
+        boolean isValid = accessToken != null && jwtProvider.resolveMemberId(accessToken).isPresent();
+        if (isValid) {
+            return accessToken;
+        }
+        String createdAccessToken = jwtProvider.createAccessToken(memberId);
+        saveAccessToken(memberId, createdAccessToken);
+        return createdAccessToken;
+    }
+
+    private void saveAccessToken(Long memberId, String accessToken) {
+        redisTemplate.opsForValue().set(accessTokenKey + memberId, accessToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+    }
+
+    private String resolveRefreshToken(Long memberId) {
+        String refreshToken = redisService.getData(refreshTokenKey + memberId);
+        boolean isValid = refreshToken != null && jwtProvider.resolveMemberId(refreshToken).isPresent();
+        if (isValid) {
+            return refreshToken;
+        }
+        String createdRefreshToken = jwtProvider.createRefreshToken(memberId);
+        saveRefreshToken(memberId, createdRefreshToken);
+        return createdRefreshToken;
+    }
+
+    private void saveRefreshToken(Long memberId, String refreshToken) {
+        redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+    }
 
     @Transactional
     public ResultResponse reissue(String refreshToken) {
@@ -107,32 +119,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public MemberInfoResponse getUserInfo(Long memberId) {
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
-
-        return MemberInfoResponse.of(member);
-    }
-
-    private void saveRefreshToken(Long memberId, String refreshToken) {
-
-        redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
-    }
-
-    private void saveAccessToken(Long memberId, String refreshToken) {
-
-        redisTemplate.opsForValue().set(accessTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
-    }
-
-    private Member checkEmail(String email) {
-
-        return memberRepository.findByEmail(email).orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIl_NOT_FOUND.getMessage()));
-    }
-
-    private void verifyPassword(String requestPassword, String realPassword) {
-
-        if (!passwordEncoder.matches(requestPassword, realPassword)) {
-            throw new PostNotFoundException(ExceptionType.PASSWORD_NOT_MATCHED.getMessage());
-        }
+        return memberRepository.findById(memberId)
+                               .map(MemberInfoResponse::of)
+                               .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
     }
 }

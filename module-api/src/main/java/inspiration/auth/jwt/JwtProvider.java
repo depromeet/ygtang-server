@@ -2,7 +2,6 @@ package inspiration.auth.jwt;
 
 import inspiration.auth.TokenResponse;
 import inspiration.enumeration.ExpireTimeConstants;
-import inspiration.enumeration.TokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,9 +19,9 @@ import java.util.Optional;
 @Component
 public class JwtProvider {
 
+    private final String MEMBER_ID = "member_id";
     @Value("spring.jwt.secret")
     private String secretKey;
-    private final String MEMBER_ID = "member_id";
 
     @PostConstruct
     protected void init() {
@@ -33,52 +29,49 @@ public class JwtProvider {
     }
 
     public String createAccessToken(Long memberId) {
+        return createAccessTokenInner(memberId);
+    }
 
+    private String createAccessTokenInner(Long memberId) {
         Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
         accessTokenClaims.put(MEMBER_ID, memberId);
 
         Date now = new Date();
 
         return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(accessTokenClaims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+                   .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                   .setClaims(accessTokenClaims)
+                   .setIssuedAt(now)
+                   .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
+                   .signWith(SignatureAlgorithm.HS256, secretKey)
+                   .compact();
     }
 
-    public TokenResponse createTokenDto(Long memberId) {
+    public String createRefreshToken(Long memberId) {
+        return createRefreshTokenInner(memberId);
+    }
 
-        Claims accessTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
-        accessTokenClaims.put(MEMBER_ID, memberId);
-
-        Date now = new Date();
-
-        String accessToken = Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(accessTokenClaims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.accessTokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-
+    private String createRefreshTokenInner(Long memberId) {
         Claims refreshTokenClaims = Jwts.claims().setSubject(String.valueOf(memberId));
         refreshTokenClaims.put(MEMBER_ID, memberId);
 
-        String refreshToken = Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(refreshTokenClaims)
-                .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+        Date now = new Date();
 
+        return Jwts.builder()
+                   .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                   .setClaims(refreshTokenClaims)
+                   .setExpiration(new Date(now.getTime() + ExpireTimeConstants.refreshTokenValidMillisecond))
+                   .signWith(SignatureAlgorithm.HS256, secretKey)
+                   .compact();
+    }
+
+    public TokenResponse createTokenDto(Long memberId) {
         return TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .memberId(memberId)
-                .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
-                .build();
+                            .accessToken(createAccessTokenInner(memberId))
+                            .refreshToken(createRefreshTokenInner(memberId))
+                            .memberId(memberId)
+                            .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                            .build();
     }
 
     public Optional<Long> resolveMemberId(String token) {
