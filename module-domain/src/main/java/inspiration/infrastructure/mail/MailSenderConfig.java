@@ -1,26 +1,25 @@
 package inspiration.infrastructure.mail;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-@Component
+@Configuration
 public class MailSenderConfig {
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
+    public JavaMailSender getJavaMailSender(MailProperties mailProperties) {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(mailProperties().getHost());
-        mailSender.setPort(mailProperties().getPort());
+        mailSender.setHost(mailProperties.getHost());
+        mailSender.setPort(mailProperties.getPort());
 
-        mailSender.setUsername(mailProperties().getUserName());
-        mailSender.setPassword(mailProperties().getPassword());
+        mailSender.setUsername(mailProperties.getUserName());
+        mailSender.setPassword(mailProperties.getPassword());
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
