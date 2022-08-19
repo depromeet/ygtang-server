@@ -1,7 +1,6 @@
 package inspiration.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -23,11 +22,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AwsS3Service {
 
+    private final AmazonS3 amazonS3;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-
-    private final AmazonS3 amazonS3;
-    private final AmazonS3Client amazonS3Client;
 
     public List<String> uploadFile(List<MultipartFile> multipartFile) {
         List<String> fileNames = new ArrayList<>();
@@ -38,10 +36,10 @@ public class AwsS3Service {
             objectMetadata.setContentLength(file.getSize());
             objectMetadata.setContentType(file.getContentType());
 
-            try(InputStream inputStream = file.getInputStream()) {
+            try (InputStream inputStream = file.getInputStream()) {
                 amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
-            } catch(IOException e) {
+                                           .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
 
@@ -68,6 +66,6 @@ public class AwsS3Service {
     }
 
     public String getFilePath(String fileName) {
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 }
