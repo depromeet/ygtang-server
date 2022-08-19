@@ -54,8 +54,8 @@ public class TagRankingConfig {
 
     @Value("${ygtang.slack.token.bot}")
     private String botToken;
-    @Value("${ygtang.slack.channel.monitoring-dev}")
-    private String monitoringDevChannel;
+    @Value("${ygtang.slack.channel.report}")
+    private String reportChannel;
 
     @Bean
     public Job tagRankingJob() {
@@ -145,7 +145,7 @@ public class TagRankingConfig {
             MethodsClient methods = slack.methods(botToken);
             FilesUploadResponse response = methods.filesUpload(
                     FilesUploadRequest.builder()
-                                      .channels(Collections.singletonList(monitoringDevChannel))
+                                      .channels(Collections.singletonList(reportChannel))
                                       .title("Tag ranking at " + today)
                                       .filename("tagRanking_" + today.format(FORMATTER_YYYYMMDD) + ".csv")
                                       .filetype("text/csv")
