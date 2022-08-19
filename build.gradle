@@ -37,14 +37,12 @@ subprojects {
         }
     }
     dependencies {
-        // spring
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        // slack
+        implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion"
         implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-        // test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'com.h2database:h2'
         testImplementation "it.ozimov:embedded-redis:$embeddedRedisVersion"
