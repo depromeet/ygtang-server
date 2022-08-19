@@ -2,10 +2,10 @@ package inspiration.v1.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.TestRedisConfiguration;
-import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.domain.emailauth.SignUpEmailSendService;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.enumeration.RedisKey;
+import inspiration.infrastructure.redis.EmbeddedRedisConfiguration;
 import inspiration.redis.RedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
