@@ -22,17 +22,25 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Slf4j
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    public static final String[] ALLOWED_URI_PATTERN = new String[]{
+    private static final String[] ALLOWED_URI_PATTERN = new String[] {
             "/api/v1/signup/**",
             "/api/v1/auth/**",
             "/api/v1/reissue",
             "/api/v1/members/sends-email/reset-passwords",
     };
+    private static final Set<String> IGNORED_LOGGING_URI_SET = new HashSet<>(Arrays.asList(
+            "/",
+            "/csrf"
+    ));
     private final JwtProvider jwtProvider;
     private final MemberService memberService;
 
@@ -50,7 +58,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, authException) -> {
-                            log.warn("UNAUTHORIZED", authException);
+                            String requestURI = request.getRequestURI();
+                            if (!IGNORED_LOGGING_URI_SET.contains(requestURI)) {
+                                log.warn("UNAUTHORIZED: " + requestURI, authException);
+                            }
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             apiResponseObjectMapper().writeValue(
@@ -61,7 +72,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 )
                 .accessDeniedHandler(
                         (request, response, accessDeniedException) -> {
-                            log.warn("FORBIDDEN", accessDeniedException);
+                            String requestURI = request.getRequestURI();
+                            if (!IGNORED_LOGGING_URI_SET.contains(requestURI)) {
+                                log.warn("FORBIDDEN: " + request.getRequestURI(), accessDeniedException);
+                            }
                             response.setStatus(HttpStatus.FORBIDDEN.value());
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             apiResponseObjectMapper().writeValue(
