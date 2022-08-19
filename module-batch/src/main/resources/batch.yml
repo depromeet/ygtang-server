@@ -4,14 +4,6 @@ spring:
     web-application-type: none
 
 ygtang:
-  batch:
-    datasource:
-      url: jdbc:mysql://${DB_HOST}:${DB_PORT}/spring_batch?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
-      username: ${DB_USER}
-      password: ${DB_PASSWORD}
-      driver-class-name: com.mysql.cj.jdbc.Driver
   slack:
     token:
-      bot: ${YGTANG_SLACK_TOKEN_BOT}
-    channel:
-      monitoring-dev: "#monitoring-yg-dev"
+      bot: ENC(/vYHx8EfqXQ5Q+wUpBxmEkde8Nz0i32a1I1uFPzi7X5bOsfQ1/BU7/enM9DMzHt2VO7FwgOELpKfAkjc98kzHG4stHPZKF3mJ5Xqf0p9SeAEyMvv+Y6JPZojjQ755zAT)
