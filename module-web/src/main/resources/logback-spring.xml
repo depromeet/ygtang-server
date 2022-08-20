@@ -15,9 +15,9 @@
         <include resource="org/springframework/boot/logging/logback/defaults.xml" />
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
-        <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
+        <springProperty name="SLACK_WEBHOOK_URI" source="uri.webhook"/>
         <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-            <webhookUri>${webhook}</webhookUri>
+            <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
             </layout>
@@ -44,9 +44,9 @@
         <include resource="org/springframework/boot/logging/logback/defaults.xml" />
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
-        <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
+        <springProperty name="SLACK_WEBHOOK_URI" source="uri.webhook"/>
         <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-            <webhookUri>${webhook}</webhookUri>
+            <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
             </layout>
