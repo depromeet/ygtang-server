@@ -19,6 +19,7 @@ bin/
 
 ### IntelliJ IDEA ###
 .env
+.env_dev
 .idea
 *.iws
 *.iml
@@ -37,8 +38,7 @@ out/
 ### VS Code ###
 
 .vscode/
-/module-domain/src/main/resources/
-/module-api/src/main/resources/
-/module-common/src/main/resources/
-/module-batch/src/main/resources/
-/module-web/src/main/resources/
+
+# tomcat access log
+/work/
+/logs/

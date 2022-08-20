@@ -1,0 +1,59 @@
+uri:
+  webhook:
+
+spring:
+  application:
+    name: inspriation
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+    database-platform: org.hibernate.dialect.H2Dialect
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: username
+    password: password
+    sign-up-email-send-mail:
+    reset-password-for-auth-send-mail:
+    auth-token:
+  jwt:
+    secret:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  cache:
+    type: redis
+  flyway:
+    enabled: false
+cloud:
+  aws:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket:
+
+ygtang:
+  server:
+    host: ygtang.server.host
+  domain:
+    datasource:
+      jdbcUrl: jdbc:h2:mem:;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  redirect-url:
+    password-auth:
+    policy:
+
+
+management:
+  server:
+    port: 8081

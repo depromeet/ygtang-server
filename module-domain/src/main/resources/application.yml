@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: inspriation
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(uL7Og9J574ABbkuxuqqmUcSpZ5X/Lzj+JTUKL63FZ5YbDuuic0xg9+b/M+N/DECQ5Li/bbwa73NZ7hh+6wwWAw==)
+    password: ENC(Q3i86abe2zQVkwIl4P/VWxGJqw4SdyJ6U8+QKUJysdsNUZiOYVToeu/Tz7oAJjIA93kZXQ/ZEVAVyaTnjOn85A==)
+  jwt:
+    secret: ENC(88bpwlUo++X0KVfhWI04B7hxT9Yi+2D4fuz+lmoVUD2uqtDzinqHZWkkrmoC7F+k)
+  cache:
+    type: redis
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+
+uri:
+  webhook:

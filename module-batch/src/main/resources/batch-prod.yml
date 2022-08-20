@@ -1,0 +1,10 @@
+ygtang:
+  batch:
+    datasource:
+      url: ENC(hbu8eSeg35mJy3yXKVRmX1ufs3Cl2vQRQJlkQ0pvi/UahWUpQ3KLaKV/sTxXVkMto0FsLjPZsL5qBqrVlZYY/FNkyNXfKt++bO9v3OeA7QjODDxtGPSCaFBkC5JqK6CEVqbPwm110p27Q6c+9hJYXc1iDYpNNXSK12pg685uWvDKx37cFMt/qAybOYEOYBNJQiFLqPqdohQyomwzwHfBZJO3pb9TEO0a4EnmpeKOw5MHoZxgqhM0bvi8GHvftPPtHAk+1tTJrZEjYQsJLalcvUuwIK+Q5JW4fgz6J3EQCqHjZ0J76Zd81ZddiprcpUZMqL3UHUxnQGZFCPZ94DPyUg==)
+      username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
+      password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  slack:
+    channel:
+      report: "#monitoring-yg"

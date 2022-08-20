@@ -1,8 +1,9 @@
 package inspiration.v1.signup;
 
 import inspiration.ResultResponse;
-import inspiration.member.request.SignUpRequest;
-import inspiration.member.request.ExtraInfoRequest;
+import inspiration.auth.TokenResponse;
+import inspiration.domain.member.request.ExtraInfoRequest;
+import inspiration.domain.member.request.SignUpRequest;
 import inspiration.signup.SignupService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/signup")
+@SuppressWarnings("ClassCanBeRecord")
 public class SignUpController {
     private final SignupService signupService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
-    public ResultResponse singUp(@RequestBody @Valid SignUpRequest request) {
+    public ResultResponse<TokenResponse> signUp(@RequestBody @Valid SignUpRequest request) {
 
         return signupService.signUp(request);
     }

@@ -1,0 +1,57 @@
+uri:
+  webhook:
+
+spring:
+  jpa:
+    generate-ddl: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+
+  # disable flyway
+  flyway:
+    enabled: false
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  mail:
+    host: mailHost
+    port: 587
+    username: username
+    password: password
+    sign-up-email-send-mail:
+    reset-password-for-auth-send-mail:
+    auth-token:
+
+  jwt:
+    secret:
+
+  cache:
+    type: redis
+
+cloud:
+  aws:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static:
+    s3:
+      bucket:
+    stack:
+      auto: false
+
+logging:
+  pattern:
+    console: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+
+ygtang:
+  domain:
+    datasource:
+      # embedded db
+      jdbcUrl: jdbc:h2:mem:;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
