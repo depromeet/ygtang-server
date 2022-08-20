@@ -10,6 +10,7 @@ server:
     basedir: .
     accesslog:
       enabled: true
+      pattern: ENC(G9YBJAt98GeEWdi05/RjpC0L2Q5MaByA6TYLlFV+E05G1Coo9BNVE61MX/eP4PxQooBbsMokm8W5/ZsGIk87lS71EQ1q3MVnb1rm2+ofT8fOWVEaOE0dUkVdDyoebFG4y44iHXSgDdx6J38tSP/YBmVe1vgCotCv3Yr0QgbHyjc=)
 
 management:
   server:
