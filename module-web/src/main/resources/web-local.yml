@@ -2,5 +2,5 @@ ygtang:
   server:
     host: localhost:8080
   redirect-url:
-    password-auth: ENC(C59s3hJp0gPRTWubGuKGIWPRzgS+qtD84zCHdxw9HvVOfqzGaTbK8tJJx4wwTKYeceBx8aV9vPjfQxwu8pDNf+PNndG7nSrxKH8IZsAmNtI=)
+    password-auth: ENC(Joeb5ws5aOyJQ6cB8fX/vHfTYSVoJ4HuseyMo+/gH1yWCgPZLpeGF7RFb8d1ktfzRdu3F8oi6KtGNO8ADdfpZvGmZmv2Xj2whEePtcFD3S4=)
     policy: ENC(o4xiUhtZ0ZzM7GvLGjo+XeQ4q+hyPvZVj7lu+MJ8+/sRLJ9WtdY6k+ZIhr5PXlaFBQf8PcJ8kMmDnQQxrqcs5h3J0REk6a30pl/Y1TAWccHxfffDwLszIJe9Olozpx4RI0TEF3JvCgLVOEk8UYKXSw==)

@@ -69,7 +69,7 @@ public class AuthController {
     public RedirectView authenticateEmailOfResetPasswordForAuth(@ModelAttribute AuthenticateEmailRequest request) {
 
         emailAuthService.authenticateEmailOfResetPasswordForAuth(request.getEmail());
-        return new RedirectView(policyRedirectUrl + request.getEmail());
+        return new RedirectView(passwordAuthRedirectUrl + request.getEmail());
     }
 
     @GetMapping("/signup/email/{email}/status")
