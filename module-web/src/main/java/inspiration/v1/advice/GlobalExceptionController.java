@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Optional;
 
@@ -35,7 +36,8 @@ public class GlobalExceptionController {
     @ExceptionHandler({
             HttpRequestMethodNotSupportedException.class,
             MethodArgumentTypeMismatchException.class,
-            ResourceNotFoundException.class
+            ResourceNotFoundException.class,
+            MaxUploadSizeExceededException.class
     })
     protected ResultResponse handleBadRequestException(Exception e) {
         log.warn("BAD_REQUEST", e);
