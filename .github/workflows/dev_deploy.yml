@@ -24,7 +24,7 @@ jobs:
       # appspec.yml Copy
       - name: Copy appspec
         run: cp ./appspec.yml ./deploy/
-#
+
       # Dockerfile Copy
       - name: Copy Dockerfile
         run: cp ./docker-compose.yml ./deploy/
