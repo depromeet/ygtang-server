@@ -53,7 +53,6 @@ public class InspirationService {
     private final OpenGraphService openGraphService;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
     public RestPage<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -67,7 +66,6 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId, #id}")
     public InspirationResponse findInspiration(Long id, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -101,7 +99,6 @@ public class InspirationService {
         return getOpenGraphResponse(InspirationType.LINK, link);
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long addInspiration(InspirationAddRequest request,  Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -148,7 +145,6 @@ public class InspirationService {
     }
 
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long modifyMemo(InspirationModifyRequest request, Long memberId) {
 
         Inspiration inspiration = getInspiration(request.getId());
@@ -161,7 +157,6 @@ public class InspirationService {
     }
 
     @Transactional
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeInspiration(Long id, Long memberId) {
         Inspiration inspiration = getInspiration(id);
 
@@ -182,7 +177,6 @@ public class InspirationService {
     }
 
     @Transactional
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeAllInspiration(Long memberId) {
         Member member = memberService.findById(memberId);
 
@@ -208,7 +202,6 @@ public class InspirationService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long tagInspiration(InspirationTagRequest request, Long memberId) {
 
         Inspiration inspiration = getInspiration(request.getId());
@@ -229,7 +222,6 @@ public class InspirationService {
         return inspiration.getId();
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspiration(Long id, Long tagId, Long memberId) {
 
         Inspiration inspiration = getInspiration(id);
@@ -249,7 +241,6 @@ public class InspirationService {
 
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspirationByInspiration(Long id, Long memberId) {
 
         if(!getInspiration(id).getMember().isSameMember(memberId)) {
@@ -261,7 +252,6 @@ public class InspirationService {
         inspirationTagService.deleteAllByInspiration(inspiration);
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspirationByTag(Long tagId, Long memberId) {
 
         Tag tag = tagService.getTag(tagId);
