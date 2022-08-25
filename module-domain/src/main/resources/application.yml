@@ -22,6 +22,8 @@ cloud:
   aws:
     region:
       static: ap-northeast-2
-
+    s3:
+      connection-timeout: 1000
+      request-timeout: 3000
 uri:
   webhook:
