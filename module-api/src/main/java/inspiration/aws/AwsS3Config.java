@@ -22,10 +22,10 @@ public class AwsS3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Value("${cloud.aws.s3.connection-timeout}")
+    @Value("${cloud.aws.s3.connection-timeout:1000}")
     private int connectionTimeout;
 
-    @Value("${cloud.aws.s3.request-timeout}")
+    @Value("${cloud.aws.s3.request-timeout:3000}")
     private int requestTimeout;
 
     @Bean
