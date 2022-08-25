@@ -10,12 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.Duration;
-
 @Configuration
 public class AwsS3Config {
-    private static final Duration CONNECTION_TIMEOUT = Duration.ofSeconds(1);
-    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(3);
 
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
@@ -26,12 +22,18 @@ public class AwsS3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.s3.connection-timeout}")
+    private int connectionTimeout;
+
+    @Value("${cloud.aws.s3.request-timeout}")
+    private int requestTimeout;
+
     @Bean
     public AmazonS3 amazonS3() {
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setConnectionTimeout((int) CONNECTION_TIMEOUT.toMillis());
-        clientConfiguration.setRequestTimeout((int) REQUEST_TIMEOUT.toMillis());
+        clientConfiguration.setConnectionTimeout(connectionTimeout);
+        clientConfiguration.setRequestTimeout(requestTimeout);
         return AmazonS3ClientBuilder.standard()
                                     .withRegion(region)
                                     .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
