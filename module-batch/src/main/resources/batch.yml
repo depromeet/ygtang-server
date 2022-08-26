@@ -6,6 +6,8 @@ spring:
 ygtang:
   slack:
     token:
-      bot: DEC(xoxb-3651644455301-3943686520132-NVE0FRzXGtT6lsCESoktbFx1)
+      bot: ENC(tiq6tuKYXrEiqutBkfkXJxKFiHBO7JlCgPDH8zAiU/C72XsYPXZuDZ+ZWAkx871dBAKF+befdkDbQZ1SF2eHVPa2pemI38jqmszaycYcic0hnzY9EVcDNMOmPTLJauPT)
   google:
     api-key: ENC(eSD4S2QU5YycRNsFnwcVBXfcjyhZZZGt752BAZEORv5WgbT60yy1VGDiKrpq6NYBbN0wVKNXSc78/OVrc2sr7X4anCsUjRh81mykpr9PWTM=)
+    sheet-id:
+      tag-group: ENC(W5y38wS4Qp1HatcqmlZqTRVcylum+99xzcLyKbf+UC/H4sdhpv8V9du2KfevbClTQBChW2nxo/6BerOK4Kp4rZv4Jfr9W+woHlIWyhPze4M=)
