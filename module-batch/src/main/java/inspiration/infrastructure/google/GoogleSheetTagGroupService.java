@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,8 +43,8 @@ public class GoogleSheetTagGroupService implements TagGroupService {
                              .map(it -> TagGroup.from(
                                      it.getValues()
                                        .stream()
-                                       .filter(Objects::nonNull)
                                        .map(ValuesResponse::getFormattedValue)
+                                       .filter(StringUtils::hasText)
                                        .collect(Collectors.toList())
                                      )
                              )
