@@ -1,12 +1,10 @@
 package inspiration.v1.auth;
 
-import inspiration.ResultResponse;
 import inspiration.auth.AuthService;
-import inspiration.auth.TokenResponse;
-import inspiration.auth.request.LoginRequest;
+import inspiration.auth.TokenResponseVo;
+import inspiration.auth.request.LoginRequestVo;
 import inspiration.domain.emailauth.EmailAuthService;
-import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
-import inspiration.domain.emailauth.request.SendEmailRequest;
+import inspiration.v1.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +14,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
+import static inspiration.enumeration.ExceptionType.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
@@ -24,6 +24,7 @@ public class AuthController {
 
     private final EmailAuthService emailAuthService;
     private final AuthService authService;
+    private final AuthAssembler authAssembler;
 
     @Value("${ygtang.redirect-url.password-auth}")
     private String passwordAuthRedirectUrl;
@@ -36,8 +37,10 @@ public class AuthController {
     public ResultResponse<TokenResponse> login(
             @RequestBody LoginRequest request
     ) {
-
-        return authService.login(request);
+        LoginRequestVo loginRequestVo = authAssembler.toLoginRequestVo(request);
+        TokenResponseVo tokenResponseVo = authService.login(loginRequestVo);
+        TokenResponse tokenResponse = authAssembler.toTokenResponse(tokenResponseVo);
+        return ResultResponse.success(tokenResponse);
     }
 
     @PostMapping("/sends-email/signup")
@@ -74,15 +77,21 @@ public class AuthController {
 
     @GetMapping("/signup/email/{email}/status")
     @ApiOperation(value = "회원가입을 위한 해당 이메일의 인증 상태 여부 반환", notes = "회원가입을 위한 해당 이메일의 인증 상태 여부를 반환한다.")
-    public ResultResponse validAuthenticateEmailStatusOfSignup(@PathVariable String email) {
-
-        return emailAuthService.validAuthenticateEmailStatusOfSignup(email);
+    public ResultResponse<Boolean> validAuthenticateEmailStatusOfSignup(@PathVariable String email) {
+        boolean isValid = emailAuthService.validAuthenticateEmailStatusOfSignup(email);
+        return ResultResponse.of(
+                isValid ? EMAIL_ALREADY_AUTHENTICATED : EMAIL_NOT_AUTHENTICATED,
+                isValid
+        );
     }
 
     @GetMapping("/passwords/reset/email/{email}/status")
     @ApiOperation(value = "비밀번호 초기화를 위한 이메일 인증 상태 여부 반환", notes = "비밀번호 초기화를 위한 해당 이메일의 인증 상태 여부를 반환한다.")
-    public ResultResponse validAuthenticateEmailStatusOfResetPassword(@PathVariable String email) {
-
-        return emailAuthService.validAuthenticateEmailStatusOfResetPassword(email);
+    public ResultResponse<Boolean> validAuthenticateEmailStatusOfResetPassword(@PathVariable String email) {
+        boolean isValid = emailAuthService.isValidAuthenticateEmailStatusOfResetPassword(email);
+        return ResultResponse.of(
+                isValid ? EMAIL_ALREADY_AUTHENTICATED : EMAIL_NOT_AUTHENTICATED,
+                isValid
+        );
     }
 }

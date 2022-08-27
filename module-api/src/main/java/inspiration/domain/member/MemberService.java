@@ -2,12 +2,12 @@ package inspiration.domain.member;
 
 import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.domain.emailauth.ResetPasswordEmailSendService;
+import inspiration.domain.member.response.MemberResponseVo;
+import inspiration.domain.passwordauth.PasswordAuth;
+import inspiration.domain.passwordauth.PasswordAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.UnauthorizedAccessRequestException;
-import inspiration.domain.member.response.MemberResponse;
-import inspiration.domain.passwordauth.PasswordAuth;
-import inspiration.domain.passwordauth.PasswordAuthRepository;
 import inspiration.utils.GetResetPasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class MemberService {
 
     private final EmailAuthRepository emailAuthRepository;
@@ -33,7 +34,7 @@ public class MemberService {
         confirmPasswordCheck(confirmPassword, password);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         member.updatePassword(passwordEncoder.encode(password));
     }
@@ -42,7 +43,7 @@ public class MemberService {
     public void resetPasswordEmailSend(String email) {
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         String resetPassword = GetResetPasswordUtil.getResetPassword();
 
@@ -51,7 +52,7 @@ public class MemberService {
         member.updatePassword(passwordEncoder.encode(resetPassword));
 
         PasswordAuth passwordAuth = passwordAuthRepository.findByEmail(member.getEmail())
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage()));
+                                                          .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage()));
 
         passwordAuthRepository.delete(passwordAuth);
     }
@@ -60,7 +61,7 @@ public class MemberService {
     public void changeNickname(Long memberId, String nickname) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_EXISTS.getMessage()));
 
         member.updateNickname(nickname);
     }
@@ -69,7 +70,7 @@ public class MemberService {
     public void removeUser(Long memberId) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         emailAuthRepository.deleteByEmail(member.getEmail());
 
@@ -86,14 +87,14 @@ public class MemberService {
 
     public Member findById(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(UnauthorizedAccessRequestException::new);
+                               .orElseThrow(UnauthorizedAccessRequestException::new);
     }
 
-    public List<MemberResponse> findAll() {
+    public List<MemberResponseVo> findAll() {
         return memberRepository.findAll()
-                                .stream()
-                                .map(MemberResponse::of)
-                                .collect(Collectors.toList());
+                               .stream()
+                               .map(MemberResponseVo::of)
+                               .collect(Collectors.toList());
     }
 
 }

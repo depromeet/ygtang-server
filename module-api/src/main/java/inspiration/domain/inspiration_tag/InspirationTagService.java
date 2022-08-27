@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@SuppressWarnings("ClassCanBeRecord")
 public class InspirationTagService {
 
     private final InspirationTagRepository inspirationTagRepository;

@@ -3,7 +3,6 @@ package inspiration.v1.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.TestRedisConfiguration;
 import inspiration.domain.emailauth.SignUpEmailSendService;
-import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.enumeration.RedisKey;
 import inspiration.redis.RedisService;
 import org.junit.jupiter.api.DisplayName;

@@ -1,13 +1,12 @@
 package inspiration.domain.tag;
 
-import inspiration.RestPage;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberService;
+import inspiration.domain.tag.request.TagAddRequestVo;
+import inspiration.domain.tag.response.TagResponseVo;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
-import inspiration.domain.member.Member;
-import inspiration.domain.member.MemberService;
-import inspiration.domain.tag.request.TagAddRequest;
-import inspiration.domain.tag.response.TagResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@SuppressWarnings("ClassCanBeRecord")
 public class TagService {
 
     private final TagRepository tagRepository;
@@ -28,56 +28,47 @@ public class TagService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "tag", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
-    public RestPage<TagResponse> findTags(Pageable pageable, Long memberId) {
-
+    public Page<TagResponseVo> findTags(Pageable pageable, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        Page<Tag> tagPage = tagRepository.findAllByMember(member, pageable);
-        return new RestPage<>(tagPage.map(TagResponse::from));
+        return tagRepository.findAllByMember(member, pageable)
+                            .map(TagResponseVo::from);
     }
 
     @Transactional(readOnly = true)
-    public RestPage<TagResponse> indexTags(Pageable pageable, String keyword, Long memberId) {
-
+    public Page<TagResponseVo> indexTags(Pageable pageable, String keyword, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        Page<Tag> tagPage = tagRepository.findAllByMemberAndContentContaining(member, keyword, pageable);
-        return new RestPage<>(tagPage.map(TagResponse::from));
+        return tagRepository.findAllByMemberAndContentContaining(member, keyword, pageable)
+                            .map(TagResponseVo::from);
     }
 
     @Transactional(readOnly = true)
-    public Page<TagResponse> searchTags(Pageable pageable, String keyword, Long memberId) {
-
+    public Page<TagResponseVo> searchTags(Pageable pageable, String keyword, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        Page<Tag> tagPage = tagRepository.findAllByMemberAndContent(member, keyword, pageable);
-        return new RestPage<>(tagPage.map(TagResponse::from));
+        return tagRepository.findAllByMemberAndContent(member, keyword, pageable)
+                            .map(TagResponseVo::from);
     }
 
     @CacheEvict(value = "tag", allEntries = true)
-    public TagResponse addTag(TagAddRequest request, Long memberId) {
-
+    public TagResponseVo addTag(TagAddRequestVo requestVo, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        if (tagRepository.findAllByMemberAndContent(member, request.getContent()).isPresent()) {
+        if (tagRepository.findAllByMemberAndContent(member, requestVo.getContent()).isPresent()) {
             throw new ConflictRequestException();
         }
-        Tag tag = request.toEntity();
+        Tag tag = requestVo.toEntity();
         tag.writeBy(member);
-
         Tag savedTag = tagRepository.save(tag);
-        return TagResponse.from(savedTag);
+        return TagResponseVo.from(savedTag);
     }
 
     public Tag getTag(Long id) {
         return tagRepository.findById(id)
-                                .orElseThrow(ResourceNotFoundException::new);
+                            .orElseThrow(ResourceNotFoundException::new);
     }
 
     @CacheEvict(value = "tag", allEntries = true)
     public void removeTag(Long id, Long memberId) {
         Tag tag = tagRepository.findById(id)
-                                .orElseThrow(ResourceNotFoundException::new);
+                               .orElseThrow(ResourceNotFoundException::new);
 
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();

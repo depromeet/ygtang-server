@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("ClassCanBeRecord")
 public class ResetPasswordForAuthSendService implements EmailSendService {
+    private static final String SUBJECT = "비밀번호 초기화를 위한 이메일 인증";
+    private static final String OPEN_HREF = "<a href=";
+    private static final String CLOSE_HREF = "></a>";
 
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
-    private final static String SUBJECT = "비밀번호 초기화를 위한 이메일 인증";
-    private final static String OPEN_HREF = "<a href=";
-    private final static String CLOSE_HREF = "></a>";
 
     @Override
     public void send(String email, String authToken) {

@@ -1,8 +1,6 @@
-package inspiration.domain.member.request;
+package inspiration.v1.member;
 
-import inspiration.domain.member.Member;
 import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -26,13 +24,4 @@ public class SignUpRequest {
     @NotBlank(message = "올바른 비밀번호를 입력해주세요.")
     @Size(min = 6, max = 20, message = "비밀번호는 6자 이상 20자 이하로 입력해주세요.")
     private String confirmPassword;
-
-    @Builder
-    public Member toEntity(PasswordEncoder passwordEncoder) {
-        return Member.builder()
-                     .email(email)
-                     .password(passwordEncoder.encode(password))
-                     .nickname(nickName)
-                     .build();
-    }
 }

@@ -1,14 +1,13 @@
 package inspiration.domain.inspiration;
 
-import inspiration.RestPage;
 import inspiration.aws.AwsS3Service;
 import inspiration.domain.inspiration.opengraph.OpenGraphService;
 import inspiration.domain.inspiration.opengraph.OpenGraphVo;
-import inspiration.domain.inspiration.request.InspirationAddRequest;
-import inspiration.domain.inspiration.request.InspirationModifyRequest;
-import inspiration.domain.inspiration.request.InspirationTagRequest;
-import inspiration.domain.inspiration.response.InspirationResponse;
-import inspiration.domain.inspiration.response.OpenGraphResponse;
+import inspiration.domain.inspiration.request.InspirationAddRequestVo;
+import inspiration.domain.inspiration.request.InspirationModifyRequestVo;
+import inspiration.domain.inspiration.request.InspirationTagRequestVo;
+import inspiration.domain.inspiration.response.InspirationResponseVo;
+import inspiration.domain.inspiration.response.OpenGraphResponseVo;
 import inspiration.domain.inspiration_tag.InspirationTag;
 import inspiration.domain.inspiration_tag.InspirationTagRepository;
 import inspiration.domain.inspiration_tag.InspirationTagService;
@@ -36,14 +35,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
+@SuppressWarnings("ClassCanBeRecord")
 public class InspirationService {
 
     private final InspirationRepository inspirationRepository;
@@ -58,36 +56,34 @@ public class InspirationService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
-    public RestPage<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
-
+    public Page<Inspiration> findInspirations(Pageable pageable, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        Page<Inspiration> inspirationPage = inspirationRepository.findAllByMember(member, pageable);
-        return toRestPage(inspirationPage);
+        return inspirationRepository.findAllByMember(member, pageable);
     }
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId, #id}")
-    public InspirationResponse findInspiration(Long id, Long memberId) {
-
+    public InspirationResponseVo findInspiration(Long id, Long memberId) {
         Member member = memberService.findById(memberId);
         Inspiration inspiration = inspirationRepository.findAllByMemberAndId(member, id)
                                                        .orElseThrow(ResourceNotFoundException::new);
-
-        inspiration.setFilePath(getFilePath(inspiration.getType(), inspiration.getContent()));
-        return InspirationResponse.of(inspiration, getOpenGraphResponse(inspiration.getType(), inspiration.getContent()));
+        return InspirationResponseVo.of(
+                inspiration,
+                getOpenGraphResponseVo(inspiration.getType(), inspiration.getContent()),
+                awsS3Service
+        );
     }
 
-    private OpenGraphResponse getOpenGraphResponse(InspirationType inspirationType, String link) {
+    private OpenGraphResponseVo getOpenGraphResponseVo(InspirationType inspirationType, String link) {
         if (inspirationType != InspirationType.LINK) {
-            return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return OpenGraphResponseVo.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         Optional<OpenGraphVo> openGraphVoOptional = openGraphService.getMetadata(link);
         if (openGraphVoOptional.isEmpty()) {
-            return OpenGraphResponse.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return OpenGraphResponseVo.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         OpenGraphVo openGraphVo = openGraphVoOptional.get();
-        return OpenGraphResponse.of(
+        return OpenGraphResponseVo.of(
                 HttpStatus.OK.value(),
                 openGraphVo.getImage(),
                 openGraphVo.getSiteName(),
@@ -97,55 +93,62 @@ public class InspirationService {
         );
     }
 
-    public OpenGraphResponse getOpenGraphResponse(String link) {
-        return getOpenGraphResponse(InspirationType.LINK, link);
+    public OpenGraphResponseVo getOpenGraphResponseVo(String link) {
+        return getOpenGraphResponseVo(InspirationType.LINK, link);
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)
-    public Long addInspiration(InspirationAddRequest request, Long memberId) {
+    public Long addInspiration(InspirationAddRequestVo requestVo, Long memberId) {
 
         Member member = memberService.findById(memberId);
 
-        Inspiration tmpInspiration = request.toEntity();
+        Inspiration tmpInspiration = requestVo.toEntity();
         tmpInspiration.writeBy(member);
 
-        if (request.getType() == InspirationType.IMAGE) {
-            if (request.getFile() == null) {
+        if (requestVo.getType() == InspirationType.IMAGE) {
+            if (requestVo.getFile() == null) {
                 throw new IllegalArgumentException("IMAGE 타입은 파일을 업로드 해야합니다.");
             }
-            fileUpload(tmpInspiration, List.of(request.getFile()));
+            fileUpload(tmpInspiration, List.of(requestVo.getFile()));
         }
         Inspiration inspiration = inspirationRepository.save(tmpInspiration);
 
-        if (request.getTagIds() != null) {
-            List<Tag> tags = request.getTagIds().stream()
-                                    .map(tagService::getTag)
-                                    .collect(Collectors.toList());
+        if (requestVo.getTagIds() != null) {
+            List<Tag> tags = requestVo.getTagIds().stream()
+                                      .map(tagService::getTag)
+                                      .collect(Collectors.toList());
             tags.forEach(tag -> inspirationTagService.save(InspirationTag.of(inspiration, tag)));
         }
         return inspiration.getId();
     }
 
     @Transactional(readOnly = true)
-    public RestPage<InspirationResponse> findInspirationsByTags(List<Long> tagIds, List<InspirationType> types,
-                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo,
-                                                                Long memberId, Pageable pageable) {
-
-        Page<Inspiration> inspirationPage = inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(memberId, tagIds, types, createdDateTimeFrom, createdDateTimeTo, pageable);
-
-        return toRestPage(inspirationPage);
+    public Page<Inspiration> findInspirationsByTags(
+            List<Long> tagIds,
+            List<InspirationType> types,
+            LocalDateTime createdDateTimeFrom,
+            LocalDateTime createdDateTimeTo,
+            Long memberId,
+            Pageable pageable
+    ) {
+        return inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(
+                memberId,
+                tagIds,
+                types,
+                createdDateTimeFrom,
+                createdDateTimeTo,
+                pageable
+        );
     }
 
 
     @CacheEvict(value = "inspiration", allEntries = true)
-    public Long modifyMemo(InspirationModifyRequest request, Long memberId) {
-
-        Inspiration inspiration = getInspiration(request.getId());
-
+    public Long modifyMemo(InspirationModifyRequestVo requestVo, Long memberId) {
+        Inspiration inspiration = getInspiration(requestVo.getId());
         if (!inspiration.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
         }
-        inspiration.modifyMemo(request.getMemo());
+        inspiration.modifyMemo(requestVo.getMemo());
         return inspiration.getId();
     }
 
@@ -198,15 +201,15 @@ public class InspirationService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     @CacheEvict(value = "inspiration", allEntries = true)
-    public Long tagInspiration(InspirationTagRequest request, Long memberId) {
+    public Long tagInspiration(InspirationTagRequestVo requestVo, Long memberId) {
 
-        Inspiration inspiration = getInspiration(request.getId());
+        Inspiration inspiration = getInspiration(requestVo.getInspirationId());
 
         if (!inspiration.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
         }
 
-        Tag tag = tagService.getTag(request.getTagId());
+        Tag tag = tagService.getTag(requestVo.getTagId());
 
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
@@ -280,20 +283,5 @@ public class InspirationService {
     private Inspiration getInspiration(Long id) {
         return inspirationRepository.findById(id)
                                     .orElseThrow(ResourceNotFoundException::new);
-    }
-
-    private RestPage<InspirationResponse> toRestPage(Page<Inspiration> inspirationPage) {
-        return new RestPage<>(
-                inspirationPage.stream()
-                               .parallel()
-                               .peek(it -> it.setFilePath(getFilePath(it.getType(), it.getContent())))
-                               .map(it -> (Callable<InspirationResponse>) () -> InspirationResponse.of(it, getOpenGraphResponse(it.getType(), it.getContent())))
-                               .map(it -> threadPoolTaskExecutor.submitListenable(it).completable())
-                               .map(CompletableFuture::join)
-                               .collect(Collectors.toList()),
-                inspirationPage.getPageable().getPageNumber(),
-                inspirationPage.getPageable().getPageSize(),
-                inspirationPage.getTotalElements()
-        );
     }
 }

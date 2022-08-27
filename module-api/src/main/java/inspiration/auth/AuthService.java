@@ -1,11 +1,10 @@
 package inspiration.auth;
 
-import inspiration.ResultResponse;
 import inspiration.auth.jwt.JwtProvider;
-import inspiration.auth.request.LoginRequest;
+import inspiration.auth.request.LoginRequestVo;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
-import inspiration.domain.member.response.MemberInfoResponse;
+import inspiration.domain.member.response.MemberInfoVo;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.PostNotFoundException;
@@ -33,22 +32,18 @@ public class AuthService {
 
     private final String refreshTokenKey = "refreshToken : ";
     private final String accessTokenKey = "accessToken : ";
-    private final String issueToken = "refreshToken : ";
 
     @Transactional
-    public ResultResponse<TokenResponse> login(LoginRequest request) {
+    public TokenResponseVo login(LoginRequestVo loginRequestVo) {
+        Member member = checkEmail(loginRequestVo.getEmail());
+        verifyPassword(loginRequestVo.getPassword(), member.getPassword());
 
-        Member member = checkEmail(request.getEmail());
-        verifyPassword(request.getPassword(), member.getPassword());
-
-        TokenResponse tokenResponse = TokenResponse.builder()
-                                                   .accessToken(resolveAccessToken(member.getId()))
-                                                   .refreshToken(resolveRefreshToken(member.getId()))
-                                                   .memberId(member.getId())
-                                                   .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
-                                                   .build();
-
-        return ResultResponse.of(issueToken, tokenResponse);
+        return new TokenResponseVo(
+                resolveAccessToken(member.getId()),
+                resolveRefreshToken(member.getId()),
+                member.getId(),
+                ExpireTimeConstants.accessTokenValidMillisecond
+        );
     }
 
     private Member checkEmail(String email) {
@@ -93,7 +88,7 @@ public class AuthService {
     }
 
     @Transactional
-    public ResultResponse reissue(String refreshToken) {
+    public TokenResponseVo reissue(String refreshToken) {
         Long memberId = jwtProvider.resolveMemberId(refreshToken)
                                    .orElseThrow(RefreshTokenException::new);
         Member member = memberRepository.findById(memberId)
@@ -109,18 +104,16 @@ public class AuthService {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId());
-
-        saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
-        saveAccessToken(member.getId(), newTokenResponse.getAccessToken());
-
-        return ResultResponse.of(issueToken, newTokenResponse);
+        TokenResponseVo newTokenResponseVo = jwtProvider.createTokenDto(member.getId());
+        saveRefreshToken(member.getId(), newTokenResponseVo.getRefreshToken());
+        saveAccessToken(member.getId(), newTokenResponseVo.getAccessToken());
+        return newTokenResponseVo;
     }
 
     @Transactional(readOnly = true)
-    public MemberInfoResponse getUserInfo(Long memberId) {
+    public MemberInfoVo getUserInfo(Long memberId) {
         return memberRepository.findById(memberId)
-                               .map(MemberInfoResponse::of)
+                               .map(MemberInfoVo::from)
                                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
     }
 }

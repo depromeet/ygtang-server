@@ -1,4 +1,4 @@
-package inspiration.domain.member.request;
+package inspiration.v1.member;
 
 import inspiration.domain.member.AgeGroupType;
 import inspiration.domain.member.GenderType;

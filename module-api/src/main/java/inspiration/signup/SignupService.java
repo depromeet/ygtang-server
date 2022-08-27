@@ -1,17 +1,16 @@
 package inspiration.signup;
 
-import inspiration.ResultResponse;
+import inspiration.auth.TokenResponseVo;
 import inspiration.auth.jwt.JwtProvider;
-import inspiration.auth.TokenResponse;
 import inspiration.domain.emailauth.EmailAuthRepository;
+import inspiration.domain.member.Member;
+import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.request.ExtraInfoRequestVo;
+import inspiration.domain.member.request.SignUpRequestVo;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
-import inspiration.domain.member.Member;
-import inspiration.domain.member.MemberRepository;
-import inspiration.domain.member.request.SignUpRequest;
-import inspiration.domain.member.request.ExtraInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,55 +21,44 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class SignupService {
+    private static final String REFRESH_TOKEN_KEY = "refreshToken : ";
 
     private final MemberRepository memberRepository;
     private final EmailAuthRepository emailAuthRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final StringRedisTemplate redisTemplate;
-    private final String REFRESH_TOKEN_KEY = "refreshToken : ";
+
 
     @Transactional
-    public ResultResponse<TokenResponse> signUp(SignUpRequest request) {
+    public TokenResponseVo signUp(SignUpRequestVo signUpRequestVo) {
+        verifyEmail(signUpRequestVo.getEmail());
+        isValidEmail(signUpRequestVo.getEmail());
+        isValidNickName(signUpRequestVo.getNickName());
+        confirmPasswordCheck(signUpRequestVo.getConfirmPassword(), signUpRequestVo.getPassword());
 
-        verifyEmail(request.getEmail());
-        isValidEmail(request.getEmail());
-        isValidNickName(request.getNickName());
-        confirmPasswordCheck(request.getConfirmPassword(), request.getPassword());
-
-        Member member = memberRepository.save(request.toEntity(passwordEncoder));
-        TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId());
-        saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
-
-        return ResultResponse.of(REFRESH_TOKEN_KEY, tokenResponse);
+        Member member = memberRepository.save(signUpRequestVo.toEntity(passwordEncoder));
+        TokenResponseVo tokenResponseVo = jwtProvider.createTokenDto(member.getId());
+        saveRefreshToken(member.getId(), tokenResponseVo.getRefreshToken());
+        return tokenResponseVo;
     }
 
     @Transactional(readOnly = true)
-    public ResultResponse checkNickName(String nickname) {
-
+    public void checkNickName(String nickname) {
         isValidNickName(nickname);
-
-        return ResultResponse.from("사용할 수 있는 닉네임입니다.");
     }
 
     @Transactional
-    public void updateExtraInfo(String email, ExtraInfoRequest request) {
-
+    public void updateExtraInfo(String email, ExtraInfoRequestVo requestVo) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
-
-        member.updateExtraInfo(request.getGender(), request.getAge(), request.getJob());
+                                        .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
+        member.updateExtraInfo(requestVo.getGender(), requestVo.getAge(), requestVo.getJob());
     }
 
-    public ResultResponse validSignUpEmailStatus(String email) {
-
-        if (memberRepository.existsByEmail(email)) {
-
-            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
-        }
-
-        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
+    public boolean validSignUpEmailStatus(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {

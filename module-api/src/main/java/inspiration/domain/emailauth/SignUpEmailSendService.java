@@ -13,11 +13,12 @@ import javax.mail.internet.MimeMessage;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("ClassCanBeRecord")
 public class SignUpEmailSendService implements EmailSendService {
+    private static final String SUBJECT = "이메일 인증";
 
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
-    private final static String SUBJECT = "이메일 인증";
 
     @Override
     public void send(String email, String authToken) {

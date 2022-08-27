@@ -1,6 +1,5 @@
-package inspiration.domain.inspiration.request;
+package inspiration.v1.inspiration;
 
-import inspiration.domain.inspiration.Inspiration;
 import inspiration.domain.inspiration.InspirationType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,24 +19,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InspirationAddRequest {
 
-    @ApiModelProperty( notes = "IMAGE | LINK | TEXT")
+    @ApiModelProperty(notes = "IMAGE | LINK | TEXT")
     @NotNull
     private InspirationType type;
     @ApiModelProperty(notes = "LINK, TEXT의 경우 해당 데이터 입력")
     private String content;
-    @ApiModelProperty( notes = "메모 입력")
+    @ApiModelProperty(notes = "메모 입력")
     private String memo;
 
     private MultipartFile file;
 
     private List<Long> tagIds;
-
-    public Inspiration toEntity() {
-        return Inspiration.builder()
-                .content(this.content)
-                .type(this.type)
-                .memo(this.memo)
-                .build();
-    }
-
 }

@@ -1,14 +1,13 @@
 package inspiration.domain.emailauth;
 
-import inspiration.ResultResponse;
+import inspiration.domain.member.MemberRepository;
+import inspiration.domain.passwordauth.PasswordAuth;
+import inspiration.domain.passwordauth.PasswordAuthRepository;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.enumeration.RedisKey;
 import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
-import inspiration.domain.member.MemberRepository;
-import inspiration.domain.passwordauth.PasswordAuth;
-import inspiration.domain.passwordauth.PasswordAuthRepository;
 import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@SuppressWarnings("ClassCanBeRecord")
 public class EmailAuthService {
 
     private final EmailAuthRepository emailAuthRepository;
@@ -33,7 +33,7 @@ public class EmailAuthService {
 
         verifyEmail(email);
 
-        if(email.contains("+")) {
+        if (email.contains("+")) {
             throw new PostNotFoundException("잘못된 이메일 형식입니다.");
         }
 
@@ -58,9 +58,9 @@ public class EmailAuthService {
 
         emailAuthRepository.save(
                 EmailAuth.builder()
-                        .email(email)
-                        .isAuth(true)
-                        .build());
+                         .email(email)
+                         .isAuth(true)
+                         .build());
     }
 
     @Transactional
@@ -70,11 +70,11 @@ public class EmailAuthService {
             throw new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage());
         }
 
-        if(passwordAuthRepository.existsByEmail(email)) {
+        if (passwordAuthRepository.existsByEmail(email)) {
             throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
         }
 
-        if(email.contains("+")) {
+        if (email.contains("+")) {
             throw new PostNotFoundException("잘못된 이메일 형식입니다.");
         }
 
@@ -98,29 +98,19 @@ public class EmailAuthService {
 
         passwordAuthRepository.save(
                 PasswordAuth.builder()
-                        .email(email)
-                        .isAuth(true)
-                        .build());
+                            .email(email)
+                            .isAuth(true)
+                            .build());
     }
 
     @Transactional(readOnly = true)
-    public ResultResponse validAuthenticateEmailStatusOfSignup(String email) {
-
-        if (emailAuthRepository.existsByEmail(email)) {
-            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
-        }
-
-        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
+    public boolean validAuthenticateEmailStatusOfSignup(String email) {
+        return emailAuthRepository.existsByEmail(email);
     }
 
     @Transactional(readOnly = true)
-    public ResultResponse validAuthenticateEmailStatusOfResetPassword(String email) {
-
-        if (passwordAuthRepository.existsByEmail(email)) {
-            return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
-        }
-
-        return ResultResponse.of(ExceptionType.EMAIL_NOT_AUTHENTICATED.getMessage(), false);
+    public boolean isValidAuthenticateEmailStatusOfResetPassword(String email) {
+        return passwordAuthRepository.existsByEmail(email);
     }
 
     private void verifyEmail(String email) {

@@ -1,11 +1,11 @@
 package inspiration.infrastructure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inspiration.ResultResponse;
 import inspiration.auth.jwt.JwtAuthenticationProvider;
 import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.domain.member.MemberService;
+import inspiration.v1.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ import java.util.Set;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final String[] ALLOWED_URI_PATTERN = new String[] {
+    private static final String[] ALLOWED_URI_PATTERN = new String[]{
             "/api/v1/signup/**",
             "/api/v1/auth/**",
             "/api/v1/reissue",

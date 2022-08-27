@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("ClassCanBeRecord")
 public class ResetPasswordEmailSendService implements EmailSendService {
+    private static final String SUBJECT = "비빌번호 초기화";
+    private static final String CREATED_RESET_PASSWORD = "임시 비밀번호 발급: ";
 
     private final JavaMailSender mailSender;
-    private final static String SUBJECT = "비빌번호 초기화";
-    private final static String CREATED_RESET_PASSWORD = "임시 비밀번호 발급: ";
 
     @Override
     public void send(String email, String restPassword) {

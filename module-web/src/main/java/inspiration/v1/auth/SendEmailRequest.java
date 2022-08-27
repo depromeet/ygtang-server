@@ -1,4 +1,4 @@
-package inspiration.domain.emailauth.request;
+package inspiration.v1.auth;
 
 import lombok.Data;
 

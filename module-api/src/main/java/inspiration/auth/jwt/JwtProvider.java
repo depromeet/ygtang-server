@@ -1,6 +1,6 @@
 package inspiration.auth.jwt;
 
-import inspiration.auth.TokenResponse;
+import inspiration.auth.TokenResponseVo;
 import inspiration.enumeration.ExpireTimeConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
@@ -65,13 +65,13 @@ public class JwtProvider {
                    .compact();
     }
 
-    public TokenResponse createTokenDto(Long memberId) {
-        return TokenResponse.builder()
-                            .accessToken(createAccessTokenInner(memberId))
-                            .refreshToken(createRefreshTokenInner(memberId))
-                            .memberId(memberId)
-                            .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
-                            .build();
+    public TokenResponseVo createTokenDto(Long memberId) {
+        return new TokenResponseVo(
+                createAccessTokenInner(memberId),
+                createRefreshTokenInner(memberId),
+                memberId,
+                ExpireTimeConstants.accessTokenValidMillisecond
+        );
     }
 
     public Optional<Long> resolveMemberId(String token) {

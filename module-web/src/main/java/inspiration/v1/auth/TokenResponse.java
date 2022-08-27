@@ -1,4 +1,4 @@
-package inspiration.auth;
+package inspiration.v1.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
