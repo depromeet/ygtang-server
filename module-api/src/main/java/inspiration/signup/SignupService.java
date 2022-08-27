@@ -40,7 +40,7 @@ public class SignupService {
         confirmPasswordCheck(signUpRequestVo.getConfirmPassword(), signUpRequestVo.getPassword());
 
         Member member = memberRepository.save(signUpRequestVo.toEntity(passwordEncoder));
-        TokenResponseVo tokenResponseVo = jwtProvider.createTokenDto(member.getId());
+        TokenResponseVo tokenResponseVo = jwtProvider.createTokenVo(member.getId());
         saveRefreshToken(member.getId(), tokenResponseVo.getRefreshToken());
         return tokenResponseVo;
     }

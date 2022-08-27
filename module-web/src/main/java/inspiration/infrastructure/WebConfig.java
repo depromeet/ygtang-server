@@ -4,6 +4,7 @@ import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Lists;
 import inspiration.enumeration.HttpHeaderType;
 import inspiration.enumeration.TokenType;
+import inspiration.infrastructure.security.AuthenticationPrincipalArgumentResolver;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

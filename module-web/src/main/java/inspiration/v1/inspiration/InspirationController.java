@@ -9,7 +9,7 @@ import inspiration.domain.inspiration.request.InspirationModifyRequestVo;
 import inspiration.domain.inspiration.request.InspirationTagRequestVo;
 import inspiration.domain.inspiration.response.InspirationResponseVo;
 import inspiration.domain.inspiration.response.OpenGraphResponseVo;
-import inspiration.infrastructure.AuthenticationPrincipal;
+import inspiration.infrastructure.security.AuthenticationPrincipal;
 import inspiration.v1.ResultResponse;
 import inspiration.v1.inspiration.opengraph.OpenGraphAssembler;
 import inspiration.v1.inspiration.opengraph.OpenGraphResponse;

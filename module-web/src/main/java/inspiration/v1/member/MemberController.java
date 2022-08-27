@@ -5,7 +5,7 @@ import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.member.MemberService;
 import inspiration.domain.member.response.MemberInfoVo;
 import inspiration.domain.tag.TagService;
-import inspiration.infrastructure.AuthenticationPrincipal;
+import inspiration.infrastructure.security.AuthenticationPrincipal;
 import inspiration.signup.SignupService;
 import inspiration.v1.auth.SendEmailRequest;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +22,6 @@ import javax.validation.Valid;
 @SuppressWarnings("ClassCanBeRecord")
 public class MemberController {
     private final MemberService memberService;
-    private final AuthService authService;
     private final SignupService signupService;
     private final InspirationService inspirationService;
     private final TagService tagService;
@@ -56,8 +55,8 @@ public class MemberController {
 
     @GetMapping("/info")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보를 조회한다.")
-    public MemberInfoResponse getUserInfo(@ApiIgnore @AuthenticationPrincipal Long memberId) {
-        MemberInfoVo memberInfoVo = authService.getUserInfo(memberId);
+    public MemberInfoResponse getMemberInfo(@ApiIgnore @AuthenticationPrincipal Long memberId) {
+        MemberInfoVo memberInfoVo = memberService.getMemberInfo(memberId);
         return memberAssembler.toMemberInfoResponse(memberInfoVo);
     }
 

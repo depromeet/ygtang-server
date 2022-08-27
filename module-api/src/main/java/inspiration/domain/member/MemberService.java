@@ -2,6 +2,7 @@ package inspiration.domain.member;
 
 import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.domain.emailauth.ResetPasswordEmailSendService;
+import inspiration.domain.member.response.MemberInfoVo;
 import inspiration.domain.member.response.MemberResponseVo;
 import inspiration.domain.passwordauth.PasswordAuth;
 import inspiration.domain.passwordauth.PasswordAuthRepository;
@@ -95,6 +96,13 @@ public class MemberService {
                                .stream()
                                .map(MemberResponseVo::of)
                                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoVo getMemberInfo(Long memberId) {
+        return memberRepository.findById(memberId)
+                               .map(MemberInfoVo::from)
+                               .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
     }
 
 }

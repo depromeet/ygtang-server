@@ -1,4 +1,4 @@
-package inspiration.auth.jwt;
+package inspiration.infrastructure.security;
 
 import inspiration.enumeration.TokenType;
 import lombok.extern.slf4j.Slf4j;

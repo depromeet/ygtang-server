@@ -5,7 +5,7 @@ import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.tag.TagService;
 import inspiration.domain.tag.request.TagAddRequestVo;
 import inspiration.domain.tag.response.TagResponseVo;
-import inspiration.infrastructure.AuthenticationPrincipal;
+import inspiration.infrastructure.security.AuthenticationPrincipal;
 import inspiration.v1.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

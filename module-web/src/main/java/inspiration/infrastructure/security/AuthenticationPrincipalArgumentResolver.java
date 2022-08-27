@@ -1,4 +1,4 @@
-package inspiration.infrastructure;
+package inspiration.infrastructure.security;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

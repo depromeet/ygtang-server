@@ -65,7 +65,7 @@ public class JwtProvider {
                    .compact();
     }
 
-    public TokenResponseVo createTokenDto(Long memberId) {
+    public TokenResponseVo createTokenVo(Long memberId) {
         return new TokenResponseVo(
                 createAccessTokenInner(memberId),
                 createRefreshTokenInner(memberId),

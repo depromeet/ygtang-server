@@ -4,7 +4,6 @@ import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequestVo;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
-import inspiration.domain.member.response.MemberInfoVo;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.PostNotFoundException;
@@ -104,16 +103,9 @@ public class AuthService {
             throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
         }
 
-        TokenResponseVo newTokenResponseVo = jwtProvider.createTokenDto(member.getId());
+        TokenResponseVo newTokenResponseVo = jwtProvider.createTokenVo(member.getId());
         saveRefreshToken(member.getId(), newTokenResponseVo.getRefreshToken());
         saveAccessToken(member.getId(), newTokenResponseVo.getAccessToken());
         return newTokenResponseVo;
-    }
-
-    @Transactional(readOnly = true)
-    public MemberInfoVo getUserInfo(Long memberId) {
-        return memberRepository.findById(memberId)
-                               .map(MemberInfoVo::from)
-                               .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
     }
 }

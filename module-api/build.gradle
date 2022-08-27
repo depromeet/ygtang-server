@@ -6,9 +6,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.security:spring-security-crypto'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation "com.amazonaws:aws-java-sdk-s3:${awsJavaSdkVersion}"
 

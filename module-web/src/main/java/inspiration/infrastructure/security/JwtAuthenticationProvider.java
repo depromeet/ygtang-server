@@ -1,5 +1,6 @@
-package inspiration.auth.jwt;
+package inspiration.infrastructure.security;
 
+import inspiration.auth.jwt.JwtProvider;
 import inspiration.exception.UnauthorizedAccessRequestException;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberService;

@@ -1,8 +1,6 @@
-package inspiration.infrastructure;
+package inspiration.infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inspiration.auth.jwt.JwtAuthenticationProvider;
-import inspiration.auth.jwt.JwtPreAuthenticatedProcessingFilter;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.domain.member.MemberService;
 import inspiration.v1.ResultResponse;
