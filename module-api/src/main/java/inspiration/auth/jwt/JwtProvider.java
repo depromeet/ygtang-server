@@ -66,12 +66,12 @@ public class JwtProvider {
     }
 
     public TokenResponseVo createTokenVo(Long memberId) {
-        return new TokenResponseVo(
-                createAccessTokenInner(memberId),
-                createRefreshTokenInner(memberId),
-                memberId,
-                ExpireTimeConstants.accessTokenValidMillisecond
-        );
+        return TokenResponseVo.builder()
+                              .accessToken(createAccessTokenInner(memberId))
+                              .refreshToken(createRefreshTokenInner(memberId))
+                              .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                              .memberId(memberId)
+                              .build();
     }
 
     public Optional<Long> resolveMemberId(String token) {

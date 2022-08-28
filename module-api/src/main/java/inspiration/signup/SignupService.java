@@ -57,7 +57,7 @@ public class SignupService {
         member.updateExtraInfo(requestVo.getGender(), requestVo.getAge(), requestVo.getJob());
     }
 
-    public boolean validSignUpEmailStatus(String email) {
+    public boolean existsMemberByEmail(String email) {
         return memberRepository.existsByEmail(email);
     }
 

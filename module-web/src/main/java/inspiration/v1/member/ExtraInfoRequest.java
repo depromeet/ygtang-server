@@ -4,13 +4,13 @@ import inspiration.domain.member.AgeGroupType;
 import inspiration.domain.member.GenderType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class ExtraInfoRequest {
 
     @ApiModelProperty( notes = "F | M | N")

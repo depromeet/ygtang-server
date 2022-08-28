@@ -1,12 +1,16 @@
 package inspiration.auth;
 
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Builder
+@Getter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("ClassCanBeRecord")
 public class TokenResponseVo {
-    String accessToken;
-    String refreshToken;
-    Long accessTokenExpireDate;
-    long memberId;
+    private final String accessToken;
+    private final String refreshToken;
+    private final Long accessTokenExpireDate;
+    private final long memberId;
 }

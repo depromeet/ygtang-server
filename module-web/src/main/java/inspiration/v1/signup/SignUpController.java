@@ -57,10 +57,10 @@ public class SignUpController {
     @GetMapping("/{email}/status")
     @ApiOperation(value = "해당 유저가 가입되어 있는 유저인지 상태 여부 반환", notes = "해당 유저가 가입되어 있는 유저인지 상태 여부를 반환한다.")
     public ResultResponse<Boolean> validSignUpEmailStatus(@PathVariable String email) {
-        boolean isValid = signupService.validSignUpEmailStatus(email);
+        boolean exist = signupService.existsMemberByEmail(email);
         return ResultResponse.of(
-                isValid ? ExceptionType.EMAIL_ALREADY_AUTHENTICATED : ExceptionType.EMAIl_NOT_FOUND,
-                isValid
+                exist ? ExceptionType.EMAIL_ALREADY_AUTHENTICATED : ExceptionType.EMAIL_NOT_AUTHENTICATED,
+                exist
         );
     }
 }

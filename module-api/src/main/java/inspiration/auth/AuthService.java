@@ -37,12 +37,12 @@ public class AuthService {
         Member member = checkEmail(loginRequestVo.getEmail());
         verifyPassword(loginRequestVo.getPassword(), member.getPassword());
 
-        return new TokenResponseVo(
-                resolveAccessToken(member.getId()),
-                resolveRefreshToken(member.getId()),
-                member.getId(),
-                ExpireTimeConstants.accessTokenValidMillisecond
-        );
+        return TokenResponseVo.builder()
+                              .accessToken(resolveAccessToken(member.getId()))
+                              .refreshToken(resolveRefreshToken(member.getId()))
+                              .accessTokenExpireDate(ExpireTimeConstants.accessTokenValidMillisecond)
+                              .memberId(member.getId())
+                              .build();
     }
 
     private Member checkEmail(String email) {

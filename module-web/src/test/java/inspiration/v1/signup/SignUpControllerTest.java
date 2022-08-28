@@ -7,6 +7,7 @@ import inspiration.v1.auth.SendEmailRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
 import inspiration.v1.member.SignUpRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,6 +41,7 @@ class SignUpControllerTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @DisplayName("회원 가입")
     @Test
     void signUp() throws Exception {
         // given
