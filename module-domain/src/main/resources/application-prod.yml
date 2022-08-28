@@ -4,7 +4,7 @@ spring:
     user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
     password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
   redis:
-    host: ENC(019slyR3n+gWa0DJd5h9mV5EFpZpTPQBXuCILhV31gjPZimc0GMVK40UBBcpMeWi)
+    host: ENC(zrBtSslGn/+y5jh5sWNaA3uPSGlRQSejw3wfXPItaZXdM2clW5PAlVYQ8BQOS8Vz)
     port: 6379
   mail:
     sign-up-email-send-mail: ENC(zyANvPjCAYiH+b6CSKvf0B3vMD1eU7NaOfqeUWVs2Mj4eCMvDa7Y6qpAV5h02jbihEC/I6zmjIZqsPu1VTdUadTTuVPVcLyqTJGlRYS5rLlEcXGhZ4zg+Nu8+3S8otsn)

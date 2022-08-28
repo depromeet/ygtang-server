@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-    <springProfile name="local">
-        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
+    <springProperty name="SLACK_WEBHOOK_URI" source="uri.webhook"/>
+    <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+        <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
+        </layout>
+        <username>영감탱 에러 모니터링</username>
+        <iconEmoji>:stuck_out_tongue_winking_eye:</iconEmoji>
+        <colorCoding>true</colorCoding>
+    </appender>
+    <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK"/>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ASYNC_SLACK" />
         </root>
     </springProfile>
 
     <springProfile name="dev">
-        <property resource="application-dev.yml" />
-
-        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-        <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-
-        <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
-        <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-            <webhookUri>${webhook}</webhookUri>
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
-            </layout>
-            <username>영감탱 에러 모니터링</username>
-            <iconEmoji>:stuck_out_tongue_winking_eye:</iconEmoji>
-            <colorCoding>true</colorCoding>
-        </appender>
-        <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
-            <appender-ref ref="SLACK"/>
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>ERROR</level>
-            </filter>
-        </appender>
-
         <root level="INFO">
             <appender-ref ref="FILE" />
             <appender-ref ref="ASYNC_SLACK"/>
@@ -39,28 +36,6 @@
     </springProfile>
 
     <springProfile name="prod">
-        <property resource="application-prod.yml" />
-
-        <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-        <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-
-        <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
-        <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-            <webhookUri>${webhook}</webhookUri>
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
-            </layout>
-            <username>영감탱 에러 모니터링</username>
-            <iconEmoji>:stuck_out_tongue_winking_eye:</iconEmoji>
-            <colorCoding>true</colorCoding>
-        </appender>
-        <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
-            <appender-ref ref="SLACK"/>
-            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-                <level>ERROR</level>
-            </filter>
-        </appender>
-
         <root level="INFO">
             <appender-ref ref="FILE" />
             <appender-ref ref="ASYNC_SLACK"/>
