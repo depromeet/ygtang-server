@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id "com.gorylenko.gradle-git-properties" version "$gradleGitPropertiesPluginVersion" apply false
+    id "com.gorylenko.gradle-git-properties" version "$gradleGitPropertiesPluginVersion"
 }
 
 subprojects {
