@@ -6,7 +6,8 @@ import inspiration.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

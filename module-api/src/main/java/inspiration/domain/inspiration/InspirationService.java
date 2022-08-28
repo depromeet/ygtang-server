@@ -1,13 +1,10 @@
 package inspiration.domain.inspiration;
 
 import inspiration.aws.AwsS3Service;
-import inspiration.domain.inspiration.opengraph.OpenGraphService;
-import inspiration.domain.inspiration.opengraph.OpenGraphVo;
 import inspiration.domain.inspiration.request.InspirationAddRequestVo;
 import inspiration.domain.inspiration.request.InspirationModifyRequestVo;
 import inspiration.domain.inspiration.request.InspirationTagRequestVo;
 import inspiration.domain.inspiration.response.InspirationResponseVo;
-import inspiration.domain.inspiration.response.OpenGraphResponseVo;
 import inspiration.domain.inspiration_tag.InspirationTag;
 import inspiration.domain.inspiration_tag.InspirationTagRepository;
 import inspiration.domain.inspiration_tag.InspirationTagService;
@@ -25,8 +22,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,14 +45,13 @@ public class InspirationService {
     private final InspirationTagService inspirationTagService;
     private final InspirationTagRepository inspirationTagRepository;
     private final TagRepository tagRepository;
-    private final OpenGraphService openGraphService;
-    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
-    public Page<Inspiration> findInspirations(Pageable pageable, Long memberId) {
+    public Page<InspirationResponseVo> findInspirations(Pageable pageable, Long memberId) {
         Member member = memberService.findById(memberId);
-        return inspirationRepository.findAllByMember(member, pageable);
+        return inspirationRepository.findAllByMember(member, pageable)
+                                    .map(it -> InspirationResponseVo.of(it, awsS3Service));
     }
 
     @Transactional(readOnly = true)
@@ -67,34 +60,7 @@ public class InspirationService {
         Member member = memberService.findById(memberId);
         Inspiration inspiration = inspirationRepository.findAllByMemberAndId(member, id)
                                                        .orElseThrow(ResourceNotFoundException::new);
-        return InspirationResponseVo.of(
-                inspiration,
-                getOpenGraphResponseVo(inspiration.getType(), inspiration.getContent()),
-                awsS3Service
-        );
-    }
-
-    private OpenGraphResponseVo getOpenGraphResponseVo(InspirationType inspirationType, String link) {
-        if (inspirationType != InspirationType.LINK) {
-            return OpenGraphResponseVo.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-        Optional<OpenGraphVo> openGraphVoOptional = openGraphService.getMetadata(link);
-        if (openGraphVoOptional.isEmpty()) {
-            return OpenGraphResponseVo.from(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-        OpenGraphVo openGraphVo = openGraphVoOptional.get();
-        return OpenGraphResponseVo.of(
-                HttpStatus.OK.value(),
-                openGraphVo.getImage(),
-                openGraphVo.getSiteName(),
-                openGraphVo.getTitle(),
-                openGraphVo.getUrl() != null ? openGraphVo.getUrl() : link,
-                openGraphVo.getDescription()
-        );
-    }
-
-    public OpenGraphResponseVo getOpenGraphResponseVo(String link) {
-        return getOpenGraphResponseVo(InspirationType.LINK, link);
+        return InspirationResponseVo.of(inspiration, awsS3Service);
     }
 
     @CacheEvict(value = "inspiration", allEntries = true)
@@ -123,7 +89,7 @@ public class InspirationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Inspiration> findInspirationsByTags(
+    public Page<InspirationResponseVo> findInspirationsByTags(
             List<Long> tagIds,
             List<InspirationType> types,
             LocalDateTime createdDateTimeFrom,
@@ -138,7 +104,7 @@ public class InspirationService {
                 createdDateTimeFrom,
                 createdDateTimeTo,
                 pageable
-        );
+        ).map(it -> InspirationResponseVo.of(it, awsS3Service));
     }
 
 
@@ -271,13 +237,6 @@ public class InspirationService {
         if (!fileNames.isEmpty()) {
             inspiration.setFilePath(fileNames.get(0));
         }
-    }
-
-    private String getFilePath(InspirationType type, String content) {
-        if (type == InspirationType.IMAGE) {
-            return awsS3Service.getFilePath(content);
-        }
-        return content;
     }
 
     private Inspiration getInspiration(Long id) {

@@ -1,7 +1,8 @@
 package inspiration.domain.inspiration.opengraph;
 
-import java.util.Optional;
+import inspiration.domain.inspiration.InspirationType;
+import inspiration.domain.inspiration.response.OpenGraphResponseVo;
 
 public interface OpenGraphService {
-    Optional<OpenGraphVo> getMetadata(String url);
+    OpenGraphResponseVo getOpenGraphResponseVo(InspirationType inspirationType, String link);
 }

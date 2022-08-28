@@ -24,13 +24,11 @@ public class InspirationResponseVo {
     private final InspirationType type;
     private final String content;
     private final String memo;
-    private final OpenGraphResponseVo openGraphResponseVo;
     private final LocalDateTime createdDateTime;
     private final LocalDateTime updatedDateTime;
 
     public static InspirationResponseVo of(
             Inspiration inspiration,
-            OpenGraphResponseVo openGraphResponseVo,
             AwsS3Service awsS3Service
     ) {
         return InspirationResponseVo.builder()
@@ -44,7 +42,6 @@ public class InspirationResponseVo {
                                     .tagResponseVoList(inspiration.getInspirationTags().stream()
                                                                   .map(it -> TagResponseVo.from(it.getTag()))
                                                                   .collect(Collectors.toList()))
-                                    .openGraphResponseVo(openGraphResponseVo)
                                     .build();
     }
 

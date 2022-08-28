@@ -1,12 +1,11 @@
 package inspiration.v1.inspiration;
 
-import inspiration.v1.RestPage;
-import inspiration.aws.AwsS3Service;
-import inspiration.domain.inspiration.Inspiration;
+import inspiration.domain.inspiration.opengraph.OpenGraphService;
 import inspiration.domain.inspiration.request.InspirationAddRequestVo;
 import inspiration.domain.inspiration.request.InspirationModifyRequestVo;
 import inspiration.domain.inspiration.request.InspirationTagRequestVo;
 import inspiration.domain.inspiration.response.InspirationResponseVo;
+import inspiration.v1.RestPage;
 import inspiration.v1.inspiration.opengraph.OpenGraphAssembler;
 import inspiration.v1.member.MemberAssembler;
 import inspiration.v1.tag.TagAssembler;
@@ -27,7 +26,7 @@ public class InspirationAssembler {
     private final TagAssembler tagAssembler;
     private final OpenGraphAssembler openGraphAssembler;
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    private final AwsS3Service awsS3Service;
+    private final OpenGraphService openGraphService;
 
     public InspirationAddRequestVo toInspirationAddRequestVo(InspirationAddRequest inspirationAddRequest) {
         return new InspirationAddRequestVo(
@@ -50,30 +49,35 @@ public class InspirationAssembler {
         return new InspirationResponse(
                 inspirationResponseVo.getId(),
                 memberAssembler.toMemberResponse(inspirationResponseVo.getMemberResponseVo()),
-                inspirationResponseVo.getTagResponseVoList().stream()
+                inspirationResponseVo.getTagResponseVoList()
+                                     .stream()
                                      .map(tagAssembler::toTagResponse)
                                      .collect(Collectors.toList()),
                 inspirationResponseVo.getType(),
                 inspirationResponseVo.getContent(),
                 inspirationResponseVo.getMemo(),
-                openGraphAssembler.toOpenGraphResponse(inspirationResponseVo.getOpenGraphResponseVo()),
+                openGraphAssembler.toOpenGraphResponse(
+                        openGraphService.getOpenGraphResponseVo(
+                                inspirationResponseVo.getType(),
+                                inspirationResponseVo.getContent()
+                        )
+                ),
                 inspirationResponseVo.getCreatedDateTime(),
                 inspirationResponseVo.getUpdatedDateTime()
         );
     }
 
-    public RestPage<InspirationResponse> toInspirationResponseRestPage(Page<Inspiration> inspirationPage) {
+    public RestPage<InspirationResponse> toInspirationResponseRestPage(Page<InspirationResponseVo> inspirationResponseVoPage) {
         return new RestPage<>(
-                inspirationPage.stream()
+                inspirationResponseVoPage.stream()
                                .parallel()
-                               .map(it -> (Callable<InspirationResponseVo>) () -> InspirationResponseVo.of(it, openGraphAssembler.getOpenGraphResponseVo(it.getType(), it.getContent()), awsS3Service))
+                               .map(it -> (Callable<InspirationResponse>) () -> toInspirationResponse(it))
                                .map(it -> threadPoolTaskExecutor.submitListenable(it).completable())
                                .map(CompletableFuture::join)
-                               .map(this::toInspirationResponse)
                                .collect(Collectors.toList()),
-                inspirationPage.getPageable().getPageNumber(),
-                inspirationPage.getPageable().getPageSize(),
-                inspirationPage.getTotalElements()
+                inspirationResponseVoPage.getPageable().getPageNumber(),
+                inspirationResponseVoPage.getPageable().getPageSize(),
+                inspirationResponseVoPage.getTotalElements()
         );
     }
 

@@ -1,7 +1,7 @@
 package inspiration.v1.inspiration;
 
+import inspiration.domain.inspiration.opengraph.OpenGraphService;
 import inspiration.v1.RestPage;
-import inspiration.domain.inspiration.Inspiration;
 import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.inspiration.InspirationType;
 import inspiration.domain.inspiration.request.InspirationAddRequestVo;
@@ -41,6 +41,7 @@ import java.util.List;
 public class InspirationController {
     private final InspirationService inspirationService;
     private final InspirationAssembler inspirationAssembler;
+    private final OpenGraphService openGraphService;
     private final OpenGraphAssembler openGraphAssembler;
 
     @GetMapping("/list")
@@ -53,11 +54,11 @@ public class InspirationController {
             Pageable pageable,
             @ApiIgnore @AuthenticationPrincipal Long memberId
     ) {
-        Page<Inspiration> inspirationPage = inspirationService.findInspirations(pageable, memberId);
+        Page<InspirationResponseVo> inspirationResponseVoPage = inspirationService.findInspirations(pageable, memberId);
+        RestPage<InspirationResponse> inspirationResponseRestPage =
+                inspirationAssembler.toInspirationResponseRestPage(inspirationResponseVoPage);
         return ResponseEntity.ok().body(
-                ResultResponse.success(
-                        inspirationAssembler.toInspirationResponseRestPage(inspirationPage)
-                )
+                ResultResponse.success(inspirationResponseRestPage)
         );
     }
 
@@ -147,11 +148,12 @@ public class InspirationController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdDateTimeTo,
             @ApiIgnore @AuthenticationPrincipal Long memberId
     ) {
-        Page<Inspiration> inspirationPage = inspirationService.findInspirationsByTags(tagIds, types, createdDateTimeFrom, createdDateTimeTo, memberId, pageable);
+        Page<InspirationResponseVo> inspirationResponseVoPage =
+                inspirationService.findInspirationsByTags(tagIds, types, createdDateTimeFrom, createdDateTimeTo, memberId, pageable);
+        RestPage<InspirationResponse> inspirationResponseRestPage =
+                inspirationAssembler.toInspirationResponseRestPage(inspirationResponseVoPage);
         return ResponseEntity.ok().body(
-                ResultResponse.success(
-                        inspirationAssembler.toInspirationResponseRestPage(inspirationPage)
-                )
+                ResultResponse.success(inspirationResponseRestPage)
         );
     }
 
@@ -201,7 +203,7 @@ public class InspirationController {
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
     public ResponseEntity<ResultResponse<OpenGraphResponse>> inspirationList(@RequestParam @NotBlank String link) {
-        OpenGraphResponseVo openGraphResponseVo = inspirationService.getOpenGraphResponseVo(link);
+        OpenGraphResponseVo openGraphResponseVo = openGraphService.getOpenGraphResponseVo(InspirationType.LINK, link);
         OpenGraphResponse openGraphResponse = openGraphAssembler.toOpenGraphResponse(openGraphResponseVo);
         return ResponseEntity.ok().body(ResultResponse.success(openGraphResponse));
     }
