@@ -20,7 +20,7 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
     public List<OgMetaElement> getOgMetaElementsFrom(String url) {
         try {
             final Document document = Jsoup.connect(url)
-                                           .timeout(1000)
+                                           .timeout(2000)
                                            .get();
             final Elements metaElements = document.select("meta");
             List<OgMetaElement> ogMetaElements = metaElements.stream()
