@@ -1,5 +1,3 @@
-apply plugin: "com.gorylenko.gradle-git-properties"
-
 dependencies {
     implementation project(':module-domain')
     implementation project(':module-api')
