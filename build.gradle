@@ -14,12 +14,28 @@ buildscript {
 
 }
 
+plugins {
+    id "org.sonarqube" version "$sonarqubeVersion"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "ygtang-server"
+        property "sonar.organization", "yeonggamt"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
 
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
     apply plugin: 'java-library'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "$jacocoVersion"
+    }
 
     group = 'com.depromeet.inspiration'
     version = '0.0.1'
@@ -46,5 +62,14 @@ subprojects {
     }
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            csv.required = false
+            html.required = false
+        }
     }
 }
