@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
     <springProperty name="SLACK_WEBHOOK_URI" source="uri.webhook"/>
     <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
@@ -22,13 +20,14 @@
     </appender>
 
     <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="ASYNC_SLACK" />
         </root>
     </springProfile>
 
     <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
         <root level="INFO">
             <appender-ref ref="FILE" />
             <appender-ref ref="ASYNC_SLACK"/>
@@ -36,6 +35,7 @@
     </springProfile>
 
     <springProfile name="prod">
+        <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
         <root level="INFO">
             <appender-ref ref="FILE" />
             <appender-ref ref="ASYNC_SLACK"/>
