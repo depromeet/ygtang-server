@@ -18,8 +18,6 @@ import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,15 +45,14 @@ public class InspirationService {
     private final TagRepository tagRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
     public Page<InspirationResponseVo> findInspirations(Pageable pageable, Long memberId) {
+
         Member member = memberService.findById(memberId);
         return inspirationRepository.findAllByMember(member, pageable)
                                     .map(it -> InspirationResponseVo.of(it, awsS3Service));
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inspiration", key = "{#memberId, #id}")
     public InspirationResponseVo findInspiration(Long id, Long memberId) {
         Member member = memberService.findById(memberId);
         Inspiration inspiration = inspirationRepository.findAllByMemberAndId(member, id)
@@ -63,7 +60,6 @@ public class InspirationService {
         return InspirationResponseVo.of(inspiration, awsS3Service);
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long addInspiration(InspirationAddRequestVo requestVo, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -108,7 +104,6 @@ public class InspirationService {
     }
 
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long modifyMemo(InspirationModifyRequestVo requestVo, Long memberId) {
         Inspiration inspiration = getInspiration(requestVo.getId());
         if (!inspiration.getMember().isSameMember(memberId)) {
@@ -119,7 +114,6 @@ public class InspirationService {
     }
 
     @Transactional
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeInspiration(Long id, Long memberId) {
         Inspiration inspiration = getInspiration(id);
 
@@ -140,7 +134,6 @@ public class InspirationService {
     }
 
     @Transactional
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void removeAllInspiration(Long memberId) {
         Member member = memberService.findById(memberId);
 
@@ -166,7 +159,6 @@ public class InspirationService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    @CacheEvict(value = "inspiration", allEntries = true)
     public Long tagInspiration(InspirationTagRequestVo requestVo, Long memberId) {
 
         Inspiration inspiration = getInspiration(requestVo.getInspirationId());
@@ -187,7 +179,6 @@ public class InspirationService {
         return inspiration.getId();
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspiration(Long id, Long tagId, Long memberId) {
 
         Inspiration inspiration = getInspiration(id);
@@ -207,7 +198,6 @@ public class InspirationService {
 
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspirationByInspiration(Long id, Long memberId) {
 
         if (!getInspiration(id).getMember().isSameMember(memberId)) {
@@ -219,7 +209,6 @@ public class InspirationService {
         inspirationTagService.deleteAllByInspiration(inspiration);
     }
 
-    @CacheEvict(value = "inspiration", allEntries = true)
     public void unTagInspirationByTag(Long tagId, Long memberId) {
 
         Tag tag = tagService.getTag(tagId);

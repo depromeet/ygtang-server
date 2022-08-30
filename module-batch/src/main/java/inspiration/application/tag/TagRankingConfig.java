@@ -51,6 +51,7 @@ public class TagRankingConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final InspirationTagRepository inspirationTagRepository;
+    private final TagGroupService googleSheetTagGroupService;
 
     @Value("${ygtang.slack.token.bot}")
     private String botToken;
@@ -78,20 +79,21 @@ public class TagRankingConfig {
     @StepScope
     public Tasklet tagRankingTasklet() {
         return (contribution, chunkContext) -> {
-            List<TagRankingVo> tagRankingVoList = getTagRankingVoList();
+            List<TagGroup> tagGroups = googleSheetTagGroupService.getTagGroups();
+            List<TagRankingVo> tagRankingVoList = getTagRankingVoList(tagGroups);
             File csvFile = toCsvFile(tagRankingVoList);
             sendFileToSlack(csvFile);
             return RepeatStatus.FINISHED;
         };
     }
 
-    private List<TagRankingVo> getTagRankingVoList() {
+    private List<TagRankingVo> getTagRankingVoList(List<TagGroup> tagGroups) {
         List<InspirationTag> inspirationTags = inspirationTagRepository.findAll();
 
         Map<String, Set<Long>> contentTagIdSetMap =
                 inspirationTags.stream()
                                .collect(Collectors.toMap(
-                                       it -> it.getTag().getContent(),
+                                       it -> resolveTagName(it.getTag().getContent(), tagGroups),
                                        it -> Stream.of(it.getTag().getId()).collect(Collectors.toSet()),
                                        (a, b) -> {
                                            Set<Long> c = new HashSet<>(a);
@@ -102,7 +104,7 @@ public class TagRankingConfig {
         Map<String, Set<Long>> contentInspirationIdSetMap =
                 inspirationTags.stream()
                                .collect(Collectors.toMap(
-                                       it -> it.getTag().getContent(),
+                                       it -> resolveTagName(it.getTag().getContent(), tagGroups),
                                        it -> Stream.of(it.getInspiration().getId()).collect(Collectors.toSet()),
                                        (a, b) -> {
                                            Set<Long> c = new HashSet<>(a);
@@ -122,6 +124,15 @@ public class TagRankingConfig {
                                                            .reversed())
                                          .filter(it -> it.getTagCount() >= 2 || it.getInspirationCount() >= 2)
                                          .collect(Collectors.toList());
+    }
+
+    private String resolveTagName(String tagName, List<TagGroup> tagGroups) {
+        for (TagGroup tagGroup : tagGroups) {
+            if (tagGroup.contains(tagName)) {
+                return tagGroup.getName();
+            }
+        }
+        return tagName;
     }
 
     private File toCsvFile(List<TagRankingVo> tagRankingVoList) throws IOException {

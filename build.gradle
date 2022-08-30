@@ -15,7 +15,15 @@ buildscript {
 }
 
 plugins {
-    id "com.gorylenko.gradle-git-properties" version "$gradleGitPropertiesPluginVersion" apply false
+    id "org.sonarqube" version "$sonarqubeVersion"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "ygtang-server"
+        property "sonar.organization", "yeonggamt"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 subprojects {
@@ -23,6 +31,11 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
     apply plugin: 'java-library'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "$jacocoVersion"
+    }
 
     group = 'com.depromeet.inspiration'
     version = '0.0.1'
@@ -49,5 +62,14 @@ subprojects {
     }
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            csv.required = false
+            html.required = false
+        }
     }
 }

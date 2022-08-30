@@ -8,8 +8,6 @@ import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class TagService {
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "tag", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
     public Page<TagResponseVo> findTags(Pageable pageable, Long memberId) {
         Member member = memberService.findById(memberId);
         return tagRepository.findAllByMember(member, pageable)
@@ -48,7 +45,6 @@ public class TagService {
                             .map(TagResponseVo::from);
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public TagResponseVo addTag(TagAddRequestVo requestVo, Long memberId) {
         Member member = memberService.findById(memberId);
         if (tagRepository.findAllByMemberAndContent(member, requestVo.getContent()).isPresent()) {
@@ -65,7 +61,6 @@ public class TagService {
                             .orElseThrow(ResourceNotFoundException::new);
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public void removeTag(Long id, Long memberId) {
         Tag tag = tagRepository.findById(id)
                                .orElseThrow(ResourceNotFoundException::new);
@@ -76,7 +71,6 @@ public class TagService {
         tagRepository.delete(tag);
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public void removeAllTag(Long memberId) {
         Member member = memberService.findById(memberId);
 
