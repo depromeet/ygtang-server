@@ -1,7 +1,6 @@
 package inspiration.v1.member;
 
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @SuppressWarnings("ClassCanBeRecord")

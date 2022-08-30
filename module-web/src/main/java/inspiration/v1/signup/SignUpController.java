@@ -49,7 +49,7 @@ public class SignUpController {
 
     @GetMapping("/nicknames/{nickname}/exists")
     @ApiOperation(value = "닉네임 중복 확인", notes = "중복된 닉네임이 있는지 검사합니다.")
-    public ResultResponse<?> checkNickname(@PathVariable String nickname) {
+    public ResultResponse<Object> checkNickname(@PathVariable String nickname) {
         signupService.checkNickName(nickname);
         return ResultResponse.from("사용할 수 있는 닉네임입니다.");
     }

@@ -15,7 +15,7 @@ public class ResultResponse<T> {
         this.message = message;
     }
 
-    public static ResultResponse<?> from(String message) {
+    public static ResultResponse<Object> from(String message) {
         return new ResultResponse<>(message);
     }
 

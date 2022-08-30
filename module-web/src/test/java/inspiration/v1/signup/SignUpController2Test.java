@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TestRedisConfiguration.class)
 @AutoConfigureMockMvc
 @Transactional
-public class SignUpControllerTest2 {
+class SignUpController2Test {
     private static final String EMAIL = "localpart@domain.com";
     private static final String NICKNAME = "nickname";
     @Autowired

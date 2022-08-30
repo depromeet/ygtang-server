@@ -84,7 +84,7 @@ public class InspirationController {
             @ApiResponse(code = 201, message = "정상적으로 등록되었습니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다.")
     })
-    public ResponseEntity<?> inspirationAdd(
+    public ResponseEntity<Object> inspirationAdd(
             @ModelAttribute @Valid InspirationAddRequest request,
             @ApiIgnore @AuthenticationPrincipal Long memberId
     ) {
@@ -104,7 +104,7 @@ public class InspirationController {
             @ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<?> inspirationModify(
+    public ResponseEntity<Object> inspirationModify(
             HttpServletRequest httpServletRequest,
             @RequestBody @Valid InspirationModifyRequest request,
             @ApiIgnore @AuthenticationPrincipal Long memberId
@@ -123,7 +123,7 @@ public class InspirationController {
             @ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다. | 존재하지 않는 태그ID 입니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<?> inspirationTagging(
+    public ResponseEntity<Object> inspirationTagging(
             HttpServletRequest httpServletRequest,
             @RequestBody @Valid InspirationTagRequest request,
             @ApiIgnore @AuthenticationPrincipal Long memberId
@@ -164,7 +164,7 @@ public class InspirationController {
             @ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다. | 존재하지 않는 태그ID 입니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<?> inspirationUntagging(
+    public ResponseEntity<Object> inspirationUntagging(
             @PathVariable @NotNull Long id,
             @PathVariable @NotNull Long tagId,
             @ApiIgnore @AuthenticationPrincipal Long memberId
@@ -180,7 +180,7 @@ public class InspirationController {
             @ApiResponse(code = 400, message = "존재하지 않는 영감ID 입니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<?> inspirationRemove(
+    public ResponseEntity<Object> inspirationRemove(
             @PathVariable @NotNull Long id,
             @ApiIgnore @AuthenticationPrincipal Long memberId
     ) {

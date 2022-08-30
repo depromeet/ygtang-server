@@ -110,7 +110,7 @@ public class TagController {
             @ApiResponse(code = 400, message = "존재하지 않는 태그ID 입니다."),
             @ApiResponse(code = 401, message = "토큰이 정상적으로 인증되지 않았습니다. | 해당 리소스 수정권한이 없습니다.")
     })
-    public ResponseEntity<?> tagRemove(
+    public ResponseEntity<Object> tagRemove(
             @PathVariable @NotNull Long id,
             @ApiIgnore @AuthenticationPrincipal Long memberId
     ) {

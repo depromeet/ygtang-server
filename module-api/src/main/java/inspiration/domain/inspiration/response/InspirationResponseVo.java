@@ -41,7 +41,7 @@ public class InspirationResponseVo {
                                     .memberResponseVo(MemberResponseVo.of(inspiration.getMember()))
                                     .tagResponseVoList(inspiration.getInspirationTags().stream()
                                                                   .map(it -> TagResponseVo.from(it.getTag()))
-                                                                  .collect(Collectors.toList()))
+                                                                  .toList())
                                     .build();
     }
 

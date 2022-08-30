@@ -52,7 +52,7 @@ public class InspirationAssembler {
                 inspirationResponseVo.getTagResponseVoList()
                                      .stream()
                                      .map(tagAssembler::toTagResponse)
-                                     .collect(Collectors.toList()),
+                                     .toList(),
                 inspirationResponseVo.getType(),
                 inspirationResponseVo.getContent(),
                 inspirationResponseVo.getMemo(),
@@ -74,7 +74,7 @@ public class InspirationAssembler {
                                .map(it -> (Callable<InspirationResponse>) () -> toInspirationResponse(it))
                                .map(it -> threadPoolTaskExecutor.submitListenable(it).completable())
                                .map(CompletableFuture::join)
-                               .collect(Collectors.toList()),
+                               .toList(),
                 inspirationResponseVoPage.getPageable().getPageNumber(),
                 inspirationResponseVoPage.getPageable().getPageSize(),
                 inspirationResponseVoPage.getTotalElements()

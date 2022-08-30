@@ -3,7 +3,6 @@ package inspiration.v1.member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import inspiration.domain.member.Member;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
