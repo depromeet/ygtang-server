@@ -3,6 +3,7 @@ dependencies {
     implementation project(':module-api')
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework:spring-web'
     implementation "org.apache.commons:commons-csv:$apacheCommonsCsvVersion"
     implementation "com.slack.api:slack-api-client:$slackSdkVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
