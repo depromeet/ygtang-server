@@ -6,7 +6,6 @@ import inspiration.enumeration.ExceptionType;
 import inspiration.v1.auth.TokenResponse;
 import inspiration.auth.TokenResponseVo;
 import inspiration.v1.member.ExtraInfoRequest;
-import inspiration.v1.member.SignUpRequest;
 import inspiration.domain.member.request.SignUpRequestVo;
 import inspiration.signup.SignupService;
 import inspiration.v1.auth.AuthAssembler;

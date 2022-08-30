@@ -1,11 +1,8 @@
 package inspiration.v1.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class UpdateNicknameRequest {
     private String nickname;
 }

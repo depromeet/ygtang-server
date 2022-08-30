@@ -1,22 +1,20 @@
 package inspiration.v1;
 
 import inspiration.enumeration.ExceptionType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResultResponse<T> {
 
     private String message;
     private T data;
 
-    private ResultResponse(String message) {
-        this.message = message;
-    }
-
     public static ResultResponse<Object> from(String message) {
-        return new ResultResponse<>(message);
+        return new ResultResponse<>(message, null);
     }
 
     public static <T> ResultResponse<T> success(T data) {

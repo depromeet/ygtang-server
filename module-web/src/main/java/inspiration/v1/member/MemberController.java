@@ -1,6 +1,5 @@
 package inspiration.v1.member;
 
-import inspiration.auth.AuthService;
 import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.member.MemberService;
 import inspiration.domain.member.response.MemberInfoVo;

@@ -1,4 +1,4 @@
-package inspiration.v1.member;
+package inspiration.v1.signup;
 
 import lombok.*;
 

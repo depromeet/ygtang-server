@@ -2,7 +2,6 @@ package inspiration.v1.signup;
 
 import inspiration.v1.member.ExtraInfoRequest;
 import inspiration.domain.member.request.ExtraInfoRequestVo;
-import inspiration.v1.member.SignUpRequest;
 import inspiration.domain.member.request.SignUpRequestVo;
 import org.springframework.stereotype.Component;
 

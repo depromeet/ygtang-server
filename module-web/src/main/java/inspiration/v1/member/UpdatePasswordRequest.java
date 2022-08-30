@@ -1,14 +1,11 @@
 package inspiration.v1.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class UpdatePasswordRequest {
 
     @NotBlank(message = "올바른 비밀번호를 입력해주세요.")

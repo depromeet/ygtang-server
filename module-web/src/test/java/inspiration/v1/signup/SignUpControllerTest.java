@@ -6,7 +6,6 @@ import inspiration.domain.emailauth.SignUpEmailSendService;
 import inspiration.v1.auth.SendEmailRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
-import inspiration.v1.member.SignUpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
