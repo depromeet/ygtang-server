@@ -38,10 +38,6 @@ cloud:
       secret-key:
     region:
       static:
-    s3:
-      bucket:
-    stack:
-      auto: false
 
 logging:
   pattern:
