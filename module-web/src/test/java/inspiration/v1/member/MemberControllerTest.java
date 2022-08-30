@@ -68,7 +68,6 @@ class MemberControllerTest {
         MvcResult signUpResult = signUpApiTestHelper.signUp(EMAIL, NICKNAME, PASSWORD);
         var response = MvcResultHelper.parse(
                 signUpResult,
-                new ObjectMapper(),
                 new TypeReference<ResultResponse<TokenResponse>>() {
                 }
         );

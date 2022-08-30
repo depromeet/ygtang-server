@@ -12,18 +12,16 @@ public class MvcResultHelper {
 
     public static <T> T parse(
             MvcResult mvcResult,
-            ObjectMapper objectMapper,
             Class<T> clazz
     ) throws IOException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), clazz);
+        return new ObjectMapper().readValue(mvcResult.getResponse().getContentAsByteArray(), clazz);
     }
 
     public static <T> T parse(
             MvcResult mvcResult,
-            ObjectMapper objectMapper,
             TypeReference<T> typeReference
     ) throws IOException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), typeReference);
+        return new ObjectMapper().readValue(mvcResult.getResponse().getContentAsByteArray(), typeReference);
     }
 
 }
