@@ -21,14 +21,14 @@
 
     <springProfile name="local">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
     <springProfile name="dev">
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="FILE" />
             <appender-ref ref="ASYNC_SLACK"/>
         </root>
