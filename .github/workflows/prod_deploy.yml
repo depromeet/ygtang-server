@@ -17,25 +17,9 @@ jobs:
     steps: 
       - name: Checkout 
         uses: actions/checkout@v2 
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1 
-        with: 
-          java-version: 17
-          
-      - name: Grant execute permission for gradlew 
-        run: chmod +x gradlew 
-        shell: bash 
-        
-      - name: Build with Gradle 
-        run: ./gradlew build 
-        shell: bash
 
       - name: Make Directory for deliver
         run: mkdir deploy
-
-      - name: Copy Jar
-        run: cp ./module-web/build/libs/*.jar ./deploy/
 
       # appspec.yml Copy
       - name: Copy appspec
@@ -43,9 +27,7 @@ jobs:
 
       # Dockerfile Copy
       - name: Copy Dockerfile
-        run: |
-          cp ./dockerfile ./deploy/
-          cp ./docker-compose.yml ./deploy/
+        run: cp ./docker-compose.yml ./deploy/
 
       # script file Copy
       - name: Copy shell
@@ -53,16 +35,21 @@ jobs:
           mkdir deploy/scripts
           cp ./scripts/* ./deploy/scripts/
 
-      - name: Make zip file 
+      - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip ./deploy/
-        shell: bash 
+        shell: bash
 
-      - name: Configure AWS credentials 
-        uses: aws-actions/configure-aws-credentials@v1 
-        with: 
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-          aws-region: ${{ secrets.AWS_REGION }} 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup CodeBuild
+        uses: aws-actions/aws-codebuild-run-build@v1.0.3
+        with:
+          project-name: ygtang-prod-build
           
       - name: Upload to S3 
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
