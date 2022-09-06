@@ -10,4 +10,4 @@ services:
     volumes:
       - "${YGTANG_LOG_DIR}:/logs"
     environment:
-      - "JAVA_OPTS=${JAVA_OPTS}"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dspring.profiles.active=${ACTIVE} -Duser.timezone=Asia/Seoul -Djasypt.encryptor.password=${ENC_PASSWORD} -Dserver.tomcat.accesslog.enabled=true -Dserver.tomcat.basedir=/ -Dlogging.level.org.apache.catalina.core=OFF -Dlogging.file.name=/logs/spring.log"
