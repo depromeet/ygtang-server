@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -123,7 +123,7 @@ public class InspirationService {
 
     @Transactional(readOnly = true)
     public RestPage<InspirationResponse> findInspirationsByTags(List<Long> tagIds, List<InspirationType> types,
-                                                                LocalDateTime createdDateTimeFrom, LocalDateTime createdDateTimeTo,
+                                                                LocalDate createdDateTimeFrom, LocalDate createdDateTimeTo,
                                                                 Long memberId, Pageable pageable) {
 
         Page<Inspiration> inspirationPage = inspirationRepository.findDistinctByMemberIdAndTagIdInAndTypeAndCreatedDateTimeBetween(memberId, tagIds, types, createdDateTimeFrom, createdDateTimeTo, pageable);

@@ -10,7 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -27,8 +28,8 @@ public class InspirationRepositoryImpl extends QuerydslRepositorySupport impleme
             Long memberId,
             Collection<Long> tagIds,
             Collection<InspirationType> inspirationTypes,
-            LocalDateTime createdDateTimeFrom,
-            LocalDateTime createdDateTimeTo,
+            LocalDate createdDateTimeFrom,
+            LocalDate createdDateTimeTo,
             Pageable pageable
     ) {
         BooleanExpression expression = qInspiration.member.id.eq(memberId);
@@ -39,10 +40,10 @@ public class InspirationRepositoryImpl extends QuerydslRepositorySupport impleme
             expression = expression.and(qInspiration.type.in(inspirationTypes));
         }
         if (createdDateTimeFrom != null) {
-            expression = expression.and(qInspiration.createdDateTime.goe(createdDateTimeFrom));
+            expression = expression.and(qInspiration.createdDateTime.goe(createdDateTimeFrom.atStartOfDay()));
         }
         if (createdDateTimeTo != null) {
-            expression = expression.and(qInspiration.createdDateTime.lt(createdDateTimeTo));
+            expression = expression.and(qInspiration.createdDateTime.loe(createdDateTimeTo.atTime(LocalTime.MAX)));
         }
 
         JPQLQuery<Inspiration> query = from(qInspiration)

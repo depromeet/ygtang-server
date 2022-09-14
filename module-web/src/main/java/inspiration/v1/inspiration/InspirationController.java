@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -111,8 +111,8 @@ public class InspirationController {
     })
     public ResponseEntity<ResultResponse> findInspirationByTag(Pageable pageable, @RequestBody List<Long> tagIds,
                                                                @RequestParam(required = false) List<InspirationType> types,
-                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdDateTimeFrom,
-                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdDateTimeTo,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDateTimeFrom,
+                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDateTimeTo,
                                                                @ApiIgnore @AuthenticationPrincipal Long memberId) {
         Page<InspirationResponse> inspirationResponsePage = inspirationService.findInspirationsByTags(tagIds, types, createdDateTimeFrom, createdDateTimeTo, memberId, pageable);
 
