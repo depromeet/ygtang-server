@@ -91,6 +91,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void addArgumentResolvers(List argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
         argumentResolvers.add(new PageableHandlerMethodArgumentResolver());

@@ -3,7 +3,7 @@ package inspiration.domain.inspiration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 
 public interface InspirationRepositoryCustom {
@@ -11,8 +11,8 @@ public interface InspirationRepositoryCustom {
             Long memberId,
             Collection<Long> tagIds,
             Collection<InspirationType> inspirationTypes,
-            LocalDateTime createdDateTimeFrom,
-            LocalDateTime createdDateTimeTo,
+            LocalDate createdDateTimeFrom,
+            LocalDate createdDateTimeTo,
             Pageable pageable
     );
 }

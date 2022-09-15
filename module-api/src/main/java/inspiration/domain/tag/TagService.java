@@ -27,7 +27,6 @@ public class TagService {
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "tag", key = "{#memberId, #pageable.pageNumber, #pageable.pageSize}")
     public RestPage<TagResponse> findTags(Pageable pageable, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -54,7 +53,6 @@ public class TagService {
         return new RestPage<>(tagPage.map(TagResponse::from));
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public TagResponse addTag(TagAddRequest request, Long memberId) {
 
         Member member = memberService.findById(memberId);
@@ -74,7 +72,6 @@ public class TagService {
                                 .orElseThrow(ResourceNotFoundException::new);
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public void removeTag(Long id, Long memberId) {
         Tag tag = tagRepository.findById(id)
                                 .orElseThrow(ResourceNotFoundException::new);
@@ -85,7 +82,6 @@ public class TagService {
         tagRepository.delete(tag);
     }
 
-    @CacheEvict(value = "tag", allEntries = true)
     public void removeAllTag(Long memberId) {
         Member member = memberService.findById(memberId);
 

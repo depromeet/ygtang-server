@@ -4,10 +4,11 @@
 TARGET_URL=localhost
 APP_PATH=/home/ubuntu/app/inspiration
 
+export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
+
 echo "> Start health check of WAS at '${TARGET_URL}:${PORT}' ..."
 
-for RETRY_COUNT in 1 2 3 4 5 6 7 8 9 10
-do
+for RETRY_COUNT in 1 2 3 4 5 6 7 8 9 10; do
   echo "> #${RETRY_COUNT} trying..."
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${TARGET_URL}:"${PORT}"/health)
 
