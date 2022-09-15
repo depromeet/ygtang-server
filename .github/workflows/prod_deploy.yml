@@ -49,7 +49,7 @@ jobs:
       - name: Setup CodeBuild
         uses: aws-actions/aws-codebuild-run-build@v1.0.3
         with:
-          project-name: ygtang-prod-build
+          project-name: ygtang-build-production
           
       - name: Upload to S3 
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
