@@ -7,4 +7,4 @@ ygtang:
       driver-class-name: com.mysql.cj.jdbc.Driver
   slack:
     channel:
-      report: "#monitoring-yg"
+      report: "#noti-business-report"
