@@ -10,15 +10,11 @@ import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.PostNotFoundException;
 import inspiration.exception.RefreshTokenException;
-import inspiration.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class AuthService {
 
     private final JwtProvider jwtProvider;
-    private final StringRedisTemplate redisTemplate;
-    private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    private final String refreshTokenKey = "refreshToken : ";
-    private final String accessTokenKey = "accessToken : ";
     private final String issueToken = "refreshToken : ";
 
     @Transactional
@@ -63,33 +55,11 @@ public class AuthService {
     }
 
     private String resolveAccessToken(Long memberId) {
-        String accessToken = redisService.getData(accessTokenKey + memberId);
-        boolean isValid = accessToken != null && jwtProvider.resolveMemberId(accessToken).isPresent();
-        if (isValid) {
-            return accessToken;
-        }
-        String createdAccessToken = jwtProvider.createAccessToken(memberId);
-        saveAccessToken(memberId, createdAccessToken);
-        return createdAccessToken;
-    }
-
-    private void saveAccessToken(Long memberId, String accessToken) {
-        redisTemplate.opsForValue().set(accessTokenKey + memberId, accessToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+        return jwtProvider.createAccessToken(memberId);
     }
 
     private String resolveRefreshToken(Long memberId) {
-        String refreshToken = redisService.getData(refreshTokenKey + memberId);
-        boolean isValid = refreshToken != null && jwtProvider.resolveMemberId(refreshToken).isPresent();
-        if (isValid) {
-            return refreshToken;
-        }
-        String createdRefreshToken = jwtProvider.createRefreshToken(memberId);
-        saveRefreshToken(memberId, createdRefreshToken);
-        return createdRefreshToken;
-    }
-
-    private void saveRefreshToken(Long memberId, String refreshToken) {
-        redisTemplate.opsForValue().set(refreshTokenKey + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
+        return jwtProvider.createRefreshToken(memberId);
     }
 
     @Transactional
@@ -99,20 +69,7 @@ public class AuthService {
         Member member = memberRepository.findById(memberId)
                                         .orElseThrow(() -> new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage()));
 
-        String refreshTokenInRedis = redisTemplate.opsForValue().get(refreshTokenKey + member.getId());
-
-        if (refreshTokenInRedis == null) {
-            throw new RefreshTokenException();
-        }
-
-        if (!refreshTokenInRedis.equals(refreshToken)) {
-            throw new RefreshTokenException(ExceptionType.VALID_NOT_REFRESH_TOKEN.getMessage());
-        }
-
         TokenResponse newTokenResponse = jwtProvider.createTokenDto(member.getId());
-
-        saveRefreshToken(member.getId(), newTokenResponse.getRefreshToken());
-        saveAccessToken(member.getId(), newTokenResponse.getAccessToken());
 
         return ResultResponse.of(issueToken, newTokenResponse);
     }

@@ -2,14 +2,10 @@ package inspiration.domain.emailauth;
 
 import inspiration.ResultResponse;
 import inspiration.enumeration.ExceptionType;
-import inspiration.enumeration.ExpireTimeConstants;
-import inspiration.enumeration.RedisKey;
-import inspiration.exception.EmailAuthenticatedTimeExpiredException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.domain.member.MemberRepository;
 import inspiration.domain.passwordauth.PasswordAuth;
 import inspiration.domain.passwordauth.PasswordAuthRepository;
-import inspiration.redis.RedisService;
 import inspiration.utils.AuthTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +22,6 @@ public class EmailAuthService {
     private final PasswordAuthRepository passwordAuthRepository;
     private final SignUpEmailSendService signUpEmailSendService;
     private final ResetPasswordForAuthSendService resetPasswordForAuthSendService;
-    private final RedisService redisService;
 
     @Transactional
     public void signUpEmailSend(String email) {
@@ -39,22 +34,11 @@ public class EmailAuthService {
 
         String authToken = AuthTokenUtil.getAuthToken();
 
-        redisService.setDataWithExpiration(RedisKey.EAUTH_SIGN_UP.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
-
         signUpEmailSendService.send(email, authToken);
     }
 
     @Transactional
     public void authenticateEmailOfSignUp(String email) {
-
-        String expiredKey = RedisKey.EAUTH_SIGN_UP.getKey() + email;
-        log.info(email);
-
-        if (redisService.getData(expiredKey) == null) {
-            throw new EmailAuthenticatedTimeExpiredException();
-        }
-
-        redisService.deleteData(expiredKey);
 
         emailAuthRepository.save(
                 EmailAuth.builder()
@@ -80,21 +64,11 @@ public class EmailAuthService {
 
         String authToken = AuthTokenUtil.getAuthToken();
 
-        redisService.setDataWithExpiration(RedisKey.EAUTH_RESET_PASSWORD.getKey() + email, authToken, ExpireTimeConstants.expireSingUpAccessTokenTime);
-
         resetPasswordForAuthSendService.send(email, authToken);
     }
 
     @Transactional
     public void authenticateEmailOfResetPasswordForAuth(String email) {
-
-        String expiredKey = RedisKey.EAUTH_RESET_PASSWORD.getKey() + email;
-
-        if (redisService.getData(expiredKey) == null) {
-            throw new EmailAuthenticatedTimeExpiredException();
-        }
-
-        redisService.deleteData(expiredKey);
 
         passwordAuthRepository.save(
                 PasswordAuth.builder()

@@ -3,10 +3,7 @@ package inspiration.domain.tag.request;
 import inspiration.domain.tag.Tag;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,8 +11,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @ApiModel("Sample Request")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class TagAddRequest {
 
     @ApiModelProperty(example = "태그등록 테스트", value = "태그등록 테스트")

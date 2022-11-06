@@ -1,18 +1,14 @@
 package inspiration.domain.inspiration.request;
 
 import io.swagger.annotations.ApiModel;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
 
 @Getter
 @ApiModel("Sample Request InspirationTagRequest")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class InspirationTagRequest {
 
     @NotNull(message = "영감 id는 필수 입력 입니다.")

@@ -3,9 +3,6 @@ spring:
     url: ENC(DiuH5gQbIMnSu4B1O0TC+AQrUHJGyjA+lkVRRuFmEzVVHDDlKo6fKZEJX+UibptIx415dJbnuPPLwKap1WzTNmNXvFEWcvAgoGw8WAXQoF41SbPuWxzhIDg5mg/PhvrCCtC7UCsOpel1EqcTFn+49nPZP59vIlvAqgzQCxfyYqh4dn1NF/qs2HesVCrUefPQorG/yk1LI1c5rfhnWQhjuxdWDi7fVkISxM15csTifiqTOhcziVkaWkd/QnnD3Z3YJBUTTkykJ7dUQpVluX1SNZWsKGtBNKjYtqS2T6BzbdH7m1jtyQp4XzrH+SoPrZjSPEhHCQ6XkG3JMg40ygY62Q==)
     user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
     password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
-  redis:
-    host: ENC(zrBtSslGn/+y5jh5sWNaA3uPSGlRQSejw3wfXPItaZXdM2clW5PAlVYQ8BQOS8Vz)
-    port: 6379
   mail:
     sign-up-email-send-mail: ENC(zyANvPjCAYiH+b6CSKvf0B3vMD1eU7NaOfqeUWVs2Mj4eCMvDa7Y6qpAV5h02jbihEC/I6zmjIZqsPu1VTdUadTTuVPVcLyqTJGlRYS5rLlEcXGhZ4zg+Nu8+3S8otsn)
     reset-password-for-auth-send-mail: ENC(TtTKtnwv64ttIONkMuT1SF6r/iU2NWV+hI17DTupgugbuj50RsiIsEXowUUmFoVz7fh01FBNkq0dKhkaDEK+BLWtRchs9Z+koSAMSNqvGhby2+8rHzRfIL3FMTzEGeHt)

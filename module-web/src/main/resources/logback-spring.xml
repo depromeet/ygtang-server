@@ -19,7 +19,7 @@
         </filter>
     </appender>
 
-    <springProfile name="local">
+    <springProfile name="local,test">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
@@ -41,4 +41,5 @@
             <appender-ref ref="ASYNC_SLACK"/>
         </root>
     </springProfile>
+
 </configuration>

@@ -12,10 +12,6 @@ spring:
   flyway:
     enabled: false
 
-  redis:
-    host: 127.0.0.1
-    port: 6379
-
   mail:
     host: mailHost
     port: 587
@@ -27,9 +23,6 @@ spring:
 
   jwt:
     secret:
-
-  cache:
-    type: redis
 
 cloud:
   aws:
