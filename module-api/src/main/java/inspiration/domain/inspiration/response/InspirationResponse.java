@@ -11,8 +11,10 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Builder
@@ -47,9 +49,9 @@ public class InspirationResponse {
                                     .createdDatetime(inspiration.getCreatedDateTime())
                                     .updatedDatetime(inspiration.getUpdatedDateTime())
                                     .memberResponse(MemberResponse.of(inspiration.getMember()))
-                                    .tagResponses(inspiration.getInspirationTags().stream()
-                                                                                .map(inspirationTag -> TagResponse.from(inspirationTag.getTag()))
-                                                                                .collect(Collectors.toList()))
+                                    .tagResponses(Stream.ofNullable(inspiration.getInspirationTags())
+                                                        .flatMap(Collection::stream)
+                                                        .map(inspirationTag -> TagResponse.from(inspirationTag.getTag())).collect(Collectors.toList()))
                                     .openGraphResponse(openGraphResponse)
                                     .build();
     }

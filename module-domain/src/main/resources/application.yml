@@ -15,8 +15,6 @@ spring:
     password: ENC(Q3i86abe2zQVkwIl4P/VWxGJqw4SdyJ6U8+QKUJysdsNUZiOYVToeu/Tz7oAJjIA93kZXQ/ZEVAVyaTnjOn85A==)
   jwt:
     secret: ENC(88bpwlUo++X0KVfhWI04B7hxT9Yi+2D4fuz+lmoVUD2uqtDzinqHZWkkrmoC7F+k)
-  cache:
-    type: redis
 
 cloud:
   aws:

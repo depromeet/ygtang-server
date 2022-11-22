@@ -4,10 +4,7 @@ import inspiration.domain.inspiration.Inspiration;
 import inspiration.domain.inspiration.InspirationType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -16,8 +13,7 @@ import java.util.List;
 
 @Getter
 @ApiModel("Sample Request InspirationAddRequest")
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
 public class InspirationAddRequest {
 
     @ApiModelProperty( notes = "IMAGE | LINK | TEXT")

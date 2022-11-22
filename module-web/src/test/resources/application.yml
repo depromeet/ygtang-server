@@ -9,9 +9,6 @@ spring:
       hibernate:
         default_batch_fetch_size: 100
     database-platform: org.hibernate.dialect.H2Dialect
-  redis:
-    host: 127.0.0.1
-    port: 6379
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,8 +23,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  cache:
-    type: redis
   flyway:
     enabled: false
 cloud:

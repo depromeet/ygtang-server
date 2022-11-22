@@ -5,7 +5,6 @@ import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.TokenResponse;
 import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.enumeration.ExceptionType;
-import inspiration.enumeration.ExpireTimeConstants;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
 import inspiration.domain.member.Member;
@@ -13,12 +12,10 @@ import inspiration.domain.member.MemberRepository;
 import inspiration.domain.member.request.SignUpRequest;
 import inspiration.domain.member.request.ExtraInfoRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +25,6 @@ public class SignupService {
     private final EmailAuthRepository emailAuthRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final StringRedisTemplate redisTemplate;
     private final String REFRESH_TOKEN_KEY = "refreshToken : ";
 
     @Transactional
@@ -41,8 +37,6 @@ public class SignupService {
 
         Member member = memberRepository.save(request.toEntity(passwordEncoder));
         TokenResponse tokenResponse = jwtProvider.createTokenDto(member.getId());
-        saveRefreshToken(member.getId(), tokenResponse.getRefreshToken());
-
         return ResultResponse.of(REFRESH_TOKEN_KEY, tokenResponse);
     }
 
@@ -99,10 +93,6 @@ public class SignupService {
         if (memberRepository.existsByEmail(email)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
         }
-    }
-
-    private void saveRefreshToken(Long memberId, String refreshToken) {
-        redisTemplate.opsForValue().set(REFRESH_TOKEN_KEY + memberId, refreshToken, ExpireTimeConstants.refreshTokenValidMillisecond, TimeUnit.MILLISECONDS);
     }
 
 }
