@@ -3,8 +3,6 @@ package inspiration.v1.inspiration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.ResultResponse;
-import inspiration.TestMysqlConfiguration;
-import inspiration.auth.AuthService;
 import inspiration.auth.TokenResponse;
 import inspiration.domain.emailauth.EmailAuthRepository;
 import inspiration.domain.inspiration.InspirationType;
@@ -36,9 +34,11 @@ import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = {TestMysqlConfiguration.class})
+@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
@@ -47,8 +47,6 @@ class InspirationControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
-    private AuthService authService;
     @MockBean
     private EmailAuthRepository emailAuthRepository;
 
