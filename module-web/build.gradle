@@ -25,3 +25,7 @@ jar {
     enabled = false
     archivesBaseName = 'inspiration'
 }
+
+gitProperties {
+    failOnNoGitDirectory = false
+}
