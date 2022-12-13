@@ -1,3 +1,7 @@
+plugins {
+    id "com.gorylenko.gradle-git-properties" version "$gradleGitPropertiesPluginVersion"
+}
+
 dependencies {
     implementation project(':module-domain')
     implementation project(':module-api')
