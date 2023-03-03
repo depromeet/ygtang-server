@@ -16,10 +16,25 @@ management:
   server:
     port: 8081
   endpoints:
+    enabled-by-default: false
     web:
       exposure:
-        include: "health,info"
-
+        include: health,info,prometheus
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.9,0.95,0.99
+      maximum-expected-value:
+        http.server.requests: 10s
 logging:
   level:
     org:

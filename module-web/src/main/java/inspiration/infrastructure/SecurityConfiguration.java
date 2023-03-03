@@ -113,7 +113,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/swagger/**",
                 "/health",
                 "/actuator",
-                "/actuator/**"
+                "/actuator/**",
+                "/error"
         );
     }
 
