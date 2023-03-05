@@ -11,6 +11,7 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,6 +29,9 @@ public class TagRankingTasklet implements Tasklet {
     private final InspirationTagRepository inspirationTagRepository;
     private final TagGroupService googleSheetTagGroupService;
     private final SlackService slackService;
+
+    @Value("ygtang.temporary-directory-path")
+    private String temporaryDirectoryPath;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -87,7 +91,7 @@ public class TagRankingTasklet implements Tasklet {
     }
 
     private File toCsvFile(List<TagRankingVo> tagRankingVoList) throws IOException {
-        File file = File.createTempFile("tagRanking", "csv", new File("/ygtang"));
+        File file = File.createTempFile("tagRanking", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()

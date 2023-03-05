@@ -13,6 +13,7 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,9 @@ public class MemberCountJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final SlackService slackService;
+
+    @Value("ygtang.temporary-directory-path")
+    private String temporaryDirectoryPath;
 
     @Bean
     public Job memberDailyCountJob(Step memberDailyCountStep) {
@@ -96,7 +100,7 @@ public class MemberCountJobConfig {
     }
 
     private File toDailyCsvFile(Map<LocalDate, Integer> dailyCountMap) throws IOException {
-        File file = File.createTempFile("memberDailyCount", "csv", new File("/ygtang"));
+        File file = File.createTempFile("memberDailyCount", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()
@@ -107,7 +111,7 @@ public class MemberCountJobConfig {
                         try {
                             printer.printRecord(it.getKey(), it.getValue());
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            throw new IllegalStateException(e);
                         }
                     }
             );
@@ -116,7 +120,7 @@ public class MemberCountJobConfig {
     }
 
     private File toMonthlyCsvFile(Map<YearMonth, Integer> monthlyCountMap) throws IOException {
-        File file = File.createTempFile("memberMonthlyCount", "csv", new File("/ygtang"));
+        File file = File.createTempFile("memberMonthlyCount", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()
@@ -127,7 +131,7 @@ public class MemberCountJobConfig {
                         try {
                             printer.printRecord(it.getKey(), it.getValue());
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            throw new IllegalStateException(e);
                         }
                     }
             );
