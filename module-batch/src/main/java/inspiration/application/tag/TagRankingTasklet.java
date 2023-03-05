@@ -87,7 +87,7 @@ public class TagRankingTasklet implements Tasklet {
     }
 
     private File toCsvFile(List<TagRankingVo> tagRankingVoList) throws IOException {
-        File file = File.createTempFile("tagRanking", "csv");
+        File file = File.createTempFile("tagRanking", "csv", new File("/ygtang"));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()

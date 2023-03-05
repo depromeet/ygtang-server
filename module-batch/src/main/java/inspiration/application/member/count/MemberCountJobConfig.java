@@ -96,7 +96,7 @@ public class MemberCountJobConfig {
     }
 
     private File toDailyCsvFile(Map<LocalDate, Integer> dailyCountMap) throws IOException {
-        File file = File.createTempFile("memberDailyCount", "csv");
+        File file = File.createTempFile("memberDailyCount", "csv", new File("/ygtang"));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()
@@ -116,7 +116,7 @@ public class MemberCountJobConfig {
     }
 
     private File toMonthlyCsvFile(Map<YearMonth, Integer> monthlyCountMap) throws IOException {
-        File file = File.createTempFile("memberMonthlyCount", "csv");
+        File file = File.createTempFile("memberMonthlyCount", "csv", new File("/ygtang"));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
         CSVFormat csvFormat = CSVFormat.Builder.create()
