@@ -7,5 +7,5 @@ ygtang:
 
 server:
   tomcat:
-  accesslog:
-    enabled: false
+    accesslog:
+      enabled: false

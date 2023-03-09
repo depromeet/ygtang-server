@@ -1,6 +1,7 @@
 package inspiration.domain.date;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @EntityListeners(value = {AuditingEntityListener.class})
+@ToString
 @MappedSuperclass
 public abstract class BaseTimeEntity {
 
