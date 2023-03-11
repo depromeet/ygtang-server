@@ -7,12 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +20,12 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
-    private final RestTemplate restTemplate;
     @Override
     public List<OgMetaElement> getOgMetaElementsFrom(String url) {
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
-            if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
-                throw new IllegalArgumentException("Failed to connect. url: " + url);
-            }
-            if (!MediaType.TEXT_HTML.isCompatibleWith(responseEntity.getHeaders().getContentType())) {
-                throw new IllegalArgumentException("Failed to get html. url: " + url);
-            }
-
-            final Document document = Jsoup.parse(responseEntity.getBody());
+            final Document document = Jsoup.connect(url)
+                                           .timeout(2000)
+                                           .get();
             final Elements metaElements = document.select("meta");
             List<OgMetaElement> ogMetaElements = metaElements.stream()
                                                              .filter(m -> m.attr("property").startsWith("og:"))
@@ -47,7 +38,7 @@ public class YgtangOgMetaElementHtmlParser implements OgMetaElementHtmlParser {
             addDescriptionIfNotExists(ogMetaElements, document);
             addTitleIfNotExists(ogMetaElements, document);
             return ogMetaElements;
-        } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException | IOException e) {
             log.warn("Failed to parse OpenGraph Metadata. url:{}", url, e);
             return Collections.emptyList();
         }
