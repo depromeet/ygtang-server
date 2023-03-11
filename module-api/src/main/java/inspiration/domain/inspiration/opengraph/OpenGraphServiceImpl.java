@@ -2,15 +2,18 @@ package inspiration.domain.inspiration.opengraph;
 
 import com.github.siyoon210.ogparser4j.OgParser;
 import com.github.siyoon210.ogparser4j.OpenGraph;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OpenGraphServiceImpl implements OpenGraphService {
+    private final YgtangOgMetaElementHtmlParser ygtangOgMetaElementHtmlParser;
+
     public Optional<OpenGraphVo> getMetadata(String url) {
-        // FIXME: DI 적용 (모듈 의존성 개선 후 api 모듈에서 bean 생성해야함)
-        OgParser ogParser = new OgParser(new YgtangOgMetaElementHtmlParser());
+        OgParser ogParser = new OgParser(ygtangOgMetaElementHtmlParser);
         OpenGraph openGraph = ogParser.getOpenGraphOf(url);
         if (openGraph.getAllProperties().isEmpty()) {
             return Optional.empty();
