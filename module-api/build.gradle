@@ -15,7 +15,7 @@ dependencies {
     implementation "com.amazonaws:aws-java-sdk-s3:${awsJavaSdkVersion}"
 
     implementation 'com.github.siyoon210:ogparser4j:1.0.1'
-    implementation 'org.jsoup:jsoup:1.15.1'
+    implementation "org.jsoup:jsoup:${jsoupVersion}"
 
     implementation("com.slack.api:slack-api-client:1.22.3")
 }
