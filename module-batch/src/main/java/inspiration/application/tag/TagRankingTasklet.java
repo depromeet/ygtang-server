@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -30,7 +32,7 @@ public class TagRankingTasklet implements Tasklet {
     private final TagGroupService googleSheetTagGroupService;
     private final SlackService slackService;
 
-    @Value("ygtang.temporary-directory-path")
+    @Value("${ygtang.temporary-directory-path}")
     private String temporaryDirectoryPath;
 
     @Override
@@ -91,6 +93,7 @@ public class TagRankingTasklet implements Tasklet {
     }
 
     private File toCsvFile(List<TagRankingVo> tagRankingVoList) throws IOException {
+        createDirectoryIfNotExists(temporaryDirectoryPath);
         File file = File.createTempFile("tagRanking", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
@@ -103,6 +106,13 @@ public class TagRankingTasklet implements Tasklet {
             }
         }
         return file;
+    }
+
+    private void createDirectoryIfNotExists(String directoryPath) throws IOException {
+        Path path = Path.of(directoryPath);
+        if (Files.notExists(path)) {
+            Files.createDirectories(path);
+        }
     }
 
     private void sendFileToSlack(File file) {
