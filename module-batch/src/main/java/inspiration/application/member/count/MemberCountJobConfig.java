@@ -22,6 +22,8 @@ import javax.persistence.EntityManagerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -100,6 +102,7 @@ public class MemberCountJobConfig {
     }
 
     private File toDailyCsvFile(Map<LocalDate, Integer> dailyCountMap) throws IOException {
+        createDirectoryIfNotExists(temporaryDirectoryPath);
         File file = File.createTempFile("memberDailyCount", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
@@ -119,7 +122,16 @@ public class MemberCountJobConfig {
         return file;
     }
 
+    private void createDirectoryIfNotExists(String directoryPath) throws IOException {
+        Path path = Path.of(directoryPath);
+        if (Files.notExists(path)) {
+            Files.createDirectories(path);
+        }
+    }
+
+
     private File toMonthlyCsvFile(Map<YearMonth, Integer> monthlyCountMap) throws IOException {
+        createDirectoryIfNotExists(temporaryDirectoryPath);
         File file = File.createTempFile("memberMonthlyCount", "csv", new File(temporaryDirectoryPath));
         file.deleteOnExit();
         FileWriter out = new FileWriter(file);
