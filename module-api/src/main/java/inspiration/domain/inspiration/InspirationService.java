@@ -25,15 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,6 +51,7 @@ public class InspirationService {
     private final InspirationTagRepository inspirationTagRepository;
     private final TagRepository tagRepository;
     private final OpenGraphService openGraphService;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Transactional(readOnly = true)
     public RestPage<InspirationResponse> findInspirations(Pageable pageable, Long memberId) {
@@ -268,16 +270,19 @@ public class InspirationService {
     }
 
     private RestPage<InspirationResponse> toRestPage(Page<Inspiration> inspirationPage) {
-        final Map<Long, OpenGraphResponse> inspirationOpenGraphMap;
-        inspirationOpenGraphMap = inspirationPage.getContent()
-                       .parallelStream()
-                       .collect(
-                               Collectors.toMap(
-                                       Inspiration::getId,
-                                       it -> getOpenGraphResponse(it.getType(), it.getContent())
-                               )
-                       );
-
+        final Map<Long, OpenGraphResponse> inspirationOpenGraphMap = new ConcurrentHashMap<>();
+        // executor 에 작업 할당
+        final List<CompletableFuture<Void>> completableFutures = inspirationPage.map(
+                inspiration -> CompletableFuture.runAsync(
+                        () -> inspirationOpenGraphMap.put(
+                                inspiration.getId(),
+                                getOpenGraphResponse(inspiration.getType(), inspiration.getContent())
+                        ),
+                        threadPoolTaskExecutor
+                )
+        ).toList();
+        // 비동기 작업 끝날때까지 대기
+        completableFutures.forEach(CompletableFuture::join);
         return new RestPage<>(
                 inspirationPage.stream()
                                .peek(it -> it.setFilePath(getFilePath(it.getType(), it.getContent())))
