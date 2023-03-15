@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public class MemberCountJobConfig {
     static final String JOB_NAME = "member-count-job";
     static final String STEP_NAME = "member-count-step";
-    private static final int CHUNK_SIZE = 1000;
+    private static final int CHUNK_SIZE = 10000;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final SlackService slackService;
