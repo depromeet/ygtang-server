@@ -45,7 +45,7 @@ public class MemberCountJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final SlackService slackService;
 
-    @Value("ygtang.temporary-directory-path")
+    @Value("${ygtang.temporary-directory-path}")
     private String temporaryDirectoryPath;
 
     @Bean
