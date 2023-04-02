@@ -70,7 +70,7 @@ class SignUpControllerTest {
                // then 1
                .andExpect(status().isCreated());
         // then 2
-        Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Member> member = memberRepository.findByEmailAndStatusIsNull(email);
         assertThat(member).isPresent();
         assertThat(member.get().getEmail()).isEqualTo(email);
         assertThat(member.get().getNickname()).isEqualTo("nickname");

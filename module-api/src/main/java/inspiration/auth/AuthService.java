@@ -44,7 +44,7 @@ public class AuthService {
     }
 
     private Member checkEmail(String email) {
-        return memberRepository.findByEmail(email)
+        return memberRepository.findByEmailAndStatusIsNull(email)
                                .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIl_NOT_FOUND.getMessage()));
     }
 

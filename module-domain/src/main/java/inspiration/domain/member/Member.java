@@ -39,6 +39,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = true)
     private String job;
 
+    @Column(nullable = true, length = 1)
+    private Integer status;
+
     public void updatePassword(String password) {
 
         this.password = password;
@@ -58,5 +61,9 @@ public class Member extends BaseTimeEntity {
 
     public boolean isSameMember(Long id) {
         return this.id.equals(id);
+    }
+
+    public void removeMember(){
+        this.status = 1;
     }
 }

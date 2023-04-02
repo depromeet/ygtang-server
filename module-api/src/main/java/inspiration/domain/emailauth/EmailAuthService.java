@@ -50,7 +50,7 @@ public class EmailAuthService {
     @Transactional
     public void resetPasswordForAuthEmailSend(String email) {
 
-        if (!memberRepository.existsByEmail(email)) {
+        if (!memberRepository.existsByEmailAndStatusIsNull(email)) {
             throw new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage());
         }
 
