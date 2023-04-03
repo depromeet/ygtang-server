@@ -18,7 +18,6 @@ public class ExtraInfoRequest {
     private GenderType gender;
 
     @ApiModelProperty( notes = "UNDER_20S | EARLY_20S | LATE_20S | EARLY_30S | OLDER_35")
-    @NotNull(message = "나이는 필수 입력입니다.")
     private AgeGroupType age;
 
     @NotNull(message = "관심 직무는 필수 입력입니다.")
