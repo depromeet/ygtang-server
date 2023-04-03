@@ -28,15 +28,18 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @Column(nullable = true)
+    /**
+     * iOS 에서 나이가 필수값이라 때문에 리젝당함 (2023-04-04)
+     */
+    @Column
     @Enumerated(EnumType.STRING)
-    private AgeGroupType age_group;
+    private AgeGroupType ageGroup;
 
-    @Column(nullable = true)
+    @Column
     private String job;
 
     public void updatePassword(String password) {
@@ -49,10 +52,10 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
-    public void updateExtraInfo(GenderType gender, AgeGroupType age_group, String job) {
+    public void updateExtraInfo(GenderType gender, AgeGroupType ageGroup, String job) {
 
         this.gender = gender;
-        this.age_group = age_group;
+        this.ageGroup = ageGroup;
         this.job = job;
     }
 
