@@ -17,9 +17,7 @@ spring:
     port: 587
     username: username
     password: password
-    sign-up-email-send-mail:
     reset-password-for-auth-send-mail:
-    auth-token:
 
   jwt:
     secret:
@@ -44,3 +42,7 @@ ygtang:
       username: sa
       password:
       driver-class-name: org.h2.Driver
+  server:
+    scheme: http
+    host: localhost
+    port: 8080

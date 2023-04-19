@@ -2,11 +2,12 @@ package inspiration.domain.emailauth;
 
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
-import inspiration.infrastructure.mail.MailProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.mail.internet.MimeMessage;
 
@@ -16,13 +17,27 @@ import javax.mail.internet.MimeMessage;
 public class SignUpEmailSendService implements EmailSendService {
 
     private final JavaMailSender mailSender;
-    private final MailProperties mailProperties;
     private final static String SUBJECT = "이메일 인증";
+
+    @Value("${ygtang.server.scheme}")
+    private String scheme;
+    @Value("${ygtang.server.host}")
+    private String host;
+    @Value("${ygtang.server.port}")
+    private String port;
 
     @Override
     public void send(String email, String authToken) {
 
-        String link = mailProperties.getSignUpEmailSendMail() + email + "&authToken=" + authToken;
+        String link = UriComponentsBuilder.newInstance()
+                                          .scheme(scheme)
+                                          .host(host)
+                                          .port(port)
+                                          .path("/api/v1/auth/email/signup")
+                                          .queryParam("email", email)
+                                          .queryParam("authToken", authToken)
+                                          .build(false)
+                                          .toUriString();
 
         try {
             MimeMessage simpleMailMessage = mailSender.createMimeMessage();
