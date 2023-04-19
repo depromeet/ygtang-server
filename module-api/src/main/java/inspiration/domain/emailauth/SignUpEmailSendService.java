@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.mail.internet.MimeMessage;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class SignUpEmailSendService implements EmailSendService {
                                           .host(host)
                                           .port(port)
                                           .path("/api/v1/auth/email/signup")
-                                          .queryParam("email", email)
+                                          .queryParam("email", URLEncoder.encode(email, StandardCharsets.UTF_8))
                                           .queryParam("authToken", authToken)
                                           .build(false)
                                           .toUriString();
