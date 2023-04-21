@@ -9,7 +9,6 @@ spring:
     user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
     password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
   mail:
-    sign-up-email-send-mail: ENC(v8vfcMSRTQlJR/sRIpLnWAuYzJz0trJL6yKadnmztGC9N6dD1Bo1nh9xMSdFnHZky/TRWW9uf0oVteh6Z57R0YjLYnOEJAyDmCgrv+x5JqLTPlFlCPpVAwCFx29nJc/m)
     reset-password-for-auth-send-mail: ENC(GeC90mA3UZZDdttZYktCwjx5gl00nT+ZGOOlCmT3UuTzwgvnGBqby+LjMl1BVfJ6B0leFjbJVUbkkykNQ0i/9/f6MPYopOgJy0sCaL8QlypSmzJy5Vkq98KTbAu18nsg)
 
 logging:
@@ -31,6 +30,10 @@ ygtang:
       username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
       password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
       driver-class-name: com.mysql.cj.jdbc.Driver
+  server:
+    scheme: https
+    host: ENC(nhcx6FgoC9f1sw8x+IXZxUeA7jVGC00faq6kqZ9qJK5ZgKS/ayDPiY+swiTOrb1e)
+    port: 443
 
 uri:
   webhook: ENC(KSZZjsE2e2j/6aQIb1EFZmIqM+S2qW2hY6/k9X97URbVEUcE6jNH60ZF186hVIpfmx3u4kZ3MgLboXvzId3CCFg3uIovOW5iiEh9T2zwf+wtK7GvcD0DaJ+H+xhRadViI5xoKD1aR6OMcVvDOwJurBVa6BFy0VemoIuSt+nQNYM=)
