@@ -1,23 +1,24 @@
 package inspiration.domain.emailauth;
 
+import inspiration.aws.AwsSesService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.infrastructure.mail.MailProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SignUpEmailSendService implements EmailSendService {
 
-    private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
     private final static String SUBJECT = "이메일 인증";
+
+    private final AwsSesService awsSesService;
 
     @Override
     public void send(String email, String authToken) {
@@ -25,14 +26,9 @@ public class SignUpEmailSendService implements EmailSendService {
         String link = mailProperties.getSignUpEmailSendMail() + email + "&authToken=" + authToken;
 
         try {
-            MimeMessage simpleMailMessage = mailSender.createMimeMessage();
-
-            simpleMailMessage.addRecipients(MimeMessage.RecipientType.TO, email);
-            simpleMailMessage.setSubject(SUBJECT);
-            simpleMailMessage.setText(setHtml(link), "utf-8", "html");
-
-            mailSender.send(simpleMailMessage);
+            awsSesService.send(SUBJECT, setHtml(link), List.of(email));
         } catch (Exception e) {
+            e.printStackTrace();
             log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e.getMessage());
             throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
         }
