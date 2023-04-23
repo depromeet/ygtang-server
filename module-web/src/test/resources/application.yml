@@ -14,9 +14,7 @@ spring:
     port: 587
     username: username
     password: password
-    sign-up-email-send-mail:
     reset-password-for-auth-send-mail:
-    auth-token:
   jwt:
     secret:
   servlet:
@@ -34,10 +32,15 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket:
+    ses:
+      access-key:
+      secret-key:
 
 ygtang:
   server:
-    host: ygtang.server.host
+    scheme: http
+    host: localhost
+    port: 8080
   domain:
     datasource:
       jdbcUrl: jdbc:h2:mem:;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
