@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,9 +49,26 @@ class AuthControllerTest {
                // then 1
                .andExpect(status().isCreated());
         // then 2
-        //String authToken = redisService.getData(RedisKey.EAUTH_SIGN_UP.getKey() + email);
-        //assertThat(authToken).isNotBlank();
-        //verify(signUpEmailSendService).send(any(), any());
+        verify(signUpEmailSendService).send(any(), any());
+    }
+
+    @DisplayName("인증 메일 발송: '+ '문자 포함된 이메일도 허용")
+    @Test
+    void sendEmailForSignup_withPlusCharacter() throws Exception {
+        // given
+        String email = "localpart+1@domain";
+        SendEmailRequest sendEmailRequest = new SendEmailRequest();
+        sendEmailRequest.setEmail(email);
+        doNothing().when(signUpEmailSendService).send(any(), any());
+        // when
+        mockMvc.perform(
+                       post("/api/v1/auth/sends-email/signup")
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(objectMapper.writeValueAsBytes(sendEmailRequest)))
+               // then 1
+               .andExpect(status().isCreated());
+        // then 2
+        verify(signUpEmailSendService).send(any(), any());
     }
 
     @DisplayName("인증 메일 링크 통해 이메일 소유 확인")

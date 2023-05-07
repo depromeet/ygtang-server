@@ -27,15 +27,18 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-    @Column(nullable = true)
+    /**
+     * iOS 에서 나이가 필수값이라 때문에 리젝당함 (2023-04-04)
+     */
+    @Column
     @Enumerated(EnumType.STRING)
     private AgeGroupType ageGroupType;
 
-    @Column(nullable = true)
+    @Column
     private String job;
 
     @Enumerated(value = EnumType.STRING)

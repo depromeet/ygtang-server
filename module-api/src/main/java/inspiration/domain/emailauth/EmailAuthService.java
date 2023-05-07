@@ -29,10 +29,6 @@ public class EmailAuthService {
 
         verifyEmail(email);
 
-        if(email.contains("+")) {
-            throw new PostNotFoundException("잘못된 이메일 형식입니다.");
-        }
-
         String authToken = AuthTokenUtil.getAuthToken();
 
         signUpEmailSendService.send(email, authToken);
