@@ -5,6 +5,7 @@ import inspiration.domain.emailauth.SignUpEmailSendService;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.MemberStatus;
 import inspiration.domain.member.request.SignUpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,7 +71,7 @@ class SignUpControllerTest {
                // then 1
                .andExpect(status().isCreated());
         // then 2
-        Optional<Member> member = memberRepository.findByEmail(email);
+        Optional<Member> member = memberRepository.findByEmailAndMemberStatus(email, MemberStatus.REGISTERED);
         assertThat(member).isPresent();
         assertThat(member.get().getEmail()).isEqualTo(email);
         assertThat(member.get().getNickname()).isEqualTo("nickname");

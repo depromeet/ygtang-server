@@ -41,7 +41,7 @@ public class MemberService {
     @Transactional
     public void resetPasswordEmailSend(String email) {
 
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndMemberStatus(email, MemberStatus.REGISTERED)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         String resetPassword = GetResetPasswordUtil.getResetPassword();
@@ -72,9 +72,7 @@ public class MemberService {
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         emailAuthRepository.deleteByEmail(member.getEmail());
-
-        memberRepository.deleteById(memberId);
-
+        member.removeMember();
     }
 
     private void confirmPasswordCheck(String confirmPasswordCheck, String password) {
@@ -87,13 +85,6 @@ public class MemberService {
     public Member findById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(UnauthorizedAccessRequestException::new);
-    }
-
-    public List<MemberResponse> findAll() {
-        return memberRepository.findAll()
-                                .stream()
-                                .map(MemberResponse::of)
-                                .collect(Collectors.toList());
     }
 
 }

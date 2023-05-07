@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
 public class Member extends BaseTimeEntity {
@@ -37,10 +36,24 @@ public class Member extends BaseTimeEntity {
      */
     @Column
     @Enumerated(EnumType.STRING)
-    private AgeGroupType ageGroup;
+    private AgeGroupType ageGroupType;
 
     @Column
     private String job;
+
+    @Enumerated(value = EnumType.STRING)
+    private MemberStatus memberStatus;
+
+    private Member(Long id, String nickname, String email, String password, GenderType gender, AgeGroupType ageGroupType, String job, MemberStatus memberStatus) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.ageGroupType = ageGroupType;
+        this.job = job;
+        this.memberStatus = MemberStatus.REGISTERED;
+    }
 
     public void updatePassword(String password) {
 
@@ -52,14 +65,18 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
-    public void updateExtraInfo(GenderType gender, AgeGroupType ageGroup, String job) {
+    public void updateExtraInfo(GenderType gender, AgeGroupType ageGroupType, String job) {
 
         this.gender = gender;
-        this.ageGroup = ageGroup;
+        this.ageGroupType = ageGroupType;
         this.job = job;
     }
 
     public boolean isSameMember(Long id) {
         return this.id.equals(id);
+    }
+
+    public void removeMember(){
+        this.memberStatus = MemberStatus.UNREGISTERED;
     }
 }

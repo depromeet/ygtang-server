@@ -4,6 +4,7 @@ import inspiration.ResultResponse;
 import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.TokenResponse;
 import inspiration.domain.emailauth.EmailAuthRepository;
+import inspiration.domain.member.MemberStatus;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.PostNotFoundException;
@@ -51,7 +52,7 @@ public class SignupService {
     @Transactional
     public void updateExtraInfo(String email, ExtraInfoRequest request) {
 
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmailAndMemberStatus(email, MemberStatus.REGISTERED)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         member.updateExtraInfo(request.getGender(), request.getAge(), request.getJob());
@@ -59,7 +60,7 @@ public class SignupService {
 
     public ResultResponse validSignUpEmailStatus(String email) {
 
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmailAndMemberStatus(email, MemberStatus.REGISTERED)) {
 
             return ResultResponse.of(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage(), true);
         }
@@ -83,14 +84,14 @@ public class SignupService {
 
     private void isValidNickName(String nickName) {
 
-        if (memberRepository.existsByNickname(nickName)) {
+        if (memberRepository.existsByNicknameAndMemberStatus(nickName, MemberStatus.REGISTERED)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_NICKNAME.getMessage());
         }
     }
 
     private void isValidEmail(String email) {
 
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmailAndMemberStatus(email, MemberStatus.REGISTERED)) {
             throw new ConflictRequestException(ExceptionType.EXISTS_EMAIL.getMessage());
         }
     }
