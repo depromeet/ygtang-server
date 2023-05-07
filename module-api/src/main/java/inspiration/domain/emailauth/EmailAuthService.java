@@ -1,6 +1,7 @@
 package inspiration.domain.emailauth;
 
 import inspiration.ResultResponse;
+import inspiration.domain.member.MemberStatus;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import inspiration.domain.member.MemberRepository;
@@ -50,7 +51,7 @@ public class EmailAuthService {
     @Transactional
     public void resetPasswordForAuthEmailSend(String email) {
 
-        if (!memberRepository.existsByEmailAndStatusIsNull(email)) {
+        if (!memberRepository.existsByEmailAndMemberStatus(email, MemberStatus.REGISTERED)) {
             throw new PostNotFoundException(ExceptionType.MEMBER_NOT_FOUND.getMessage());
         }
 

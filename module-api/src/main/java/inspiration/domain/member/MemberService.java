@@ -41,7 +41,7 @@ public class MemberService {
     @Transactional
     public void resetPasswordEmailSend(String email) {
 
-        Member member = memberRepository.findByEmailAndStatusIsNull(email)
+        Member member = memberRepository.findByEmailAndMemberStatus(email, MemberStatus.REGISTERED)
                 .orElseThrow(() -> new PostNotFoundException(ExceptionType.USER_NOT_EXISTS.getMessage()));
 
         String resetPassword = GetResetPasswordUtil.getResetPassword();

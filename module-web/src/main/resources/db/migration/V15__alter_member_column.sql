@@ -1,2 +1,2 @@
 alter table member
-    add column status integer ;
+    add column member_status varchar(255)

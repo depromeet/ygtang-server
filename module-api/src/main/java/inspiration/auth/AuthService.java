@@ -5,6 +5,7 @@ import inspiration.auth.jwt.JwtProvider;
 import inspiration.auth.request.LoginRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
+import inspiration.domain.member.MemberStatus;
 import inspiration.domain.member.response.MemberInfoResponse;
 import inspiration.enumeration.ExceptionType;
 import inspiration.enumeration.ExpireTimeConstants;
@@ -44,7 +45,7 @@ public class AuthService {
     }
 
     private Member checkEmail(String email) {
-        return memberRepository.findByEmailAndStatusIsNull(email)
+        return memberRepository.findByEmailAndMemberStatus(email, MemberStatus.REGISTERED)
                                .orElseThrow(() -> new PostNotFoundException(ExceptionType.EMAIl_NOT_FOUND.getMessage()));
     }
 
