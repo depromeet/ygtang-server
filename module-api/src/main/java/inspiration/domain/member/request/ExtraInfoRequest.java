@@ -22,4 +22,7 @@ public class ExtraInfoRequest {
 
     @NotNull(message = "관심 직무는 필수 입력입니다.")
     private String job;
+
+    @NotNull(message = "이메일은 필수 입력입니다.")
+    private String email;
 }
