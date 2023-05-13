@@ -2,7 +2,6 @@ package inspiration.v1.signup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.domain.emailauth.SignUpEmailSendService;
-import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
@@ -56,7 +55,7 @@ class SignUpControllerTest {
                .andExpect(status().isCreated());
         mockMvc.perform(
                 get("/api/v1/auth/email/signup")
-                        .queryParam("email",email))
+                        .queryParam("email", email))
                .andExpect(status().isFound());
         // when
         SignUpRequest signUpRequest = new SignUpRequest();
