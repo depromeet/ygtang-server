@@ -54,10 +54,6 @@ public class EmailAuthService {
             throw new PostNotFoundException(ExceptionType.EMAIL_ALREADY_AUTHENTICATED.getMessage());
         }
 
-        if(email.contains("+")) {
-            throw new PostNotFoundException("잘못된 이메일 형식입니다.");
-        }
-
         String authToken = AuthTokenUtil.getAuthToken();
 
         resetPasswordForAuthSendService.send(email, authToken);

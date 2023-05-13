@@ -2,6 +2,7 @@ package inspiration.v1.signup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inspiration.domain.emailauth.SignUpEmailSendService;
+import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import inspiration.domain.member.Member;
 import inspiration.domain.member.MemberRepository;
@@ -54,7 +55,8 @@ class SignUpControllerTest {
                         .content(objectMapper.writeValueAsBytes(sendEmailRequest)))
                .andExpect(status().isCreated());
         mockMvc.perform(
-                get("/api/v1/auth/email/signup"))
+                get("/api/v1/auth/email/signup")
+                        .queryParam("email",email))
                .andExpect(status().isFound());
         // when
         SignUpRequest signUpRequest = new SignUpRequest();
@@ -102,9 +104,8 @@ class SignUpControllerTest {
                .andExpect(status().isCreated());
         // when
         mockMvc.perform(patch("/api/v1/signup/extra-informations")
-                .queryParam("email", email)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"gender\":\"ETC\",\"ageGroup\":null,\"job\":\"job\"}")
+                .content("{\"gender\":\"ETC\",\"ageGroup\":null,\"job\":\"job\",\"email\":\""+email+"\"}")
                 // then
         ).andExpect(status().isOk());
     }
@@ -123,7 +124,8 @@ class SignUpControllerTest {
                                 .content(objectMapper.writeValueAsBytes(sendEmailRequest)))
                 .andExpect(status().isCreated());
         mockMvc.perform(
-                        get("/api/v1/auth/email/signup"))
+                        get("/api/v1/auth/email/signup")
+                                .queryParam("email",email))
                 .andExpect(status().isFound());
         // when
         SignUpRequest signUpRequest = new SignUpRequest();
