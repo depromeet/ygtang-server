@@ -1,6 +1,8 @@
 package inspiration.domain.tag;
 
 import inspiration.RestPage;
+import inspiration.domain.inspiration_tag.InspirationTagRepository;
+import inspiration.domain.tag.response.TagCountResponse;
 import inspiration.exception.ConflictRequestException;
 import inspiration.exception.NoAccessAuthorizationException;
 import inspiration.exception.ResourceNotFoundException;
@@ -9,8 +11,6 @@ import inspiration.domain.member.MemberService;
 import inspiration.domain.tag.request.TagAddRequest;
 import inspiration.domain.tag.response.TagResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,14 +25,19 @@ public class TagService {
 
     private final TagRepository tagRepository;
     private final MemberService memberService;
+    private final InspirationTagRepository inspirationTagRepository;
 
     @Transactional(readOnly = true)
-    public RestPage<TagResponse> findTags(Pageable pageable, Long memberId) {
-
+    public RestPage<TagCountResponse> findTags(Pageable pageable, Long memberId) {
         Member member = memberService.findById(memberId);
-
-        Page<Tag> tagPage = tagRepository.findAllByMember(member, pageable);
-        return new RestPage<>(tagPage.map(TagResponse::from));
+        return new RestPage<>(
+                tagRepository.findAllByMember(member, pageable)
+                             .map(TagResponse::from)
+                             .map(it -> {
+                                 long count = inspirationTagRepository.countByTag_id(it.getId());
+                                 return it.toTagCountResponse(count);
+                             })
+        );
     }
 
     @Transactional(readOnly = true)
@@ -69,12 +74,12 @@ public class TagService {
 
     public Tag getTag(Long id) {
         return tagRepository.findById(id)
-                                .orElseThrow(ResourceNotFoundException::new);
+                            .orElseThrow(ResourceNotFoundException::new);
     }
 
     public void removeTag(Long id, Long memberId) {
         Tag tag = tagRepository.findById(id)
-                                .orElseThrow(ResourceNotFoundException::new);
+                               .orElseThrow(ResourceNotFoundException::new);
 
         if (!tag.getMember().isSameMember(memberId)) {
             throw new NoAccessAuthorizationException();
