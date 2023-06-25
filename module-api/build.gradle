@@ -13,7 +13,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:2.9.2")
 
     implementation "com.amazonaws:aws-java-sdk-s3:${awsJavaSdkVersion}"
-    implementation 'com.amazonaws:aws-java-sdk-ses:1.12.188'
+    implementation "com.amazonaws:aws-java-sdk-ses:${awsSesVersion}"
 
     implementation 'com.github.siyoon210:ogparser4j:1.0.1'
     implementation "org.jsoup:jsoup:${jsoupVersion}"

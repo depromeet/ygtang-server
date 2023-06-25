@@ -1,6 +1,7 @@
 package inspiration.domain.emailauth;
 
-import inspiration.aws.AwsSesService;
+import inspiration.email.AwsSesService;
+import inspiration.email.GoogleService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.mail.MessagingException;
 import java.util.List;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +23,7 @@ public class SignUpEmailSendService implements EmailSendService {
 
     private final static String SUBJECT = "이메일 인증";
     private final AwsSesService awsSesService;
+    private final GoogleService googleService;
 
     @Value("${ygtang.server.scheme}")
     private String scheme;
@@ -45,9 +49,13 @@ public class SignUpEmailSendService implements EmailSendService {
         try {
             awsSesService.send(SUBJECT, setHtml(link), List.of(email));
         } catch (Exception e) {
-            e.printStackTrace();
             log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e.getMessage());
-            throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
+            try {
+                googleService.send(SUBJECT, setHtml(link), List.of(email));
+            } catch (MessagingException ex) {
+                log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), ex.getMessage());
+                throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
+            }
         }
     }
 

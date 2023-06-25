@@ -23,9 +23,7 @@ cloud:
     s3:
       connection-timeout: 1000
       request-timeout: 3000
-    ses:
-      access-key: ENC(DB73NBzZBXtuco5qOP1/jtb+hE69JqfkbcuiM43tPG9sWNms0P+pqFaYc3gsAauMKMtI7Uz3JyOOIqztitWLcA==)
-      secret-key: ENC(2FeuLoZ4l1L33nWOSUzx0sXsDfO4b5NaVgu6EiGDnXRF+E1cgCqtI32xKsz11zzNuFVrueqJ/YyxmTO9yKXUPNs088t0G4LkyjMmHpmmZCg=)
+
 
 uri:
   webhook:

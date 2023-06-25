@@ -1,15 +1,17 @@
-package inspiration.aws;
+package inspiration.email;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AwsSesService {
+@Slf4j
+public class AwsSesService implements EmailService {
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
