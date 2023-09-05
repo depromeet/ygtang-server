@@ -5,7 +5,7 @@ spring:
       hibernate:
         format_sql: true
   flyway:
-    url: ENC(Qagc87PeOwmR8Zh73hU/bii+ZjzTPI7shAmw3pPxdLqXHF5MXACQparai0qWTUb6rBMXGPuqohNDhKfKx/wc21ysVuOCel9WEf2R0Le/RJhI8oVlaHZMmp6eq/yR2lsbW1ZB+n7zIi2gKgOTu2U9g4zRcA8EH3KTLK5+ps998vZRyCOIg8gW9/IJab5A8uSIgnUjwjJGdxAYcNd6+PMoceEhDfeW6wVldT7KNQeHhjofmi565uyWGQtHTfOQHbjcaBjH5CtI7/tWGaYVxdpLlC+d6kZ2wm/7H4rB0oGa9DZw7dy1JE4ymFcL67b6p2mEsi6ysBMZ+fTypM90Snb8RA==)
+    url: ENC(LrkgijSkKkCUclnsz2iCawvdG+h5A8iI4+6znCPrkjeJ4cidFO1cMwdHdUx2ZMgEJsTzJswVmz7pdspyod4FX4sY+djvhgk7s5O5+cd24dHcaJ75AcCxwh4aAdaXmtyJ2jkeAwC8709AKiUIYDD7u06gVeZSHkWTtHueEGr9IignsaHm1U+yQVxkiU1lveym1PHh3Q3yApgDsXuG5eStNYrFKSpyn3HQisw24vavAIHPQRJVZNTiwyxEv6mB0z9fc1IAAjBgVTusGw4lxli4mzSwNpHFK5wKL/NDJh1VEs67iuIRcnrgonvtFmtxlvmX0sVeMHHlJoEgLaq1k4NrPg==)
     user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
     password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
   mail:
@@ -26,7 +26,7 @@ cloud:
 ygtang:
   domain:
     datasource:
-      jdbcUrl: ENC(Qagc87PeOwmR8Zh73hU/bii+ZjzTPI7shAmw3pPxdLqXHF5MXACQparai0qWTUb6rBMXGPuqohNDhKfKx/wc21ysVuOCel9WEf2R0Le/RJhI8oVlaHZMmp6eq/yR2lsbW1ZB+n7zIi2gKgOTu2U9g4zRcA8EH3KTLK5+ps998vZRyCOIg8gW9/IJab5A8uSIgnUjwjJGdxAYcNd6+PMoceEhDfeW6wVldT7KNQeHhjofmi565uyWGQtHTfOQHbjcaBjH5CtI7/tWGaYVxdpLlC+d6kZ2wm/7H4rB0oGa9DZw7dy1JE4ymFcL67b6p2mEsi6ysBMZ+fTypM90Snb8RA==)
+      jdbcUrl: ENC(LrkgijSkKkCUclnsz2iCawvdG+h5A8iI4+6znCPrkjeJ4cidFO1cMwdHdUx2ZMgEJsTzJswVmz7pdspyod4FX4sY+djvhgk7s5O5+cd24dHcaJ75AcCxwh4aAdaXmtyJ2jkeAwC8709AKiUIYDD7u06gVeZSHkWTtHueEGr9IignsaHm1U+yQVxkiU1lveym1PHh3Q3yApgDsXuG5eStNYrFKSpyn3HQisw24vavAIHPQRJVZNTiwyxEv6mB0z9fc1IAAjBgVTusGw4lxli4mzSwNpHFK5wKL/NDJh1VEs67iuIRcnrgonvtFmtxlvmX0sVeMHHlJoEgLaq1k4NrPg==)
       username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
       password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
       driver-class-name: com.mysql.cj.jdbc.Driver
