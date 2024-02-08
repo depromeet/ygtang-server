@@ -1,15 +1,17 @@
 package inspiration.domain.emailauth;
 
+import inspiration.email.AwsSesService;
+import inspiration.email.GoogleService;
 import inspiration.enumeration.ExceptionType;
 import inspiration.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.mail.internet.MimeMessage;
+import javax.mail.MessagingException;
+import java.util.List;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -18,8 +20,10 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class SignUpEmailSendService implements EmailSendService {
 
-    private final JavaMailSender mailSender;
+
     private final static String SUBJECT = "이메일 인증";
+    private final AwsSesService awsSesService;
+    private final GoogleService googleService;
 
     @Value("${ygtang.server.scheme}")
     private String scheme;
@@ -27,6 +31,7 @@ public class SignUpEmailSendService implements EmailSendService {
     private String host;
     @Value("${ygtang.server.port}")
     private String port;
+
 
     @Override
     public void send(String email, String authToken) {
@@ -42,16 +47,15 @@ public class SignUpEmailSendService implements EmailSendService {
                                           .toUriString();
 
         try {
-            MimeMessage simpleMailMessage = mailSender.createMimeMessage();
-
-            simpleMailMessage.addRecipients(MimeMessage.RecipientType.TO, email);
-            simpleMailMessage.setSubject(SUBJECT);
-            simpleMailMessage.setText(setHtml(link), "utf-8", "html");
-
-            mailSender.send(simpleMailMessage);
+            awsSesService.send(SUBJECT, setHtml(link), List.of(email));
         } catch (Exception e) {
             log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), e.getMessage());
-            throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
+            try {
+                googleService.send(SUBJECT, setHtml(link), List.of(email));
+            } catch (MessagingException ex) {
+                log.debug(ExceptionType.FAILED_TO_SEND_MAIL.getMessage(), ex.getMessage());
+                throw new PostNotFoundException(ExceptionType.FAILED_TO_SEND_MAIL.getMessage());
+            }
         }
     }
 

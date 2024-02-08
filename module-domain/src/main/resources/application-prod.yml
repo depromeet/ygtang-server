@@ -13,6 +13,9 @@ cloud:
       secret-key: ENC(Ex+M59/bYV59b9OQy+ZTwHgdhsw/lzVBidiBzr5nyu8uXb6GrM1k+KfLusS0dTt38KzK8wKd9r5kvFU60ML1i5y061xyeRWunnBuvUWwXrQ=)
     s3:
       bucket: ENC(R9pmaGtILn87+LKOpZHuj7rrEMm+4zV7cUUWs08/kQyZqKI6dMKYTg6/ZpZZ2SkExhq+inG0Ar/9CUEIQmhvmQ==)
+    ses:
+      access-key: ENC(zx9Al4s2xHV7KK+NiRnrg/Vh0Fzf+yOySkKoK3Bnu+ub1+6qXUrZkKQEE8BsfMusAJu68GlKdB1PH3/PBoyooQ==)
+      secret-key: ENC(QRM7fc2nEakhcdw0eio2Mg1rvaCT+spuF4Si7VnuQvBFg4FjB/Pm4N0euTmHK3nu+/B1PhCKdt4YXLH13yVOIOMN7awJjYYmm5t3uLDrfOY=)
 
 logging:
   file:
