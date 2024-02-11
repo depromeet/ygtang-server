@@ -1,5 +1,7 @@
 package inspiration.v1.tag;
 
+import inspiration.domain.inspiration_tag.InspirationTagRepository;
+import inspiration.domain.tag.response.TagCountResponse;
 import inspiration.infrastructure.AuthenticationPrincipal;
 import inspiration.domain.inspiration.InspirationService;
 import inspiration.domain.tag.TagService;
@@ -30,6 +32,7 @@ public class TagController {
 
     private final TagService tagService;
     private final InspirationService inspirationService;
+    private final InspirationTagRepository inspirationTagRepository;
 
 
     @GetMapping("/list")
@@ -40,7 +43,7 @@ public class TagController {
     })
     public ResponseEntity<ResultResponse> tagList(Pageable pageable,
                                                   @ApiIgnore @AuthenticationPrincipal Long memberId ) {
-        Page<TagResponse> tagResponsePage = tagService.findTags(pageable, memberId);
+        Page<TagCountResponse> tagResponsePage = tagService.findTags(pageable, memberId);
         return ResponseEntity.ok().body(ResultResponse.from(tagResponsePage));
     }
 

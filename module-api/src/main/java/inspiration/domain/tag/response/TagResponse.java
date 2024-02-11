@@ -40,5 +40,15 @@ public class TagResponse {
                                     .build();
     }
 
+    public TagCountResponse toTagCountResponse(long tagCount) {
+        return new TagCountResponse(
+                this.id,
+                this.memberResponse,
+                this.content,
+                tagCount,
+                this.createdDatetime,
+                this.updatedDatetime
+        );
+    }
 
 }
