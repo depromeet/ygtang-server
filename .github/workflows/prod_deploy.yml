@@ -6,7 +6,7 @@ on:
   workflow_dispatch: 
 
 env:
-  S3_BUCKET_NAME: ygt-bucket
+  S3_BUCKET_NAME: ygt-bucket-2023
   PROJECT_LOCATION: deploy
   PROJECT_NAME: inspiration
 
