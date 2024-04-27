@@ -14,6 +14,8 @@ public interface InspirationTagRepository extends JpaRepository<InspirationTag, 
 
     Optional<InspirationTag> findByInspirationAndTag(Inspiration inspiration, Tag tag);
 
+    long countByTag_id(Long tagId);
+
     void deleteAllByInspiration(Inspiration inspiration);
 
     @Modifying
