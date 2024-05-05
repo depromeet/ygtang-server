@@ -1,8 +1,8 @@
 spring:
   flyway:
-    url: ENC(DiuH5gQbIMnSu4B1O0TC+AQrUHJGyjA+lkVRRuFmEzVVHDDlKo6fKZEJX+UibptIx415dJbnuPPLwKap1WzTNmNXvFEWcvAgoGw8WAXQoF41SbPuWxzhIDg5mg/PhvrCCtC7UCsOpel1EqcTFn+49nPZP59vIlvAqgzQCxfyYqh4dn1NF/qs2HesVCrUefPQorG/yk1LI1c5rfhnWQhjuxdWDi7fVkISxM15csTifiqTOhcziVkaWkd/QnnD3Z3YJBUTTkykJ7dUQpVluX1SNZWsKGtBNKjYtqS2T6BzbdH7m1jtyQp4XzrH+SoPrZjSPEhHCQ6XkG3JMg40ygY62Q==)
-    user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
-    password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+    url: ENC(J6WzF+M0VMn7+ODxW5FL5nCxGLAAb0idtCItGsn+uHiexwkesIBOcF93WTXBdyrSOq6A8dtJYx2p4ZMT6lfCjL9KtpaCwQxZNf/ChXA9CRIUZcJQJKUepQaLVZ2Ww28pwd9BIpLT0ouYybz+4e/g7ZgyCN6RytW1t3IgLYqoGFYGVMELO1FS26FkpLlM6xMzxxEa4cHzCXhE91wnPhCit3sj8g6d/Zg3MS2JAnJG9PwemDrRGOyvaGZ626zjKRYzXGcFItn5KLT7kbrIePcHsbWXkHZ4++PGVLrt85RbXMk27ZEb0nxNGrUIIfcmSGFy)
+    user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
+    password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
   mail:
     sign-up-email-send-mail: ENC(zyANvPjCAYiH+b6CSKvf0B3vMD1eU7NaOfqeUWVs2Mj4eCMvDa7Y6qpAV5h02jbihEC/I6zmjIZqsPu1VTdUadTTuVPVcLyqTJGlRYS5rLlEcXGhZ4zg+Nu8+3S8otsn)
     reset-password-for-auth-send-mail: ENC(TtTKtnwv64ttIONkMuT1SF6r/iU2NWV+hI17DTupgugbuj50RsiIsEXowUUmFoVz7fh01FBNkq0dKhkaDEK+BLWtRchs9Z+koSAMSNqvGhby2+8rHzRfIL3FMTzEGeHt)
@@ -10,10 +10,10 @@ spring:
 cloud:
   aws:
     credentials:
-      access-key: ENC(z604OvMg8DC1QJ7EmDy5rbaZusHJDVqNB/5QFpXEogERDROq1xQJIJYeVOrbTlf+kSFUq92HXsp9qjLArxDLjg==)
-      secret-key: ENC(Ex+M59/bYV59b9OQy+ZTwHgdhsw/lzVBidiBzr5nyu8uXb6GrM1k+KfLusS0dTt38KzK8wKd9r5kvFU60ML1i5y061xyeRWunnBuvUWwXrQ=)
+      access-key: ENC(TytE6PoRN2G8XiwPq3IU+4GFVHPcNmWXUkYk2MApOEY2a6IZZg0pjew8eXWoa6aWmbUfk/xWWapJee+bucL5Qg==)
+      secret-key: ENC(VvzJa/x/ByNQuonkVRPTWD5zK0EA0YwCBtwhwytxgezkOe95PE6UYMObHiRsKNEmLiH9iIuh1b16M6vy1K3uvSXSa9supz8GR+Kkuz2we5E=)
     s3:
-      bucket: ENC(R9pmaGtILn87+LKOpZHuj7rrEMm+4zV7cUUWs08/kQyZqKI6dMKYTg6/ZpZZ2SkExhq+inG0Ar/9CUEIQmhvmQ==)
+      bucket: ENC(PuGrKff6b61oLzn8MOMis/s+ddimZXme4J8HTemFL4seX6C0y4n44vdXRO2PvcLq0W4nx7cX0Jq7a5ZfQWms6g==)
 
 logging:
   file:
@@ -23,9 +23,9 @@ logging:
 ygtang:
   domain:
     datasource:
-      jdbcUrl: ENC(T6KJD2K4zrrg9wj23w7I1RCcS0YBAwntd8KhtD9TonbAhXrvwkqlF98vqDfc9puBqGQU2CEAJScvfiMlig0Jz41E7gKy7k5GGbe3cTVYXiILrYo+/KBXhCtMo0qJq13wqgAn55fElbTgS4Eq9+tDV/SkRB3I5eO+2Eny6lv/j9kwz+Ko46bgch7PJmRHuQY9OFN92u1rv4y0KBYFYqUlGLHVaTDzxKtazGXcWWbV5/XYZK+A0cqX2p9EjfclXf7lfJw2fxHwiFhIWiHY6cXeqBi+1zdWJMCsYMGq3uN8jiAeR25HuF5N5nSyBPjYh5XdEJMi8E58iiDiA9MUqcE/3Q==)
-      username: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
-      password: ENC(MJISIAE2hpfyzQjAFQwM8o+Wtv5rHP5lJDwBq3mEIUkr93OEMj+uqYmXDjasb7El)
+      jdbcUrl: ENC(J6WzF+M0VMn7+ODxW5FL5nCxGLAAb0idtCItGsn+uHiexwkesIBOcF93WTXBdyrSOq6A8dtJYx2p4ZMT6lfCjL9KtpaCwQxZNf/ChXA9CRIUZcJQJKUepQaLVZ2Ww28pwd9BIpLT0ouYybz+4e/g7ZgyCN6RytW1t3IgLYqoGFYGVMELO1FS26FkpLlM6xMzxxEa4cHzCXhE91wnPhCit3sj8g6d/Zg3MS2JAnJG9PwemDrRGOyvaGZ626zjKRYzXGcFItn5KLT7kbrIePcHsbWXkHZ4++PGVLrt85RbXMk27ZEb0nxNGrUIIfcmSGFy)
+      username: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
+      password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
       driver-class-name: com.mysql.cj.jdbc.Driver
 
 uri:
