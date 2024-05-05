@@ -55,4 +55,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
 
       - name: Code Deploy 
-        run: aws deploy create-deployment --application-name Ygt-CodeDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Ygt-Develop-Deploy --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name ygt-code-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name ygt-prod-deploy --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_LOCATION/$PROJECT_NAME/$GITHUB_SHA.zip
