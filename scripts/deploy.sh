@@ -1,6 +1,6 @@
 #!/bin/bash
 APP_PATH=/home/ubuntu/app/inspiration
-SCRIPT_PATH=/home/ubuntu/app/inspiration/scripts
+SCRIPT_PATH=/home/ubuntu/app/inspiration/source/scripts
 
 cp ${APP_PATH}/deploy/.env ${APP_PATH}/source/.env
 export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
