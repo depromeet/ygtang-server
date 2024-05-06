@@ -8,7 +8,7 @@ export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
 cd ${SCRIPT_PATH}
 chmod +x login_ecr.sh
 
-sh -c $SCRIPT_PATH/login_ecr.sh ${AWS_CLI_REGION} ${AWS_CLI_ACCOUNT_ID}
+$SCRIPT_PATH/login_ecr.sh ${AWS_CLI_REGION} ${AWS_CLI_ACCOUNT_ID}
 
 docker stop ${ACTIVE}
 sleep 3
