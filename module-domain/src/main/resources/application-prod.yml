@@ -1,6 +1,6 @@
 spring:
   flyway:
-    url: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
+    url: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
     user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
     password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
   mail:
@@ -19,11 +19,10 @@ logging:
   file:
     name: spring.log
 
-
 ygtang:
   domain:
     datasource:
-      jdbcUrl: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
+      jdbcUrl: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
       username: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
       password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
       driver-class-name: com.mysql.cj.jdbc.Driver
