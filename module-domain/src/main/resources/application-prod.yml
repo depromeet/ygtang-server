@@ -1,6 +1,6 @@
 spring:
   flyway:
-    url: ENC(GAa6SpLoHfN1fWbYPEN5Ot9A1CSxCL3QpEMI45YmeUWY16IXzgyioUOhpAB8iR8TBD1c78qMofTKx20XMD/1JgdApXcgh7TAOvkPVfGI9tafUHVqn0COnJVB5x3xLyuPYD13uhuvMYC0pEUqHpli5vymdu+SuFLnb6DlsJ55H8a4Qt8b+OmQcTN1RjdMJE8/AABfIoQuCaBc603bEFxjx6COk+UGCuayNCdPTZOjI1sQ8p0D+P+axFBi7pKxb2ckluXO6VOWJQj9i0ykL9bWfDfA6Xm5m3PTQfNDARMEcAQVzBzfdOdThbhRx/VUWiSY5iFpoME0kKA9NqHE2bMylQ==)
+    url: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
     user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
     password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
   mail:
@@ -23,7 +23,7 @@ logging:
 ygtang:
   domain:
     datasource:
-      jdbcUrl: ENC(GAa6SpLoHfN1fWbYPEN5Ot9A1CSxCL3QpEMI45YmeUWY16IXzgyioUOhpAB8iR8TBD1c78qMofTKx20XMD/1JgdApXcgh7TAOvkPVfGI9tafUHVqn0COnJVB5x3xLyuPYD13uhuvMYC0pEUqHpli5vymdu+SuFLnb6DlsJ55H8a4Qt8b+OmQcTN1RjdMJE8/AABfIoQuCaBc603bEFxjx6COk+UGCuayNCdPTZOjI1sQ8p0D+P+axFBi7pKxb2ckluXO6VOWJQj9i0ykL9bWfDfA6Xm5m3PTQfNDARMEcAQVzBzfdOdThbhRx/VUWiSY5iFpoME0kKA9NqHE2bMylQ==)
+      jdbcUrl: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&useUnicode=true
       username: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
       password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
       driver-class-name: com.mysql.cj.jdbc.Driver
