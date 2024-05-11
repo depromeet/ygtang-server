@@ -1,6 +1,8 @@
 spring:
   flyway:
-    enabled: true
+    url: ENC(GAa6SpLoHfN1fWbYPEN5Ot9A1CSxCL3QpEMI45YmeUWY16IXzgyioUOhpAB8iR8TBD1c78qMofTKx20XMD/1JgdApXcgh7TAOvkPVfGI9tafUHVqn0COnJVB5x3xLyuPYD13uhuvMYC0pEUqHpli5vymdu+SuFLnb6DlsJ55H8a4Qt8b+OmQcTN1RjdMJE8/AABfIoQuCaBc603bEFxjx6COk+UGCuayNCdPTZOjI1sQ8p0D+P+axFBi7pKxb2ckluXO6VOWJQj9i0ykL9bWfDfA6Xm5m3PTQfNDARMEcAQVzBzfdOdThbhRx/VUWiSY5iFpoME0kKA9NqHE2bMylQ==)
+    user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
+    password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
   mail:
     sign-up-email-send-mail: ENC(zyANvPjCAYiH+b6CSKvf0B3vMD1eU7NaOfqeUWVs2Mj4eCMvDa7Y6qpAV5h02jbihEC/I6zmjIZqsPu1VTdUadTTuVPVcLyqTJGlRYS5rLlEcXGhZ4zg+Nu8+3S8otsn)
     reset-password-for-auth-send-mail: ENC(TtTKtnwv64ttIONkMuT1SF6r/iU2NWV+hI17DTupgugbuj50RsiIsEXowUUmFoVz7fh01FBNkq0dKhkaDEK+BLWtRchs9Z+koSAMSNqvGhby2+8rHzRfIL3FMTzEGeHt)
