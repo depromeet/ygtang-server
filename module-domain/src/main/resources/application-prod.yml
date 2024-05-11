@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 14
+
   flyway:
     url: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
     user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
