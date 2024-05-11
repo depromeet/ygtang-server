@@ -15,5 +15,5 @@ sleep 3
 
 docker-compose -f ${APP_PATH}/source/docker-compose.yml pull
 sleep 1
-docker-compose -f ${APP_PATH}/source/docker-compose.yml up
+docker-compose -f ${APP_PATH}/source/docker-compose.yml up -d
 sleep 10
