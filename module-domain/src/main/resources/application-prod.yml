@@ -21,7 +21,7 @@ logging:
 ygtang:
   domain:
     datasource:
-      jdbcUrl: ENC(2TUXqdayoRK4iQZ+oI04Nhpy85dCeOUIq8G/Zw/fBwi+DsAwfOBHB/rsz/2k3Or67tSp+cHil1YkOmzkGzmfgZDktSEjBK4GVJk0Z3ScwLu55RWXCEfsbD5xVaITkFl9nWa8PpGyzb5fHfDT/8ueZn7Z9e6VaF77xE4QIorrFIsOQcM+mPDfLYUOYZk+GhJguxerA/b887kiWjph+JOlbmvMScn55gwfpXZMEVyX5HDoWqHgtD+ahzfCaEyyhsa13K9xtHlPaIAcV1vgUUAcr5p2pG/zIbTUY1WfeV4yr1hNQqd0MfoCUhGdfMYMDYWHbZ5Hpv9WZFWchWUSuCHiwQ==)
+      jdbcUrl: ENC(20B30jUfKj2snp5Lma+O9zrREc4c3pvETsKe2SVL0Y9sLCTmA2bMtXJUfI0/a7xdkOF0MWzVWo4tafwNFW2UehnU3od9KXFKWESAwqjOvmwrwUJrug1MytQmXOD+rNxZ/3rzS63qTftVGzd0nXhI+YIiiXTl9WBCgrtZWoz7rV1nwHV/xqoHc6vEOM6crsaUIj3+RBVIjF1WLfrDYMAdieEDhEzUD8l5cSrcBzzCez3iETUQH0918ucgGX+GwbKqFWWhKG+CsOdwFwK9jW+F/hLPIF9JaP2c2cYwdCUbnEaTSZH6cws2tdoXmU5q1s0SsgqFHCM9xpkrxSn8fxiLug==)
       username: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
       password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
       driver-class-name: com.mysql.cj.jdbc.Driver
