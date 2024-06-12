@@ -29,6 +29,9 @@ cloud:
       secret-key:
     region:
       static:
+    ses:
+      access-key:
+      secret-key:
 
 logging:
   pattern:

@@ -4,6 +4,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    hibernate:
+      ddl-auto: update
   flyway:
     url: ENC(m8emks6KJk1ejQo51yejp8dHU8bPlIKyysTiOnxG3Kw34CsCTtXe6rvc/oFsLDkbhZ+f1yv4WxjiQ8KzxPSJeikBuvYNu3/WeJ/RppdR1gmhDmcpDfFZBJ7WMe2EOWcrngX7oHte6/ZZ9s6i1nvZ9VnkJT1QG8GTfAJPgRAf5YocTgpZGXBLzqWGAkX8Yk8rtlW3wlKpQn/km3ofDSKphVmpQt7+pqxZ2ibD8wno2ziHIm6D35WTpaXWMCC54GNypDQSkgoahu7IYh1BqLUdyIAX0as7vhb+YdS5eaZUug92hji1G5dn4I8IXd9D/9me4nQAT+mpXDhtxFG8xHthMQ==)
     user: ENC(pD8lmKr4PXMRCUto6pMF9Ub/iJCxKveTODoqXQm1fDEB4rVN1Nzs6sftmidgYWOP)
@@ -18,6 +20,9 @@ cloud:
       secret-key: ENC(YiKVUKqdW6IeY+zcvhSzhb65e1rVU5MFn174HDKFBb0xinizK9EwCsdj06ZAeEh7sAuWJ/DnI/w5/gC5bE4cRjO82NRIAT9aSVG2VVsemmc=)
     s3:
       bucket: ENC(hrPVDZuG83TgagLFUG7MchbMlA30RYJJU1sW8ToTYyUguoCcZiLVgtALJwQq6JRPZzfa2/WX6k0I2o/FiTurHA==)
+    ses:
+      access-key: ENC(ONeXLvOC69T9yj0Z1aECuoxIpTHA4rR7JKdYMtaio7rsvTWdYOIZoZcxRGDDFcDHv8MOH5gNapl+AfWnuLdxww==)
+      secret-key: ENC(5mbWA0xUqs/kKMOXT88QRvCh43GO3ECyzmXRxDcVCX/5XajI9Xvk6Mz1qW2oNc3CfC5p6GzxzjhSXmJ7muzHPon3rALCs93hYXNIJiYzUVo=)
 
 ygtang:
   domain:

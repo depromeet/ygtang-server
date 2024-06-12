@@ -22,6 +22,9 @@ cloud:
       secret-key: ENC(YiKVUKqdW6IeY+zcvhSzhb65e1rVU5MFn174HDKFBb0xinizK9EwCsdj06ZAeEh7sAuWJ/DnI/w5/gC5bE4cRjO82NRIAT9aSVG2VVsemmc=)
     s3:
       bucket: ENC(hrPVDZuG83TgagLFUG7MchbMlA30RYJJU1sW8ToTYyUguoCcZiLVgtALJwQq6JRPZzfa2/WX6k0I2o/FiTurHA==)
+    ses:
+      access-key: ENC(ONeXLvOC69T9yj0Z1aECuoxIpTHA4rR7JKdYMtaio7rsvTWdYOIZoZcxRGDDFcDHv8MOH5gNapl+AfWnuLdxww==)
+      secret-key: ENC(5mbWA0xUqs/kKMOXT88QRvCh43GO3ECyzmXRxDcVCX/5XajI9Xvk6Mz1qW2oNc3CfC5p6GzxzjhSXmJ7muzHPon3rALCs93hYXNIJiYzUVo=)
 
 ygtang:
   domain:

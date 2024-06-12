@@ -9,16 +9,19 @@ import inspiration.domain.emailauth.request.AuthenticateEmailRequest;
 import inspiration.domain.emailauth.request.SendEmailRequest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
+@Slf4j
 @SuppressWarnings("ClassCanBeRecord")
 public class AuthController {
 
@@ -45,7 +48,9 @@ public class AuthController {
     @ApiOperation(value = "회원가입을 위해 이메일 인증 링크 요청", notes = "회원가입을 위해 이메일에 인증 링크를 요청한다")
     public void sendEmailForSignup(@RequestBody @Valid SendEmailRequest request) {
 
+        log.warn("Request Time {} ", LocalDateTime.now());
         emailAuthService.signUpEmailSend(request.getEmail());
+        log.warn("Response Time {} ", LocalDateTime.now());
     }
 
     @PostMapping("/sends-email/passwords/reset")
