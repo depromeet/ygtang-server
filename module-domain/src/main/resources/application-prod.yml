@@ -1,6 +1,10 @@
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 14
+
   flyway:
-    url: ENC(J6WzF+M0VMn7+ODxW5FL5nCxGLAAb0idtCItGsn+uHiexwkesIBOcF93WTXBdyrSOq6A8dtJYx2p4ZMT6lfCjL9KtpaCwQxZNf/ChXA9CRIUZcJQJKUepQaLVZ2Ww28pwd9BIpLT0ouYybz+4e/g7ZgyCN6RytW1t3IgLYqoGFYGVMELO1FS26FkpLlM6xMzxxEa4cHzCXhE91wnPhCit3sj8g6d/Zg3MS2JAnJG9PwemDrRGOyvaGZ626zjKRYzXGcFItn5KLT7kbrIePcHsbWXkHZ4++PGVLrt85RbXMk27ZEb0nxNGrUIIfcmSGFy)
+    url: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
     user: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
     password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
   mail:
@@ -13,17 +17,16 @@ cloud:
       access-key: ENC(TytE6PoRN2G8XiwPq3IU+4GFVHPcNmWXUkYk2MApOEY2a6IZZg0pjew8eXWoa6aWmbUfk/xWWapJee+bucL5Qg==)
       secret-key: ENC(VvzJa/x/ByNQuonkVRPTWD5zK0EA0YwCBtwhwytxgezkOe95PE6UYMObHiRsKNEmLiH9iIuh1b16M6vy1K3uvSXSa9supz8GR+Kkuz2we5E=)
     s3:
-      bucket: ENC(PuGrKff6b61oLzn8MOMis/s+ddimZXme4J8HTemFL4seX6C0y4n44vdXRO2PvcLq0W4nx7cX0Jq7a5ZfQWms6g==)
+      bucket: ENC(AdrRa6vr8/16pDxF/6sz2ZG0W0jJ4cgAn14lIqana/vQoTl0wSnWnQfdgoTqgSdGSHL1iZE2DvkMzxAn6tX3wg==)
 
 logging:
   file:
     name: spring.log
 
-
 ygtang:
   domain:
     datasource:
-      jdbcUrl: ENC(J6WzF+M0VMn7+ODxW5FL5nCxGLAAb0idtCItGsn+uHiexwkesIBOcF93WTXBdyrSOq6A8dtJYx2p4ZMT6lfCjL9KtpaCwQxZNf/ChXA9CRIUZcJQJKUepQaLVZ2Ww28pwd9BIpLT0ouYybz+4e/g7ZgyCN6RytW1t3IgLYqoGFYGVMELO1FS26FkpLlM6xMzxxEa4cHzCXhE91wnPhCit3sj8g6d/Zg3MS2JAnJG9PwemDrRGOyvaGZ626zjKRYzXGcFItn5KLT7kbrIePcHsbWXkHZ4++PGVLrt85RbXMk27ZEb0nxNGrUIIfcmSGFy)
+      jdbcUrl: jdbc:mysql://inspiration-rds-a.cbzl7uckd4zx.ap-northeast-2.rds.amazonaws.com:3306/inspiration?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
       username: ENC(jZEdjhanW1BDicsE9g4W205D8n3mIXUiVUchGBakPhNNKx2BB6Ig2SczCQ7P0P3M)
       password: ENC(wHtJt3OkgAgOD8+3nc1BBuVswm2VozoyOxXBjrANQp69+Jd0ugUSXkO5LkbocVtQ)
       driver-class-name: com.mysql.cj.jdbc.Driver

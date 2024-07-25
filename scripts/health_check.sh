@@ -6,11 +6,11 @@ APP_PATH=/home/ubuntu/app/inspiration
 
 export $(cat ${APP_PATH}/source/.env | grep -v ^# | xargs) >/dev/null
 
-echo "> Start health check of WAS at '${TARGET_URL}:${PORT}' ..."
+echo "> Start health check of WAS at '${TARGET_URL}:8080' ..."
 
 for RETRY_COUNT in 1 2 3 4 5 6 7 8 9 10; do
   echo "> #${RETRY_COUNT} trying..."
-  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${TARGET_URL}:"${PORT}"/health)
+  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${TARGET_URL}:8080/health)
 
   if [ ${RESPONSE_CODE} -eq 200 ]; then
     echo "> New WAS successfully running"
