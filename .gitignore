@@ -42,3 +42,6 @@ out/
 # tomcat access log
 /work/
 /logs/
+
+spring.log
+gradlew
